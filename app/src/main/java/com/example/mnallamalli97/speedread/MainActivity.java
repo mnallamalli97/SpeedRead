@@ -7,6 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
@@ -70,27 +78,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void runWords(final long speed) {
 
-        final String[] wc = {"The", "Qucik", "Brown", "fox", "Jumped", "The", "Qucik", "Brown", "fox", "Jumped"};
-        final android.os.Handler handler = new android.os.Handler();
-        handler.post(new Runnable() {
+        String line;
 
-            int i = 0;
+        try (
 
-            @Override
-            public void run() {
-                System.out.println(wc[i]);
-                wordTextView.setText(wc[i]);
-                i++;
-                if (i == wc.length) {
-                    handler.removeCallbacks(this);
-                } else {
-                    if(cancelled == false)
-                        handler.postDelayed(this, speed);
-                }
+                InputStream fis = getApplicationContext().getAssets().open("req.txt");
+                InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+                BufferedReader br = new BufferedReader(isr);
+        ) {
+            while ((line = br.readLine()) != null) {
+
+                final String[] wc = line.split(" ");
+
+                    final android.os.Handler handler = new android.os.Handler();
+                    handler.post(new Runnable() {
+
+                        int i = 0;
+
+                        @Override
+                        public void run() {
+                            System.out.println(wc[i]);
+                            wordTextView.setText(wc[i]);
+                            i++;
+                            if (i == wc.length) {
+                                handler.removeCallbacks(this);
+                            } else {
+                                if(cancelled == false)
+                                    handler.postDelayed(this, speed);
+                            }
+                        }
+                    });
             }
-        });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

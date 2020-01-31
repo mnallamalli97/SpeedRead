@@ -35,7 +35,8 @@ public class SettingsActivity extends AppCompatActivity {
         seekBar.setProgress((int) pref.getLong("speedReadSpeed", -1));
         String speedString = String.valueOf(pref.getLong("speedReadSpeed", -1));
         resultText.setText(speedString);
-        
+        seekBar.setMax(1000);
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
