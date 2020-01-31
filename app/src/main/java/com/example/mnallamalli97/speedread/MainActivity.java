@@ -1,5 +1,6 @@
 package com.example.mnallamalli97.speedread;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -7,7 +8,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,8 +15,10 @@ public class MainActivity extends AppCompatActivity {
     private Button startButton;
     private Button pauseButton;
     private TextView wordTextView;
+    private TextView wordSpeedTextView;
     final Timer utilTimer = new Timer();
-    int pauseFlag = 0;
+    boolean cancelled = false;
+    private long newSpeed = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         settingsButton = findViewById(R.id.settingsButton);
         wordTextView = findViewById(R.id.mainWord);
+        wordSpeedTextView = findViewById(R.id.wordSpeed);
         startButton = findViewById(R.id.startButton);
         pauseButton = findViewById(R.id.pauseButton);
 
@@ -34,20 +37,33 @@ public class MainActivity extends AppCompatActivity {
             60/3 seconds = 20 words a minute
         */
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        newSpeed = extras.getLong("speedreadSpeed", 10000L);
+
+        wordSpeedTextView.setText(String.valueOf(newSpeed));
+        runWords(newSpeed);
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("start button pressed");
-                runWords(3000L);
-                System.out.println("runWords() function finished");
+                cancelled = false;
             }
         });
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("pause button pressed");
-                pauseFlag = 1;
+                cancelled = true;
+            }
+        });
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(startIntent);
             }
         });
 
@@ -55,28 +71,26 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void runWords(long speed) {
-        final String[] random_words = {"this", "is", "a", "test"};
+    public void runWords(final long speed) {
 
+        final String[] wc = {"The", "Qucik", "Brown", "fox", "Jumped", "The", "Qucik", "Brown", "fox", "Jumped"};
+        final android.os.Handler handler = new android.os.Handler();
+        handler.post(new Runnable() {
 
-        utilTimer.scheduleAtFixedRate(new TimerTask() {
-            private int index = 0;
+            int i = 0;
 
+            @Override
             public void run() {
-                System.out.println(random_words[index]);
-                wordTextView.post(new Runnable() {
-                    public void run() {
-                        wordTextView.setText(random_words[index]);
-                    }
-                });
-                if(pauseFlag == 0){
-                    index++;
-                }
-
-                if (index >= random_words.length) {
-                    utilTimer.cancel();
+                System.out.println(wc[i]);
+                wordTextView.setText(wc[i]);
+                i++;
+                if (i == wc.length) {
+                    handler.removeCallbacks(this);
+                } else {
+                    if(cancelled == false)
+                        handler.postDelayed(this, speed);
                 }
             }
-        }, 3000L, speed);
+        });
     }
 }
