@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "425239303758",
+    "firebase_url": "https://speedread1214.firebaseio.com",
+    "project_id": "speedread1214",
+    "storage_bucket": "speedread1214.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425239303758:android:0986ed925cd511afe2d51f",
+        "android_client_info": {
+          "package_name": "com.example.mnallamalli97.speedread"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425239303758-b5uqknbk14npn5ag4d31ns5a86bkvmtb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mnallamalli97.speedread",
+            "certificate_hash": "ebc1abe8dbcab9ec2c6d525a01612b3559289e8d"
+          }
+        },
+        {
+          "client_id": "425239303758-gd3mt40vna2oeq7mb36v5o3ualghmc6q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEU7oCWpjYchLkA1qRSrhpOYKMwtDB934"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425239303758-gd3mt40vna2oeq7mb36v5o3ualghmc6q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

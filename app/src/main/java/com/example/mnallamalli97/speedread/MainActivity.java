@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView wordTextView;
     private TextView wordSpeedTextView;
     final Timer utilTimer = new Timer();
+
     boolean cancelled = false;
     private long newSpeed = 0;
 
@@ -41,16 +43,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         /*
+            1000 ms in a second
             60 seconds a minute.
-            60/3 seconds = 20 words a minute
+
+            speed should be: show a word every 250 ms.
         */
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        newSpeed = extras.getLong("speedreadSpeed", 10000L);
+        newSpeed = extras.getLong("speedreadSpeed", 250);
 
         wordSpeedTextView.setText(String.valueOf(newSpeed));
+
+        //i want 400 words per min.
+        //currently every 400 ms, the word switches.
         runWords(newSpeed);
 
         startButton.setOnClickListener(new View.OnClickListener() {
