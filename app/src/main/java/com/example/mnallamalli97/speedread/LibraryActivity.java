@@ -44,6 +44,7 @@ public class LibraryActivity extends AppCompatActivity {
         //SETUP FIREBASE
         db= FirebaseDatabase.getInstance().getReference();
         helper=new FirebaseHelper(db);
+        helper.retrieve();
 
         //ADAPTER
         ArrayAdapter<Book> adapter = new propertyArrayAdapter(this, 0, libraryList);
