@@ -1,11 +1,18 @@
 package com.example.mnallamalli97.speedread;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,17 +25,21 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Timer;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     private Button settingsButton;
     private Button startButton;
     private Button pauseButton;
+    private Button libraryButton;
     private TextView wordTextView;
     private TextView wordSpeedTextView;
-    final Timer utilTimer = new Timer();
-
+    private TextView bookTitleTextView;
     boolean cancelled = false;
     private long newSpeed = 0;
+    private String book;
+    File localFile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +47,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         settingsButton = findViewById(R.id.settingsButton);
+        libraryButton = findViewById(R.id.libraryButton);
         wordTextView = findViewById(R.id.mainWord);
         wordSpeedTextView = findViewById(R.id.wordSpeed);
+        bookTitleTextView = findViewById(R.id.bookTitle);
         startButton = findViewById(R.id.startButton);
         pauseButton = findViewById(R.id.pauseButton);
+        Bundle extras = getIntent().getExtras();
 
 
         /*
@@ -49,12 +63,13 @@ public class MainActivity extends AppCompatActivity {
             speed should be: show a word every 250 ms.
         */
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
+
+
 
         newSpeed = extras.getLong("speedreadSpeed", 250);
-
+        book = extras.getString("title", "BOOKTITLE");
         wordSpeedTextView.setText(String.valueOf(newSpeed));
+        bookTitleTextView.setText(String.valueOf(book));
 
         //i want 400 words per min.
         //currently every 400 ms, the word switches.
@@ -82,47 +97,81 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        libraryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startIntent = new Intent(MainActivity.this, LibraryActivity.class);
+                startActivity(startIntent);
+            }
+        });
+
     }
 
 
     public void runWords(final long speed) {
 
-        String line;
 
-        try (
+        //DOWNLOADING BOOK ONTO DEVICE
+        // Instantiates a client
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference gsReference = storage.getReferenceFromUrl("gs://speedread1214.appspot.com/books/" + "req.txt");
 
-                InputStream fis = getApplicationContext().getAssets().open("req.txt");
-                InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
-                BufferedReader br = new BufferedReader(isr);
-        ) {
-            while ((line = br.readLine()) != null) {
 
-                final String[] wc = line.split(" ");
-
-                    final android.os.Handler handler = new android.os.Handler();
-                    handler.post(new Runnable() {
-
-                        int i = 0;
-
-                        @Override
-                        public void run() {
-                            System.out.println(wc[i]);
-                            wordTextView.setText(wc[i]);
-                            i++;
-                            if (i == wc.length) {
-                                handler.removeCallbacks(this);
-                            } else {
-                                if(cancelled == false)
-                                    handler.postDelayed(this, speed);
-                            }
-                        }
-                    });
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        try {
+            localFile = File.createTempFile("book", "txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        gsReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+                //load file into input stream and split each word to display in textview
+                String line;
+
+                try (
+                        InputStream fis = getApplicationContext().getAssets().open(localFile.getAbsolutePath());
+                        InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+                        BufferedReader br = new BufferedReader(isr);
+                ) {
+                    while ((line = br.readLine()) != null) {
+                        final String[] wc = line.split(" ");
+                        final android.os.Handler handler = new android.os.Handler();
+                        handler.post(new Runnable() {
+
+                            int i = 0;
+
+                            @Override
+                            public void run() {
+                                wordTextView.setText(wc[i]);
+                                i++;
+                                if (i == wc.length) {
+                                    handler.removeCallbacks(this);
+                                } else {
+                                    if(cancelled == false)
+                                        handler.postDelayed(this, speed);
+                                }
+                            }
+                        });
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
+
+        System.out.printf("Bucket %s created.%n", localFile.getName());
+
 
     }
 }

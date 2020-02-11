@@ -16,7 +16,10 @@ public class SettingsActivity extends AppCompatActivity {
     private long seekBarValue;
     private SeekBar seekBar;
     private Button saveButton;
+    private Button libraryButton;
     private TextView resultText;
+    private TextView bookTitle;
+    private TextView bookAuthor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +29,20 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
         final SharedPreferences.Editor editor = pref.edit();
 
+        Bundle extras = getIntent().getExtras();
 
         saveButton = findViewById(R.id.saveButton);
+        libraryButton = findViewById(R.id.libraryButton);
         seekBar = findViewById(R.id.seekBar);
         resultText =findViewById(R.id.resultText);
+        bookAuthor =findViewById(R.id.bookAuthor);
+        bookTitle =findViewById(R.id.bookTitle);
 
+        final String author = String.valueOf(extras.getString("author"));
+        final String title = String.valueOf(extras.getString("title"));
+
+        bookAuthor.setText(author);
+        bookTitle.setText(title);
 
         seekBar.setProgress((int) pref.getLong("speedReadSpeed", 250));
         String speedString = String.valueOf(pref.getLong("speedReadSpeed", 250));
@@ -66,8 +78,18 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent startIntent = new Intent(SettingsActivity.this, MainActivity.class);
                 Bundle extras = new Bundle();
                 extras.putLong("speedreadSpeed", seekBarValue);
+                extras.putString("title", title );
+                extras.putString("author", author );
 
                 startIntent.putExtras(extras);
+                startActivity(startIntent);
+            }
+        });
+
+        libraryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startIntent = new Intent(SettingsActivity.this, LibraryActivity.class);
                 startActivity(startIntent);
             }
         });
