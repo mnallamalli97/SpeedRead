@@ -1,2 +1,0 @@
-given an alchemist.txt file, create a alchemist.krish file that puts it in form. To compare these with other String variables in my program using .equals so it would be best if I can import as Strings. I am also okay with inputting an entire line from a text file as a String in which case Ill just put one word on each line of my file. How do I input words from a text file and store them to String variables?
-

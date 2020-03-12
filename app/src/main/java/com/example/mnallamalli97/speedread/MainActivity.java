@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
@@ -70,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
             speed should be: show a word every 250 ms.
         */
-
-
 
 
         newSpeed = extras.getLong("speedreadSpeed", 250);
@@ -141,8 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    public void downloadFileAndShowWords(Context context, String fileName, String fileExtension, String destinationDirectory, String url, final long speed){
+    public void downloadFileAndShowWords(Context context, String fileName, String fileExtension, String destinationDirectory, String url, final long speed) {
 
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
         Uri uri = Uri.parse(url);
@@ -151,26 +149,22 @@ public class MainActivity extends AppCompatActivity {
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
 
-        downloadManager.enqueue(request);
-
-
 
         // Local temp file has been created
         //load file into input stream and split each word to display in textview
         String line;
+        String downloadPath = "/storage/emulated/0/Android/data/com.example.mnallamalli97.speedread/files/Download/" + bookPath + ".txt";
 
-        File path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS);
-        String downloadPath = path.getAbsolutePath() + "/" + bookPath + ".txt";
-
+        File tmpDir = new File(downloadPath);
+        boolean exists = tmpDir.exists();
+        if (!exists) {
+            downloadManager.enqueue(request);
+        }
 
         try (
-
-
-               // InputStream fis = getApplicationContext().getFilesDir().get
-              //  InputStream fis = getApplicationContext().getAssets().open("req.txt");
-               InputStream is = new FileInputStream(downloadPath);
-                InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
-                BufferedReader br = new BufferedReader(isr);
+            InputStream is = new FileInputStream(downloadPath);
+            InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
+            BufferedReader br = new BufferedReader(isr);
         ) {
             while ((line = br.readLine()) != null) {
                 final String[] wc = line.split(" ");
@@ -186,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                         if (i == wc.length) {
                             handler.removeCallbacks(this);
                         } else {
-                            if(cancelled == false)
+                            if (cancelled == false)
                                 handler.postDelayed(this, speed);
                         }
                     }
@@ -198,4 +192,31 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+//    void countdown(final int time) {
+//        final ArrayList<Integer> count = new ArrayList<>();
+//        int j = 0;
+//        for(int i = time; i >= 0; i--) {
+//            count.add(j, i);
+//            j++;
+//        }
+//
+//        final android.os.Handler handler = new android.os.Handler();
+//        handler.post(new Runnable() {
+//            int i = 0;
+//            @Override
+//            public void run() {
+//                wordTextView.setText((count.get(i)).toString());
+//                i++;
+//                if (i == time) {
+//                    handler.removeCallbacks(this);
+//                } else {
+//
+//                    handler.postDelayed(this, 1000);
+//                }
+//            }
+//        });
+//
+//    }
 }
