@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,9 +22,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -110,10 +117,10 @@ public class LibraryActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     Book book = ds.getValue(Book.class);
-                    System.out.println(book.getTitle());
+
                     String title = book.getTitle();
                     String author = book.getAuthor();
-                    String cover = book.getBookCover();
+                    String cover = ds.child("cover").getValue().toString();
                     String bookPath = book.getBookPath();
                     libraryList.add(new Book(title, author, cover, bookPath));
 
@@ -163,8 +170,10 @@ public class LibraryActivity extends AppCompatActivity {
             title.setText("Title: " + String.valueOf(book.getTitle()));
             author.setText("Author: " + String.valueOf(book.getAuthor()));
 
+            String url= book.getBookCover();
 
-            cover.setImageBitmap(BitmapFactory.decodeFile(book.getBookCover()));
+            Glide.with(getApplicationContext()).load(url).into(cover);
+
 
             return view;
         }

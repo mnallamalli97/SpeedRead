@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
 
     <ImageView
+        android:src="@drawable/alchemist"
         android:id="@+id/cover"
-        android:layout_width="136dp"
-        android:layout_height="189dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Book Cover" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="Book Cover"
+        />
 
     <LinearLayout
         android:id="@+id/infoSection"
@@ -21,8 +28,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="209dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:id="@+id/bookTitle"
@@ -41,47 +51,4 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/pricingSection"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/infoSection"-->
-        <!--android:orientation="vertical">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/price"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="10dp"-->
-            <!--android:text="Price" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/bedroom"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@id/price"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:text="Bed:" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/bathroom"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@id/price"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:layout_toRightOf="@id/bedroom"-->
-            <!--android:text="Bath:" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/carspot"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@id/price"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:layout_toRightOf="@id/bathroom"-->
-            <!--android:text="Car:" />-->
-
-    <!--</RelativeLayout>-->
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
