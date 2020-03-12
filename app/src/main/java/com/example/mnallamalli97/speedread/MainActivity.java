@@ -1,16 +1,21 @@
 package com.example.mnallamalli97.speedread;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.renderscript.ScriptGroup;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -22,9 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Timer;
 
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +43,11 @@ public class MainActivity extends AppCompatActivity {
     boolean cancelled = false;
     private long newSpeed = 0;
     private String book;
-    File localFile = null;
+    private String bookPath;
+
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance("gs://speedread1214.appspot.com/");
+    StorageReference storageReference;
+    StorageReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
         newSpeed = extras.getLong("speedreadSpeed", 250);
         book = extras.getString("title", "BOOKTITLE");
+        bookPath = extras.getString("book_path", "BOOKPATH");
         wordSpeedTextView.setText(String.valueOf(newSpeed));
         bookTitleTextView.setText(String.valueOf(book));
 
         //i want 400 words per min.
         //currently every 400 ms, the word switches.
-        runWords(newSpeed);
+        runWords(bookPath, newSpeed);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,70 +117,85 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void runWords(final long speed) {
+    public void runWords(final String bookPath, final long speed) {
 
 
         //DOWNLOADING BOOK ONTO DEVICE
         // Instantiates a client
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference gsReference = storage.getReferenceFromUrl("gs://speedread1214.appspot.com/books/" + "req.txt");
+        storageReference = firebaseStorage.getReference();
+        ref = storageReference.child("books/" + bookPath);
 
 
-        try {
-            localFile = File.createTempFile("book", "txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        gsReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                // Local temp file has been created
-                //load file into input stream and split each word to display in textview
-                String line;
-
-                try (
-                        InputStream fis = getApplicationContext().getAssets().open(localFile.getAbsolutePath());
-                        InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
-                        BufferedReader br = new BufferedReader(isr);
-                ) {
-                    while ((line = br.readLine()) != null) {
-                        final String[] wc = line.split(" ");
-                        final android.os.Handler handler = new android.os.Handler();
-                        handler.post(new Runnable() {
-
-                            int i = 0;
-
-                            @Override
-                            public void run() {
-                                wordTextView.setText(wc[i]);
-                                i++;
-                                if (i == wc.length) {
-                                    handler.removeCallbacks(this);
-                                } else {
-                                    if(cancelled == false)
-                                        handler.postDelayed(this, speed);
-                                }
-                            }
-                        });
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+            public void onSuccess(Uri uri) {
+                String url = uri.toString();
+                downloadFileAndShowWords(MainActivity.this, bookPath, ".txt", DIRECTORY_DOWNLOADS, url, speed);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
             }
         });
+    }
 
 
-        System.out.printf("Bucket %s created.%n", localFile.getName());
+
+    public void downloadFileAndShowWords(Context context, String fileName, String fileExtension, String destinationDirectory, String url, final long speed){
+
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
+
+        downloadManager.enqueue(request);
 
 
+
+        // Local temp file has been created
+        //load file into input stream and split each word to display in textview
+        String line;
+
+        File path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS);
+        String downloadPath = path.getAbsolutePath() + "/" + bookPath + ".txt";
+
+
+        try (
+
+
+               // InputStream fis = getApplicationContext().getFilesDir().get
+              //  InputStream fis = getApplicationContext().getAssets().open("req.txt");
+               InputStream is = new FileInputStream(downloadPath);
+                InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
+                BufferedReader br = new BufferedReader(isr);
+        ) {
+            while ((line = br.readLine()) != null) {
+                final String[] wc = line.split(" ");
+                final android.os.Handler handler = new android.os.Handler();
+                handler.post(new Runnable() {
+
+                    int i = 0;
+
+                    @Override
+                    public void run() {
+                        wordTextView.setText(wc[i]);
+                        i++;
+                        if (i == wc.length) {
+                            handler.removeCallbacks(this);
+                        } else {
+                            if(cancelled == false)
+                                handler.postDelayed(this, speed);
+                        }
+                    }
+                });
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

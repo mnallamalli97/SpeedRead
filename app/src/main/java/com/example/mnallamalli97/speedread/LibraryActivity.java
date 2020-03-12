@@ -85,6 +85,7 @@ public class LibraryActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(LibraryActivity.this, SettingsActivity.class);
                 intent.putExtra("title", book.getTitle());
+                intent.putExtra("book_path", book.getBookPath());
                 intent.putExtra("author", book.getAuthor());
                 intent.putExtra("cover", book.getBookCover());
 
@@ -113,7 +114,8 @@ public class LibraryActivity extends AppCompatActivity {
                     String title = book.getTitle();
                     String author = book.getAuthor();
                     String cover = book.getBookCover();
-                    libraryList.add(new Book(title, author, cover));
+                    String bookPath = book.getBookPath();
+                    libraryList.add(new Book(title, author, cover, bookPath));
 
                 }
                 adapter.notifyDataSetChanged();

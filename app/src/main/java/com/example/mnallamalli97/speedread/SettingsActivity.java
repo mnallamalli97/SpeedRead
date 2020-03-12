@@ -20,6 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView resultText;
     private TextView bookTitle;
     private TextView bookAuthor;
+    private TextView bookPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +38,15 @@ public class SettingsActivity extends AppCompatActivity {
         resultText =findViewById(R.id.resultText);
         bookAuthor =findViewById(R.id.bookAuthor);
         bookTitle =findViewById(R.id.bookTitle);
+        bookPath = findViewById(R.id.bookPath);
 
         final String author = String.valueOf(extras.getString("author"));
         final String title = String.valueOf(extras.getString("title"));
+        final String path = String.valueOf(extras.getString("book_path"));
 
         bookAuthor.setText(author);
         bookTitle.setText(title);
+        bookPath.setText(path);
 
         seekBar.setProgress((int) pref.getLong("speedReadSpeed", 250));
         String speedString = String.valueOf(pref.getLong("speedReadSpeed", 250));
@@ -80,6 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
                 extras.putLong("speedreadSpeed", seekBarValue);
                 extras.putString("title", title );
                 extras.putString("author", author );
+                extras.putString("book_path", path );
 
                 startIntent.putExtras(extras);
                 startActivity(startIntent);
