@@ -6,9 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -21,6 +24,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView bookTitle;
     private TextView bookAuthor;
     private TextView bookPath;
+    private Switch darkMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,35 @@ public class SettingsActivity extends AppCompatActivity {
         bookAuthor =findViewById(R.id.bookAuthor);
         bookTitle =findViewById(R.id.bookTitle);
         bookPath = findViewById(R.id.bookPath);
+        darkMode = findViewById(R.id.darkMode);
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+            darkMode.setChecked(true);
+        else
+            darkMode.setChecked(false);
+
+        darkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                if (darkMode.isChecked()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+
+            }
+        });
+
+
 
         final String author = String.valueOf(extras.getString("author"));
         final String title = String.valueOf(extras.getString("title"));
