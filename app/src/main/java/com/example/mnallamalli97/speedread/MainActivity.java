@@ -3,6 +3,7 @@ package com.example.mnallamalli97.speedread;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.renderscript.ScriptGroup;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView bookTitleTextView;
     boolean cancelled = false;
     private long newSpeed = 0;
+    private boolean darkModeEnabled = false;
     private String book;
     private String bookPath;
 
@@ -66,8 +68,20 @@ public class MainActivity extends AppCompatActivity {
         bookTitleTextView = findViewById(R.id.bookTitle);
         startButton = findViewById(R.id.startButton);
         pauseButton = findViewById(R.id.pauseButton);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        final SharedPreferences.Editor editor = pref.edit();
         Bundle extras = getIntent().getExtras();
 
+
+        if (extras.getBoolean("darkModeEnabled")) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+
+        } else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        }
 
         /*
             1000 ms in a second

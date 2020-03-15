@@ -25,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView bookAuthor;
     private TextView bookPath;
     private Switch darkMode;
+    private  boolean result = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,14 @@ public class SettingsActivity extends AppCompatActivity {
         bookPath = findViewById(R.id.bookPath);
         darkMode = findViewById(R.id.darkMode);
 
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             darkMode.setChecked(true);
-        else
+            result = true;
+        } else{
             darkMode.setChecked(false);
+            result = false;
+        }
+
 
         darkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -56,14 +61,16 @@ public class SettingsActivity extends AppCompatActivity {
                 // true if the switch is in the On position
                 if (darkMode.isChecked()) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-
+                    editor.putBoolean("darkModeEnabled", true);
                     Intent intent = getIntent();
+                    intent.putExtra("darkModeEnabled", true);
                     finish();
                     startActivity(intent);
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
+                    editor.putBoolean("darkModeEnabled", false);
                     Intent intent = getIntent();
+                    intent.putExtra("darkModeEnabled", true);
                     finish();
                     startActivity(intent);
                 }
@@ -118,7 +125,7 @@ public class SettingsActivity extends AppCompatActivity {
                 extras.putString("title", title );
                 extras.putString("author", author );
                 extras.putString("book_path", path );
-
+                extras.putBoolean("darkModeEnabled", result );
                 startIntent.putExtras(extras);
                 startActivity(startIntent);
             }

@@ -9,18 +9,18 @@
     android:paddingTop="10dp">
 
     <ImageView
-        android:src="@drawable/alchemist"
         android:id="@+id/cover"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
+        android:contentDescription="Book Cover"
         android:scaleType="fitXY"
+        android:src="@drawable/alchemist"
         android:visibility="visible"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="Book Cover"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/infoSection"
