@@ -5,19 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Environment;
-import android.renderscript.ScriptGroup;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
@@ -48,8 +43,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView bookTitleTextView;
     boolean cancelled = false;
     private long newSpeed = 0;
-    private String book;
+    private String bookTitle;
+    private String bookAuthor;
     private String bookPath;
+    private boolean isDark;
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance("gs://speedread1214.appspot.com/");
     StorageReference storageReference;
@@ -63,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
         //set default to light mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        settingsButton = findViewById(R.id.settingsButton);
-        libraryButton = findViewById(R.id.libraryButton);
         wordTextView = findViewById(R.id.mainWord);
         wordSpeedTextView = findViewById(R.id.wordSpeed);
         bookTitleTextView = findViewById(R.id.bookTitle);
@@ -73,10 +68,19 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
         final SharedPreferences.Editor editor = pref.edit();
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
+
+        newSpeed = extras.getLong("speedreadSpeed", 250);
+        bookTitle = extras.getString("title", "BOOKTITLE");
+        bookAuthor = extras.getString("author", "BOOKAUTHOR");
+        bookPath = extras.getString("book_path", "BOOKPATH");
+        isDark = extras.getBoolean("darkModeEnabled");
+        wordSpeedTextView.setText(String.valueOf(newSpeed));
+        bookTitleTextView.setText(String.valueOf(bookTitle));
 
 
-        if (extras.getBoolean("darkModeEnabled")) {
+
+        if (isDark) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -87,17 +91,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.action_recents:
-                        Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                    case R.id.action_settings:
+                        Intent startSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putLong("speedreadSpeed", newSpeed);
+                        extras.putString("title", bookTitle );
+                        extras.putString("author", bookAuthor );
+                        extras.putString("book_path", bookPath );
+                        extras.putBoolean("darkModeEnabled", isDark );
+                        startSettingsIntent.putExtras(extras);
+                        startActivity(startSettingsIntent);
                         break;
-                    case R.id.action_favorites:
-                        Toast.makeText(MainActivity.this, "Library", Toast.LENGTH_SHORT).show();
+                    case R.id.action_library:
+                        Intent startLibraryIntent = new Intent(MainActivity.this, LibraryActivity.class);
+                        startActivity(startLibraryIntent);
                         break;
                 }
                 return true;
             }
         });
-        
+
 
         /*
             1000 ms in a second
@@ -106,12 +119,6 @@ public class MainActivity extends AppCompatActivity {
             speed should be: show a word every 250 ms.
         */
 
-
-        newSpeed = extras.getLong("speedreadSpeed", 250);
-        book = extras.getString("title", "BOOKTITLE");
-        bookPath = extras.getString("book_path", "BOOKPATH");
-        wordSpeedTextView.setText(String.valueOf(newSpeed));
-        bookTitleTextView.setText(String.valueOf(book));
 
         //i want 400 words per min.
         //currently every 400 ms, the word switches.
@@ -128,22 +135,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cancelled = true;
-            }
-        });
-
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent startIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(startIntent);
-            }
-        });
-
-        libraryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent startIntent = new Intent(MainActivity.this, LibraryActivity.class);
-                startActivity(startIntent);
             }
         });
 
