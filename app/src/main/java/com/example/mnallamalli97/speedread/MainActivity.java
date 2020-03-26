@@ -34,14 +34,11 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button settingsButton;
-    private Button startButton;
     private Button pauseButton;
-    private Button libraryButton;
     private TextView wordTextView;
     private TextView wordSpeedTextView;
     private TextView bookTitleTextView;
-    boolean cancelled = false;
+    private boolean isPlaying = true;
     private long newSpeed = 0;
     private String bookTitle;
     private String bookAuthor;
@@ -63,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         wordTextView = findViewById(R.id.mainWord);
         wordSpeedTextView = findViewById(R.id.wordSpeed);
         bookTitleTextView = findViewById(R.id.bookTitle);
-        startButton = findViewById(R.id.startButton);
         pauseButton = findViewById(R.id.pauseButton);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
@@ -112,29 +108,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        /*
-            1000 ms in a second
-            60 seconds a minute.
 
-            speed should be: show a word every 250 ms.
-        */
-
-
-        //i want 400 words per min.
-        //currently every 400 ms, the word switches.
         runWords(bookPath, newSpeed);
-
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelled = false;
-            }
-        });
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelled = true;
+                if (isPlaying) {
+                    pauseButton.setText("Pause");
+                }else{
+                    pauseButton.setText("Play");
+                }
+                isPlaying = !isPlaying;
             }
         });
 
@@ -186,6 +171,17 @@ public class MainActivity extends AppCompatActivity {
             downloadManager.enqueue(request);
         }
 
+        /*
+            1000 ms in a second
+            60 seconds a minute.
+
+            speed should be: show a word every 250 ms.
+        */
+
+
+        // i want 400 words per min.
+        // currently every 400 ms, the word switches.
+
         try (
             InputStream is = new FileInputStream(downloadPath);
             InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
@@ -205,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                         if (i == wc.length) {
                             handler.removeCallbacks(this);
                         } else {
-                            if (cancelled == false)
+                            if (isPlaying == true)
                                 handler.postDelayed(this, speed);
                         }
                     }
