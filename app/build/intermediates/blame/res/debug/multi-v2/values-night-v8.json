@@ -1,0 +1,60 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-night-v8/values-night-v8.xml",
+            "map": [
+                {
+                    "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/values-night/strings.xml",
+                    "from": {
+                        "startLines": "1,2",
+                        "startColumns": "4,4",
+                        "startOffsets": "16,63",
+                        "endColumns": "46,49",
+                        "endOffsets": "58,108"
+                    },
+                    "to": {
+                        "startLines": "5,6",
+                        "startColumns": "4,4",
+                        "startOffsets": "199,246",
+                        "endColumns": "46,49",
+                        "endOffsets": "241,291"
+                    }
+                },
+                {
+                    "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/values-night/colors.xml",
+                    "from": {
+                        "startLines": "4,2,3",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "153,55,102",
+                        "endColumns": "45,46,50",
+                        "endOffsets": "194,97,148"
+                    },
+                    "to": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,101,148",
+                        "endColumns": "45,46,50",
+                        "endOffsets": "96,143,194"
+                    }
+                },
+                {
+                    "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/values-night-v8/values-night-v8.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "55,125,209,293,389,491,593",
+                        "endColumns": "69,83,83,95,101,101,93",
+                        "endOffsets": "120,204,288,384,486,588,682"
+                    },
+                    "to": {
+                        "startLines": "7,8,9,10,11,12,13",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "296,366,450,534,630,732,834",
+                        "endColumns": "69,83,83,95,101,101,93",
+                        "endOffsets": "361,445,529,625,727,829,923"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -88,19 +88,29 @@ public class SettingsActivity extends AppCompatActivity {
         bookTitle.setText(title);
         bookPath.setText(path);
 
-        seekBar.setProgress((int) pref.getLong("speedReadSpeed", 250));
+        seekBar.setMax(600);
+
+        seekBar.setProgress((int) pref.getLong("speedReadSpeed", 0));
         String speedString = String.valueOf(pref.getLong("speedReadSpeed", 250));
         resultText.setText(speedString);
-        seekBar.setMax(800);
+        //seekBar.incrementProgressBy(50);
+
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int yourStep = 50;
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 seekBarValue = progress;
-
                 progress = ((int)Math.round(progress/yourStep ))*yourStep;
-                seekBar.setProgress(progress);
-                resultText.setText(progress + "");
+
+                if (progress < yourStep){
+                    seekBar.setProgress(yourStep); //set min value to 50. magic solution, ha
+                    resultText.setText(seekBarValue + "");
+                    seekBarValue = progress;
+                } else {
+                    seekBar.setProgress(progress);
+                    resultText.setText(seekBarValue + "");
+                    seekBarValue = progress;
+                }
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
