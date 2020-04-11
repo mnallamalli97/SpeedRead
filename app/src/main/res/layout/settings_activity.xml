@@ -99,15 +99,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#F3D5D5"
+            android:shadowRadius="10"
             android:text="Library"
             android:textAlignment="center" />
 
         <Switch
             android:id="@+id/darkMode"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Dark Mode" />
+            android:layout_weight="1"
+            android:thumb="@drawable/thumb2"
+            android:track="@drawable/track1"
+            android:gravity="center_horizontal|center_vertical" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
