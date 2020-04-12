@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/cover"
@@ -14,7 +12,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:contentDescription="Book Cover"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:visibility="visible"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintLeft_toLeftOf="parent"
