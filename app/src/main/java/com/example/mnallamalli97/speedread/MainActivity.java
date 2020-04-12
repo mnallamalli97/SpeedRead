@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.mnallamalli97.speedread.news.NewsActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private String bookPath;
     private boolean isDark;
     private int wordCount = 0;
+    private String mUrl, mImg, mTitle, mDate, mSource, mAuthor, mContent;
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance("gs://speedread1214.appspot.com/");
     StorageReference storageReference;
@@ -90,6 +92,15 @@ public class MainActivity extends AppCompatActivity {
         wordSpeedTextView.setText(String.valueOf(newSpeed));
         bookTitleTextView.setText(String.valueOf(bookTitle));
 
+        Intent intent = getIntent();
+        mUrl = intent.getStringExtra("url");
+        mImg = intent.getStringExtra("img");
+        mTitle = intent.getStringExtra("title");
+        mDate = intent.getStringExtra("date");
+        mSource = intent.getStringExtra("source");
+        mAuthor = intent.getStringExtra("author");
+        mContent = intent.getStringExtra("content");
+
 
 
         if (isDark) {
@@ -123,7 +134,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        runWords(bookPath, newSpeed);
+        if(mContent == null)
+            runLibraryWords(bookPath, newSpeed);
+        else
+            runNewsWords(newSpeed);
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,15 +179,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //open up a news feed and be able to select an article to play
+                Intent startNewsIntent = new Intent(MainActivity.this, NewsActivity.class);
+                startActivity(startNewsIntent);
             }
         });
 
     }
 
 
-    public void runWords(final String bookPath, final long speed) {
-
-
+    public void runLibraryWords(final String bookPath, final long speed) {
         //DOWNLOADING BOOK ONTO DEVICE
         // Instantiates a client
         storageReference = firebaseStorage.getReference();
@@ -190,6 +204,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 e.printStackTrace();
+            }
+        });
+    }
+
+    public void runNewsWords(final long speed){
+        //play each word in String mContent 1 by 1.
+        final int newsLen = mContent.length();
+        bookProgress.setMax(newsLen);
+        final String[] wc = mContent.split(" ");
+        final android.os.Handler handler = new android.os.Handler();
+        handler.post(new Runnable() {
+            int percentage;
+
+            @Override
+            public void run() {
+                if (wordCount > newsLen)
+                    wordCount = newsLen - 1;
+
+                wordTextView.setText(wc[wordCount]);
+                wordCount++;
+                bookProgress.setProgress(percentage);
+                if (wordCount == wc.length) {
+                    handler.removeCallbacks(this);
+                    bookProgress.setProgress(newsLen);
+                } else {
+                    if (isPlaying == true) {
+                        bookProgress.setProgress(wordCount);
+                        handler.postDelayed(this, speed);
+                    }
+                }
             }
         });
     }
@@ -226,11 +270,10 @@ public class MainActivity extends AppCompatActivity {
 
         // i want 400 words per min.
         // currently every 400 ms, the word switches.
-
         try (
-            InputStream is = new FileInputStream(downloadPath[0]);
-            InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
-            BufferedReader br = new BufferedReader(isr);
+                InputStream is = new FileInputStream(downloadPath[0]);
+                InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
+                BufferedReader br = new BufferedReader(isr);
 
         ) {
             //readLine here will be an entire chapter
@@ -238,43 +281,41 @@ public class MainActivity extends AppCompatActivity {
             final int len = line.split(" ").length;
             bookProgress.setMax(len);
 //            while ((line = br.readLine()) != null) {
-                final String[] wc = line.split(" ");
-                final android.os.Handler handler = new android.os.Handler();
-                handler.post(new Runnable() {
-                    int percentage;
+            final String[] wc = line.split(" ");
+            final android.os.Handler handler = new android.os.Handler();
+            handler.post(new Runnable() {
+                int percentage;
 
-                    @Override
-                    public void run() {
-                        if (wordCount > len)
-                            wordCount = len - 1;
+                @Override
+                public void run() {
+                    if (wordCount > len)
+                        wordCount = len - 1;
 
-                        wordTextView.setText(wc[wordCount]);
-                        wordCount++;
-                        bookProgress.setProgress(percentage);
-                        if (wordCount == wc.length) {
-                            handler.removeCallbacks(this);
-                            bookProgress.setProgress(len);
-                        } else {
-                            if (isPlaying == true) {
-                                bookProgress.setProgress(wordCount);
-                                handler.postDelayed(this, speed);
-                            }
+                    wordTextView.setText(wc[wordCount]);
+                    wordCount++;
+                    bookProgress.setProgress(percentage);
+                    if (wordCount == wc.length) {
+                        handler.removeCallbacks(this);
+                        bookProgress.setProgress(len);
+                    } else {
+                        if (isPlaying == true) {
+                            bookProgress.setProgress(wordCount);
+                            handler.postDelayed(this, speed);
                         }
                     }
-                });
+                }
+            });
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void openFile() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/txt");
+        intent.setType("application/pdf");
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         startActivityForResult(intent, PICK_PDF_FILE);

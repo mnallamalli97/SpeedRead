@@ -6,9 +6,11 @@
                 {
                     "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/values-night/strings.xml",
                     "from": {
-                        "startLines": "-1,-1",
-                        "startColumns": "-1,-1",
-                        "startOffsets": "-1,-1"
+                        "startLines": "1,2",
+                        "startColumns": "4,4",
+                        "startOffsets": "16,63",
+                        "endColumns": "46,49",
+                        "endOffsets": "58,108"
                     },
                     "to": {
                         "startLines": "4,5",
@@ -21,13 +23,6 @@
                 {
                     "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/values-night/colors.xml",
                     "from": {
-                        "startLines": "2,-1",
-                        "startColumns": "4,-1",
-                        "startOffsets": "55,-1",
-                        "endColumns": "46,-1",
-                        "endOffsets": "97,-1"
-                    },
-                    "to": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
                         "startOffsets": "55,102",
@@ -38,9 +33,11 @@
                 {
                     "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/values-night-v8/values-night-v8.xml",
                     "from": {
-                        "startLines": "-1,-1,-1,-1,-1,-1,-1",
-                        "startColumns": "-1,-1,-1,-1,-1,-1,-1",
-                        "startOffsets": "-1,-1,-1,-1,-1,-1,-1"
+                        "startLines": "2,3,4,5,6,7,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "55,125,209,293,389,491,593",
+                        "endColumns": "69,83,83,95,101,101,93",
+                        "endOffsets": "120,204,288,384,486,588,682"
                     },
                     "to": {
                         "startLines": "6,7,8,9,10,11,12",

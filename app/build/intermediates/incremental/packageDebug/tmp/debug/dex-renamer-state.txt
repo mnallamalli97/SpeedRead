@@ -1,4 +1,4 @@
-#Sat Apr 11 17:43:04 PDT 2020
+#Sat Apr 11 20:48:25 PDT 2020
 base.0=/Users/mnallamalli97/SpeedRead/app/build/intermediates/transforms/dexMerger/debug/0
 path.0=classes.dex
 renamed.0=classes.dex
