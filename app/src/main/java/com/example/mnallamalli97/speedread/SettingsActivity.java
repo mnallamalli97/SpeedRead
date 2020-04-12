@@ -90,6 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         bookTitle.setText(title);
         bookPath.setText(path);
+        bookAuthor.setText(author);
         seekBar.setMax(600);
 
         seekBar.setProgress((int) pref.getLong("speedReadSpeed", 0));
