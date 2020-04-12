@@ -9,10 +9,16 @@
 
     <TextView
         android:id="@+id/mainWord"
-        android:layout_width="117dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="191dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="36dp"
+        android:background="@drawable/my_shape"
+        android:gravity="center_vertical"
         android:text="Hello World!"
         android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="55sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -20,8 +26,8 @@
 
     <Button
         android:id="@+id/pauseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -35,30 +41,35 @@
 
     <TextView
         android:id="@+id/wordSpeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="107dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="104dp"
         android:text="WPM:"
-        app:layout_constraintBottom_toTopOf="@+id/mainWord"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.295" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/bookTitle"
-        android:layout_width="116dp"
-        android:layout_height="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/mainWord"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.483" />
+        app:layout_constraintVertical_bias="0.041" />
 
     <ProgressBar
         android:id="@+id/bookProgress"
@@ -90,64 +101,69 @@
 
     <Button
         android:id="@+id/rewindButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Rewind"
+        android:background="@drawable/ic_replay_10_black_48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/pauseButton"
-        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintHorizontal_bias="0.339"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.868" />
+        app:layout_constraintVertical_bias="0.853" />
 
     <Button
         android:id="@+id/forwardButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Forward"
+        android:background="@drawable/ic_forward_10_black_48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.829"
+        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toEndOf="@+id/pauseButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.868" />
+        app:layout_constraintVertical_bias="0.853" />
 
     <Button
         android:id="@+id/importButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="36dp"
         android:layout_marginTop="16dp"
-        android:text="Import"
+        android:background="@drawable/ic_cloud_upload_black_72dp"
+        app:layout_constraintBottom_toTopOf="@+id/bookProgress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mainWord"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/newsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginTop="16dp"
-        android:text="News"
+        android:background="@drawable/icon_news"
+        app:layout_constraintBottom_toTopOf="@+id/bookProgress"
         app:layout_constraintEnd_toStartOf="@+id/importButton"
-        app:layout_constraintStart_toEndOf="@+id/upgradeButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.906"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainWord"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/upgradeButton"
-        android:layout_width="wrap_content"
+        android:layout_width="32dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="36dp"
         android:text="Upgrade"
+        app:layout_constraintBottom_toTopOf="@+id/mainWord"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/bookTitle" />
 
 </android.support.constraint.ConstraintLayout>

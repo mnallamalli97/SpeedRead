@@ -85,11 +85,11 @@ public class SettingsActivity extends AppCompatActivity {
         final String author = String.valueOf(extras.getString("author"));
         final String title = String.valueOf(extras.getString("title"));
         final String path = String.valueOf(extras.getString("book_path"));
+        final String content = String.valueOf(extras.getString("content"));
 
-        bookAuthor.setText(author);
+
         bookTitle.setText(title);
         bookPath.setText(path);
-
         seekBar.setMax(600);
 
         seekBar.setProgress((int) pref.getLong("speedReadSpeed", 0));
@@ -138,6 +138,7 @@ public class SettingsActivity extends AppCompatActivity {
                 extras.putString("author", author );
                 extras.putString("book_path", path );
                 extras.putBoolean("darkModeEnabled", result );
+                extras.putString("content", content);
                 startIntent.putExtras(extras);
                 startActivity(startIntent);
             }

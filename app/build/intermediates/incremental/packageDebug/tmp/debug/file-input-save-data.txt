@@ -1,7 +1,0 @@
-#Internal package file, do not edit.
-#Sat Apr 11 01:46:18 PDT 2020
-0.baseType=DIRECTORY
-0.base=/Users/mnallamalli97/SpeedRead/app/build/intermediates/transforms/dexMerger/debug/0
-0.path=classes.dex
-0.set=DEX
-count=1

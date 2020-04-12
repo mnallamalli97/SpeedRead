@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        
+
 
         <activity android:name=".MainActivity">
 
@@ -23,6 +23,17 @@
             android:name=".SettingsActivity"
             android:label="Edit speed of words screen">
         </activity>
+
+        <activity
+            android:name=".news.NewsActivity"
+            android:label="View the main stories of the day">
+        </activity>
+
+        <activity
+            android:name=".news.NewsDetailActivity"
+            android:label="Option to select how you want to read it">
+        </activity>
+
 
 
         <activity android:label="@string/app_name" android:name=".LibraryActivity">
