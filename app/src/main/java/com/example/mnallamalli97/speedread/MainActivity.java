@@ -4,9 +4,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.MatrixCursor;
 import android.net.Uri;
-import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     private Button pauseButton;
     private Button importButton;
+    private Button newsButton;
+    private Button rewindButton;
+    private Button forwardButton;
     private TextView wordTextView;
     private TextView wordSpeedTextView;
     private TextView bookTitleTextView;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private String bookAuthor;
     private String bookPath;
     private boolean isDark;
+    private int wordCount = 0;
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance("gs://speedread1214.appspot.com/");
     StorageReference storageReference;
@@ -71,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         bookTitleTextView = findViewById(R.id.bookTitle);
         pauseButton = findViewById(R.id.pauseButton);
         importButton = findViewById(R.id.importButton);
+        newsButton = findViewById(R.id.newsButton);
+        forwardButton = findViewById(R.id.forwardButton);
+        rewindButton = findViewById(R.id.rewindButton);
         bookProgress = findViewById(R.id.bookProgress);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
@@ -124,11 +129,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isPlaying) {
-                    pauseButton.setText("Pause");
+                    pauseButton.setBackgroundResource(R.drawable.ic_play_circle_outline_black_72dp);
                 }else{
-                    pauseButton.setText("Play");
+                    pauseButton.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_72dp);
                 }
                 isPlaying = !isPlaying;
+            }
+        });
+
+        rewindButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // decrease i by 10
+                wordCount -= 10;
+            }
+        });
+
+        forwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // increase i by 10
+                wordCount += 10;
             }
         });
 
@@ -137,6 +158,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //open the pick to select and import the file
                 openFile();
+            }
+        });
+
+        newsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open up a news feed and be able to select an article to play
             }
         });
 
@@ -200,43 +228,39 @@ public class MainActivity extends AppCompatActivity {
         // currently every 400 ms, the word switches.
 
         try (
-                InputStream is = new FileInputStream(downloadPath[0]);
-                InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
-                BufferedReader br = new BufferedReader(isr);
+            InputStream is = new FileInputStream(downloadPath[0]);
+            InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8"));
+            BufferedReader br = new BufferedReader(isr);
 
         ) {
             //readLine here will be an entire chapter
             line = br.readLine();
             final int len = line.split(" ").length;
             bookProgress.setMax(len);
-
+//            while ((line = br.readLine()) != null) {
                 final String[] wc = line.split(" ");
                 final android.os.Handler handler = new android.os.Handler();
                 handler.post(new Runnable() {
-
-                    int i = 0;
                     int percentage;
-
 
                     @Override
                     public void run() {
-                        wordTextView.setText(wc[i]);
-                        i++;
+                        if (wordCount > len)
+                            wordCount = len - 1;
+
+                        wordTextView.setText(wc[wordCount]);
+                        wordCount++;
                         bookProgress.setProgress(percentage);
-                        if (i == wc.length) {
+                        if (wordCount == wc.length) {
                             handler.removeCallbacks(this);
                             bookProgress.setProgress(len);
                         } else {
-                            if (isPlaying == true){
-                                bookProgress.setProgress(i);
+                            if (isPlaying == true) {
+                                bookProgress.setProgress(wordCount);
                                 handler.postDelayed(this, speed);
-
                             }
-
-
                         }
                     }
-
                 });
         } catch (FileNotFoundException e) {
             e.printStackTrace();

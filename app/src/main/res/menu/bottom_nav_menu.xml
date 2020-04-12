@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_library"
-        android:enabled="true"
+
         android:icon="@drawable/ic_launcher_background"
         android:title="Library"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_settings"
-        android:enabled="true"
+
         android:icon="@drawable/ic_launcher_background"
         android:title="Settings"
         app:showAsAction="ifRoom" />

@@ -60,6 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
                 if (darkMode.isChecked()) {
+                    //darkMode.setBackgroundResource(R.drawable.switchbuttonfalse);
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     editor.putBoolean("darkModeEnabled", true);
                     Intent intent = getIntent();
@@ -67,6 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
                     finish();
                     startActivity(intent);
                 } else {
+                   // darkMode.setBackgroundResource(R.drawable.switchbuttontrue);
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     editor.putBoolean("darkModeEnabled", false);
                     Intent intent = getIntent();

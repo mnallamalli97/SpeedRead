@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimaryDark"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,6 +14,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:background="@drawable/my_shape"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,15 +23,13 @@
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="411dp"
-        android:layout_height="37dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="29dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_weight="1"
         android:progress="250"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resultText" />
 
@@ -40,6 +40,7 @@
         android:gravity="center_vertical"
         android:text="TextView"
         android:textAlignment="textEnd"
+        android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,6 +55,7 @@
         android:gravity="center_vertical"
         android:text="20"
         android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
@@ -67,7 +69,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="32dp"
         android:text="bookPath"
-        android:textColor="@color/colorText"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,6 +80,7 @@
         android:gravity="center_vertical"
         android:text="TextView"
         android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
         android:textSize="55sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.489"
@@ -85,10 +88,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:weightSum="2"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
+        android:weightSum="2"
         app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,20 +104,29 @@
             android:id="@+id/libraryButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:background="#F3D5D5"
+            android:background="@drawable/my_shape"
             android:shadowRadius="10"
             android:text="Library"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary" />
 
         <Switch
             android:id="@+id/darkMode"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
             android:layout_weight="1"
+            android:background="@drawable/my_shape"
+            android:textAlignment="textStart"
             android:thumb="@drawable/thumb2"
-            android:track="@drawable/track1"
-            android:gravity="center_horizontal|center_vertical" />
-    </LinearLayout>
+            android:track="@drawable/track1" />
+
+
+        </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

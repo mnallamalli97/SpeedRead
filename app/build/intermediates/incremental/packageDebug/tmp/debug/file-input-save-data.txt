@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Fri Apr 10 17:46:45 PDT 2020
+#Sat Apr 11 01:46:18 PDT 2020
 0.baseType=DIRECTORY
 0.base=/Users/mnallamalli97/SpeedRead/app/build/intermediates/transforms/dexMerger/debug/0
 0.path=classes.dex
