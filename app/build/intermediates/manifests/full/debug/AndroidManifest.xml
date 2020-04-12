@@ -30,16 +30,7 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="com.example.mnallamalli97.speedread.LibraryActivity"
-            android:label="@string/app_name" >
-        </activity>
         <activity android:name="com.example.mnallamalli97.speedread.MainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.example.mnallamalli97.speedread.SettingsActivity"
@@ -48,6 +39,19 @@
         <activity
             android:name="com.example.mnallamalli97.speedread.news.NewsActivity"
             android:label="View the main stories of the day" >
+        </activity>
+        <activity
+            android:name="com.example.mnallamalli97.speedread.news.NewsDetailActivity"
+            android:label="Option to select how you want to read it" >
+        </activity>
+        <activity
+            android:name="com.example.mnallamalli97.speedread.LibraryActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <receiver

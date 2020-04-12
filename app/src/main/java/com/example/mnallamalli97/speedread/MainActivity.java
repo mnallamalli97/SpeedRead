@@ -134,10 +134,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if(mContent == null)
+//        if()
             runLibraryWords(bookPath, newSpeed);
-        else
-            runNewsWords(newSpeed);
+//        else
+//            runNewsWords(newSpeed);
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override

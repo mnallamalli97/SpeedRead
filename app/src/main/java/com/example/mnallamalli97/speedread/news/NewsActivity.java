@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.mnallamalli97.speedread.MainActivity;
 import com.example.mnallamalli97.speedread.R;
+import com.example.mnallamalli97.speedread.SettingsActivity;
 import com.example.mnallamalli97.speedread.api.ApiClient;
 import com.example.mnallamalli97.speedread.api.ApiInterface;
 import com.example.mnallamalli97.speedread.models.Article;
@@ -168,7 +169,7 @@ public class NewsActivity extends AppCompatActivity implements  SwipeRefreshLayo
             @Override
             public void onItemClick(View view, int position) {
                 ImageView imageView = view.findViewById(R.id.img);
-                Intent intent = new Intent(NewsActivity.this, MainActivity.class);
+                Intent intent = new Intent(NewsActivity.this, SettingsActivity.class);
 
                 Article article = articles.get(position);
                 intent.putExtra("url", article.getUrl());
@@ -185,9 +186,7 @@ public class NewsActivity extends AppCompatActivity implements  SwipeRefreshLayo
                         pair
                 );
 
-
-
-                    startActivityForResult(intent, 1214);
+                startActivityForResult(intent, 1214);
 
             }
         });

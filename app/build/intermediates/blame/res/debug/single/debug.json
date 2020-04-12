@@ -212,6 +212,10 @@
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/7b264aec625ae5ae36468156e52fb97f/res/drawable-xxhdpi-v4/design_ic_visibility_off.png"
     },
     {
+        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable_ic_settings_black_24dp.xml.flat",
+        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable/ic_settings_black_24dp.xml"
+    },
+    {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable_abc_ic_clear_material.xml.flat",
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/drawable/abc_ic_clear_material.xml"
     },
@@ -660,10 +664,6 @@
         "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"
     },
     {
-        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-xxxhdpi_icon_news.png.flat",
-        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable-xxxhdpi/icon_news.png"
-    },
-    {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/anim-v21_design_bottom_sheet_slide_out.xml.flat",
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/7b264aec625ae5ae36468156e52fb97f/res/anim-v21/design_bottom_sheet_slide_out.xml"
     },
@@ -948,6 +948,10 @@
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/drawable/abc_vector_test.xml"
     },
     {
+        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable_ic_cloud_upload_black_72dp.xml.flat",
+        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable/ic_cloud_upload_black_72dp.xml"
+    },
+    {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/layout_abc_dialog_title_material.xml.flat",
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/layout/abc_dialog_title_material.xml"
     },
@@ -994,6 +998,10 @@
     {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_abc_btn_check_to_on_mtrl_000.png.flat",
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/drawable-xhdpi-v4/abc_btn_check_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable_ic_library_books_black_24dp.xml.flat",
+        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable/ic_library_books_black_24dp.xml"
     },
     {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4_abc_btn_radio_to_on_mtrl_000.png.flat",
@@ -1104,6 +1112,10 @@
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/color/abc_hint_foreground_material_light.xml"
     },
     {
+        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable_ic_forward_10_black_48dp.xml.flat",
+        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable/ic_forward_10_black_48dp.xml"
+    },
+    {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-xxxhdpi_splash_icon.png.flat",
         "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable-xxxhdpi/splash_icon.png"
     },
@@ -1210,10 +1222,6 @@
     {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/anim_abc_fade_out.xml.flat",
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/anim/abc_fade_out.xml"
-    },
-    {
-        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-mdpi_icon_news.png.flat",
-        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable-mdpi/icon_news.png"
     },
     {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/color_abc_primary_text_disable_only_material_light.xml.flat",
@@ -1664,10 +1672,6 @@
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/layout/select_dialog_singlechoice_material.xml"
     },
     {
-        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-xhdpi_icon_news.png.flat",
-        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable-xhdpi/icon_news.png"
-    },
-    {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_abc_scrubber_control_to_pressed_mtrl_005.png.flat",
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/drawable-xhdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png"
     },
@@ -1756,10 +1760,6 @@
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/drawable-xxhdpi-v4/abc_menu_hardkey_panel_mtrl_mult.9.png"
     },
     {
-        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-xxhdpi_icon_news.png.flat",
-        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable-xxhdpi/icon_news.png"
-    },
-    {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-ldrtl-xxhdpi-v17_abc_spinner_mtrl_am_alpha.9.png.flat",
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/a8f2c73aea7a3bf54dc82462859d158f/res/drawable-ldrtl-xxhdpi-v17/abc_spinner_mtrl_am_alpha.9.png"
     },
@@ -1778,6 +1778,10 @@
     {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable-xxhdpi-v4_design_ic_visibility.png.flat",
         "source": "/Users/mnallamalli97/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/7b264aec625ae5ae36468156e52fb97f/res/drawable-xxhdpi-v4/design_ic_visibility.png"
+    },
+    {
+        "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/drawable_ic_replay_10_black_48dp.xml.flat",
+        "source": "/Users/mnallamalli97/SpeedRead/app/src/main/res/drawable/ic_replay_10_black_48dp.xml"
     },
     {
         "merged": "/Users/mnallamalli97/SpeedRead/app/build/intermediates/res/merged/debug/layout-v21_notification_action.xml.flat",
