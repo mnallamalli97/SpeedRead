@@ -1,7 +1,7 @@
 package com.example.mnallamalli97.speedread;
 
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
+
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">SpeedRead</string>
+    <string name="app_name">Speed Read</string>
+    <string name="library">Library Books</string>
 </resources>

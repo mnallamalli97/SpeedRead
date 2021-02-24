@@ -11,18 +11,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.OpenableColumns
-import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
+
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.mnallamalli97.speedread.R.drawable
 import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.example.mnallamalli97.speedread.news.NewsActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.BufferedReader
@@ -35,6 +36,7 @@ import java.lang.NullPointerException
 import java.nio.charset.Charset
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.jvm.Throws
 
 class MainActivity : AppCompatActivity() {
   private var pauseButton: Button? = null

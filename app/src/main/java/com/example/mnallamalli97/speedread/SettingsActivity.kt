@@ -3,13 +3,13 @@ package com.example.mnallamalli97.speedread
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
 import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.warkiz.widget.IndicatorSeekBar

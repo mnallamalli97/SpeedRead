@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import com.example.mnallamalli97.speedread.R.layout
+import com.example.mnallamalli97.speedread.news.NewsActivity
 
 class SplashScreen : Activity() {
   /** Duration of wait  */
@@ -17,7 +18,7 @@ class SplashScreen : Activity() {
 
     Handler()
         .postDelayed({
-          val mainIntent = Intent(this@SplashScreen, LibraryActivity::class.java)
+          val mainIntent = Intent(this@SplashScreen, NewsActivity::class.java)
           this@SplashScreen.startActivity(mainIntent)
           this.overridePendingTransition(0, 0);
           finish()
