@@ -177,7 +177,7 @@ public class NewsActivity extends AppCompatActivity implements  SwipeRefreshLayo
                 intent.putExtra("img",  article.getUrlToImage());
                 intent.putExtra("date",  article.getPublishedAt());
                 intent.putExtra("source",  article.getSource().getName());
-                intent.putExtra("author",  article.getAuthor());
+                intent.putExtra("author",  "Google News");
                 intent.putExtra("content",  article.getContent());
 
                 Pair<View, String> pair = Pair.create((View)imageView, ViewCompat.getTransitionName(imageView));

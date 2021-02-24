@@ -15,7 +15,17 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".SplashScreen"
+            android:label="Intro Splash screen to load all data">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".MainActivity" android:label="@string/app_name" >
 
         </activity>
 
@@ -36,12 +46,8 @@
 
 
 
-        <activity android:label="@string/app_name" android:name=".LibraryActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".LibraryActivity"
+            android:label="The place to pick out a book">
         </activity>
     </application>
 
