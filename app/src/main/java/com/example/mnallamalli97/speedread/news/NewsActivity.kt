@@ -1,7 +1,11 @@
 package com.example.mnallamalli97.speedread.news
 
+import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -18,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.example.mnallamalli97.speedread.LibraryActivity
+import com.example.mnallamalli97.speedread.MainActivity
+import com.example.mnallamalli97.speedread.MainActivity.Companion
 import com.example.mnallamalli97.speedread.R.color
 import com.example.mnallamalli97.speedread.R.drawable
 import com.example.mnallamalli97.speedread.R.id
@@ -27,7 +33,6 @@ import com.example.mnallamalli97.speedread.api.ApiClient
 import com.example.mnallamalli97.speedread.api.ApiInterface
 import com.example.mnallamalli97.speedread.models.Article
 import com.example.mnallamalli97.speedread.models.News
-import com.example.mnallamalli97.speedread.news.NewsActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
@@ -65,12 +70,63 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     errorTitle = findViewById(id.errorTitle)
     errorMessage = findViewById(id.errorMessage)
     btnRetry = findViewById(id.btnRetry)
-    val fab = findViewById<FloatingActionButton>(id.fab)
-    fab.setOnClickListener {
+    val libraryFAB = findViewById<FloatingActionButton>(id.libraryFAB)
+    val uploadFAB = findViewById<FloatingActionButton>(id.uploadFAB)
+
+
+
+    libraryFAB.setOnClickListener {
       val intent = Intent(this@NewsActivity, LibraryActivity::class.java)
       this@NewsActivity.startActivity(intent)
       this.overridePendingTransition(0,0)
     }
+
+    uploadFAB.setOnClickListener {
+      val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+      intent.addCategory(Intent.CATEGORY_OPENABLE)
+      intent.type = "text/plain"
+      intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+      startActivityForResult(intent, 1214)
+    }
+  }
+
+  override fun onActivityResult(
+    requestCode: Int,
+    resultCode: Int,
+    data: Intent?
+  ) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (requestCode == 1214 && resultCode == Activity.RESULT_OK) {
+      data?.data?.also { uri ->
+        val intent = Intent(this@NewsActivity, SettingsActivity::class.java)
+        intent.putExtra("title", getFileName(uri))
+        intent.putExtra("author", "User")
+        intent.putExtra("userUploadUri", uri.toString())
+        startActivity(intent)
+      }
+    }
+  }
+
+  fun getFileName(uri: Uri): String? {
+    var result: String? = null
+    if (uri.scheme == "content") {
+      val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
+      try {
+        if (cursor != null && cursor.moveToFirst()) {
+          result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+        }
+      } finally {
+        cursor!!.close()
+      }
+    }
+    if (result == null) {
+      result = uri.path
+      val cut = result.lastIndexOf('/')
+      if (cut != -1) {
+        result = result.substring(cut + 1)
+      }
+    }
+    return result
   }
 
   fun LoadJson(keyword: String) {
