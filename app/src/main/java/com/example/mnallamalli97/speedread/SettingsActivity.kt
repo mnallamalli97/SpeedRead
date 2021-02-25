@@ -24,6 +24,7 @@ class SettingsActivity : AppCompatActivity() {
   private var resultText: TextView? = null
   private var bookTitle: TextView? = null
   private var bookAuthor: TextView? = null
+  private var bookChapter: TextView? = null
   private var bookPath: TextView? = null
   private var darkMode: Switch? = null
   private var pref: SharedPreferences? = null
@@ -44,6 +45,7 @@ class SettingsActivity : AppCompatActivity() {
     resultText = findViewById(id.resultText)
     bookAuthor = findViewById(id.bookAuthor)
     bookTitle = findViewById(id.bookTitle)
+    bookChapter = findViewById(id.bookChapter)
     bookPath = findViewById(id.bookPath)
     darkMode = findViewById(id.darkMode)
 
@@ -80,6 +82,8 @@ class SettingsActivity : AppCompatActivity() {
     val author = extras.getString("author")
     val title = extras.getString("title")
     val path = extras.getString("book_path")
+    val bookChaptersNames = extras.getString("bookChaptersNames")
+    val bookChaptersPaths = extras.getString("bookChaptersPaths")
     val content = extras.getString("content")
     wordCount = extras.getInt("wordCount")
     seekBarValue = pref!!.getInt("speedreadSpeed", 250)
@@ -88,6 +92,7 @@ class SettingsActivity : AppCompatActivity() {
     bookTitle!!.setText(title)
     bookPath!!.setText(path)
     bookAuthor!!.setText(author)
+    bookChapter!!.setText(bookChaptersNames)
     resultText!!.text = seekBarValue.toString()
     seekBar!!.setProgress(seekBarValue.toFloat())
     seekBar!!.onSeekChangeListener = object : OnSeekChangeListener {
@@ -111,6 +116,8 @@ class SettingsActivity : AppCompatActivity() {
       extras.putString("title", title)
       extras.putString("author", author)
       extras.putString("book_path", path)
+      extras.putString("bookChaptersNames", bookChaptersNames)
+      extras.putString("bookChaptersPaths", bookChaptersPaths)
       extras.putBoolean("darkModeEnabled", result)
       extras.putString("content", content)
       extras.putInt("wordCount", wordCount)

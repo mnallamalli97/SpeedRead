@@ -42,11 +42,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </androidx.recyclerview.widget.RecyclerView>
-
             </LinearLayout>
-
         </androidx.core.widget.NestedScrollView>
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
@@ -61,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
             android:layout_margin="16dp"
-            android:src="@android:drawable/ic_media_play"
+            android:src="@drawable/ic_library_books_24px"
             app:layout_anchor="@id/uploadFAB"
             app:layout_anchorGravity="top" />
 
@@ -71,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:src="@android:drawable/ic_dialog_info" />
+            android:src="@android:drawable/stat_sys_upload_done" />
 
 
     </LinearLayout>
