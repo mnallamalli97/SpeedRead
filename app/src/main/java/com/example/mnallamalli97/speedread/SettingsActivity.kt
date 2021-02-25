@@ -123,6 +123,7 @@ class SettingsActivity : AppCompatActivity() {
       extras.putInt("wordCount", wordCount)
       extras.putString("userUploadUri", userUploadUri)
       startIntent.putExtras(extras)
+      finish()
       startActivity(startIntent)
     })
     libraryButton!!.setOnClickListener(OnClickListener {

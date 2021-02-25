@@ -1,50 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="381dp"
-    android:layout_height="508dp"
-    android:layout_margin="4dp"
-    android:layout_gravity="center">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+app:cardElevation="5dp"
+android:layout_margin="20dp"
+app:cardCornerRadius="12dp">
 
-    <ImageButton
+<RelativeLayout
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.flaviofaria.kenburnsview.KenBurnsView
         android:id="@+id/bookCoverImageButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
         android:onClick="bookCoverClick"
-        android:contentDescription="Book Cover"
-        android:scaleType="centerCrop"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:scaleType="centerCrop"/>
 
-    <LinearLayout
-        android:id="@+id/infoSection"
+    <View
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewTransparent"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:id="@+id/tourTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Title"
+        android:fontFamily="@font/brandon_medium"
+        android:textStyle="bold"
+        android:textSize="28dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@android:color/white"
+        android:layout_above="@+id/tourRating"
+        android:layout_marginStart="10dp"/>
+
+
+    <RatingBar
+        android:layout_margin="10dp"
+        android:id="@+id/tourRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rating="4"
+        android:layout_above="@+id/tourDescription"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:progressTint="@color/colorAccent"
+        style="@style/Widget.AppCompat.RatingBar.Small"/>
+
+    <TextView
+        android:id="@+id/tourDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Title text goes here"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/brandon_medium"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@android:color/white"
+        android:layout_margin="10dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        android:layout_marginStart="10dp"/>
 
-        <TextView
-            android:id="@+id/bookTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Title"
-            android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/author"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Author"
-            android:textSize="15sp" />
-    </LinearLayout>
+</RelativeLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
