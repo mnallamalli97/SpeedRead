@@ -305,7 +305,7 @@ class LibraryActivity : AppCompatActivity(),
   }
 
   class CenterZoomLayout : LinearLayoutManager {
-    private val mShrinkAmount = 0.15f;
+    private val mShrinkAmount = 0.0f;
     private val mShrinkDistance = 0.9f;
 
     constructor(context: Context) : super(context)

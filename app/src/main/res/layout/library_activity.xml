@@ -1,109 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-
-<TextView
-    android:id="@+id/textView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="28dp"
-    android:layout_marginTop="36dp"
-    android:layout_marginBottom="17dp"
-    android:fontFamily="@font/brandon_medium"
-    android:text="Discover"
-    android:textColor="@android:color/black"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/tourRV"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_editor_absoluteX="28dp"
-    app:layout_editor_absoluteY="36dp" />
-
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/tourRV"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_marginBottom="2dp"
-    app:layout_constraintBottom_toTopOf="@id/icons"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/textView"
-     />
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/icons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/discoveryTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/brandon_medium"
+                android:text="Discover"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tourRV"
+                android:layout_width="388dp"
+                android:layout_height="552dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/icons"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/discoveryTitle"
+                />
+
+            <LinearLayout
+                android:id="@+id/icons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                >
+
+                <ImageView
+                    android:id="@+id/item_btn_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:contentDescription="@string/library"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_library_books_24px"
+                    android:tint="@color/color_black"
+                    style="@style/ClickableImageView"
+                    />
+
+
+                <ImageView
+                    android:id="@+id/item_btn_news"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/library"
+                    android:src="@drawable/icon_news"
+                    />
+
+                <ImageView
+                    android:id="@+id/item_btn_upload"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/library"
+                    android:src="@drawable/ic_cloud_upload_black_72dp"
+                    />
+
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content"
+                    />
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content"
+                    />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/item_btn_buy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@android:drawable/presence_away"
+                    android:tint="@android:color/black"
+                    app:rippleColor="@color/color_blue"
+                    app:useCompatPadding="true"
+                    />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <TextView
+        android:id="@+id/top10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="28dp"
+        android:fontFamily="@font/brandon_medium"
+        android:text="Top 10"
+        android:textColor="@android:color/black"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        >
-
-        <ImageView
-            android:id="@+id/item_btn_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:contentDescription="@string/library"
-            android:padding="8dp"
-            android:src="@drawable/ic_library_books_24px"
-            android:tint="@color/color_black"
-            style="@style/ClickableImageView"
-            />
+        app:layout_constraintTop_toBottomOf="@id/icons"
+        />
 
 
-        <Space
-            android:layout_width="16dp"
-            android:layout_height="wrap_content"
-            />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/item_btn_buy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@android:drawable/presence_away"
-            android:tint="@android:color/black"
-            app:rippleColor="@color/color_blue"
-            app:useCompatPadding="true"
-            />
+</LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/item_btn_news"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/library"
-            android:src="@drawable/icon_news"
-            />
-
-        <ImageView
-            android:id="@+id/item_btn_upload"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/library"
-            android:src="@drawable/ic_cloud_upload_black_72dp"
-            />
-
-        <Space
-            android:layout_width="16dp"
-            android:layout_height="wrap_content"
-            />
-
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+</ScrollView>
 
 
 
