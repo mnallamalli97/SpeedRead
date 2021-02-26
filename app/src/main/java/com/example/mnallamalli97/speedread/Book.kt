@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 class Book {
+
   var title: String? = null
     private set
   var author: String? = null
@@ -62,5 +63,8 @@ class Book {
     fun get(context: Context): Book {
       return Book(context)
     }
+
+    const val FEATURED_LIST = "featured_list"
+    const val TOP_CHARTS_LIST = "top_charts_list"
   }
 }

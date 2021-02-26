@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/bookCover"
+        android:src="@drawable/ic_star_border_black_24dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
+
+    <TextView
+        android:id="@+id/bookTitle"
+        android:text="Android Name"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/bookCover"
+        android:layout_toEndOf="@+id/bookCover"/>
+
+    <TextView
+        android:id="@+id/bookAuthor"
+        android:text="Android Version"
+        android:textSize="14sp"
+        android:maxLines="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bookTitle"
+        android:layout_alignLeft="@+id/bookTitle"
+        android:layout_alignStart="@+id/bookTitle" />
+
+
+
+</RelativeLayout>
