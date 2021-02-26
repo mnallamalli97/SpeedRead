@@ -8,13 +8,11 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -83,21 +81,13 @@ class LibraryActivity : AppCompatActivity(),
     booksRecyclerView!!.adapter = featuredBooksAdapter
     nonScrollListView!!.adapter = topChartsListViewAdapter
 
-
-
-
-    bookCoverImageButton = findViewById(R.id.bookCoverImageButton)
-    rateItemButton = findViewById<ImageView>(id.item_btn_news)
-
-
-
     retrieve(featuredBooksAdapter, topChartsListViewAdapter)
 
-    findViewById<View>(id.item_btn_news).setOnClickListener(this)
-    findViewById<View>(id.item_btn_buy).setOnClickListener(this)
-    findViewById<View>(id.item_btn_upload).setOnClickListener(this)
-    findViewById<View>(id.item_btn_comment).setOnClickListener(this)
-    
+    findViewById<View>(id.discoveryPageNewsButton).setOnClickListener(this)
+    findViewById<View>(id.discoveryPageUpgradeButton).setOnClickListener(this)
+    findViewById<View>(id.discoveryPageUploadButton).setOnClickListener(this)
+    findViewById<View>(id.selectChapterButton).setOnClickListener(this)
+
     booksRecyclerView!!.addOnScrollListener(object : OnScrollListener() {
       override fun onScrollStateChanged(
         recyclerView: RecyclerView,
@@ -149,13 +139,13 @@ class LibraryActivity : AppCompatActivity(),
 
   override fun onClick(v: View) {
     when (v.id) {
-      id.item_btn_comment -> selectAndLoadChapter(v)
-      id.item_btn_buy -> bookCoverClick(v)
-      id.item_btn_news -> {
+      id.selectChapterButton -> selectAndLoadChapter(v)
+//      id.discoveryPageUpgradeButton -> bookCoverClick(v)
+      id.discoveryPageNewsButton -> {
         val startNewsIntent = Intent(this@LibraryActivity, NewsActivity::class.java)
         startActivity(startNewsIntent)
       }
-      id.item_btn_upload -> {
+      id.discoveryPageUploadButton -> {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "text/plain"

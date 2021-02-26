@@ -53,59 +53,60 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 >
+                <TableLayout
+                    android:id="@+id/discoveryPageButtonGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp">
 
-                <ImageView
-                    android:id="@+id/item_btn_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:contentDescription="@string/library"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_library_books_24px"
-                    android:tint="@color/color_black"
-                    style="@style/ClickableImageView"
-                    />
+                    <TableRow
+                        android:id="@+id/tableRow1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" >
 
+                        <Button
+                            android:id="@+id/selectChapterButton"
+                            android:layout_width="0dp"
+                            android:text="select Chapter"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1" />
 
-                <ImageView
-                    android:id="@+id/item_btn_news"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/library"
-                    android:src="@drawable/icon_news"
-                    />
+                        <Button
+                            android:id="@+id/discoveryPageUpgradeButton"
+                            android:layout_width="0dp"
+                            android:text="Upgrade to full"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1" />
+                    </TableRow>
 
-                <ImageView
-                    android:id="@+id/item_btn_upload"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/library"
-                    android:src="@drawable/ic_cloud_upload_black_72dp"
-                    />
+                    <TableRow
+                        android:id="@+id/tableRow2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" >
 
+                        <Button
+                            android:id="@+id/discoveryPageNewsButton"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:text="latest news"
+                            android:drawableLeft="@drawable/icon_news"
+                            android:layout_weight="1" />
 
-                <Space
-                    android:layout_width="16dp"
-                    android:layout_height="wrap_content"
-                    />
+                        <Button
+                            android:id="@+id/discoveryPageUploadButton"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:text="Device import"
+                            android:drawableLeft="@drawable/ic_cloud_upload_black_72dp"
+                            android:drawableTint="#ffffff"
+                            android:layout_weight="1" />
 
-                <Space
-                    android:layout_width="16dp"
-                    android:layout_height="wrap_content"
-                    />
+                    </TableRow>
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/item_btn_buy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@android:drawable/presence_away"
-                    android:tint="@android:color/black"
-                    app:rippleColor="@color/color_blue"
-                    app:useCompatPadding="true"
-                    />
+                </TableLayout>
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

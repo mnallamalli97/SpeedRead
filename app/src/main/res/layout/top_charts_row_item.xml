@@ -14,12 +14,9 @@
         android:id="@+id/bookTitle"
         android:text="Android Name"
         android:textSize="20sp"
-        android:layout_marginTop="8dp"
         android:maxLines="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/bookCover"
         android:layout_toEndOf="@+id/bookCover"/>
 
     <TextView
@@ -30,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bookTitle"
-        android:layout_alignLeft="@+id/bookTitle"
         android:layout_alignStart="@+id/bookTitle" />
 
 
