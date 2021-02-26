@@ -12,6 +12,7 @@
     <TextView android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:fontFamily="@font/montserrat_regular"
         android:text="Hello World, splash"
         android:textColor="@color/color_black"/>
 

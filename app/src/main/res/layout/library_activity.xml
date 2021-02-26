@@ -69,6 +69,7 @@
                         <Button
                             android:id="@+id/selectChapterButton"
                             android:layout_width="0dp"
+                            android:fontFamily="@font/montserrat_bold"
                             android:text="select Chapter"
                             android:layout_height="fill_parent"
                             android:layout_weight="1" />
@@ -77,6 +78,7 @@
                             android:id="@+id/discoveryPageUpgradeButton"
                             android:layout_width="0dp"
                             android:text="Upgrade to full"
+                            android:fontFamily="@font/montserrat_bold"
                             android:layout_height="fill_parent"
                             android:layout_weight="1" />
                     </TableRow>
@@ -91,6 +93,7 @@
                             android:id="@+id/discoveryPageNewsButton"
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
+                            android:fontFamily="@font/montserrat_bold"
                             android:text="latest news"
                             android:drawableLeft="@drawable/icon_news"
                             android:layout_weight="1" />
@@ -99,6 +102,7 @@
                             android:id="@+id/discoveryPageUploadButton"
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
+                            android:fontFamily="@font/montserrat_bold"
                             android:text="Device import"
                             android:drawableLeft="@drawable/ic_cloud_upload_black_72dp"
                             android:drawableTint="#ffffff"

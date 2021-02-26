@@ -6,24 +6,26 @@
 
     <ImageView
         android:id="@+id/bookCover"
-        android:src="@drawable/ic_star_border_black_24dp"
+        android:src="@android:drawable/stat_notify_error"
         android:layout_width="60dp"
         android:layout_height="60dp" />
 
     <TextView
         android:id="@+id/bookTitle"
-        android:text="Android Name"
+        android:text="Book Name"
         android:textSize="20sp"
         android:maxLines="1"
+        android:fontFamily="@font/montserrat_bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/bookCover"/>
 
     <TextView
         android:id="@+id/bookAuthor"
-        android:text="Android Version"
+        android:text="Book Author"
         android:textSize="14sp"
         android:maxLines="1"
+        android:fontFamily="@font/montserrat_bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bookTitle"

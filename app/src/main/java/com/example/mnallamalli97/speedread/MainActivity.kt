@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
     isDark = extras.getBoolean("darkModeEnabled")
     currentWordCount = extras.getInt("wordCount", 0)
     userUploadUri = extras.getString("userUploadUri", "USERUPLOADURI")
-    wordSpeedTextView!!.text = newSpeed.toString()
+    wordSpeedTextView!!.text = String.format(resources.getString(R.string.words_per_min_settings_page),  newSpeed.toString())
     bookTitleTextView!!.text = bookTitle.toString()
 
     if (isDark) {

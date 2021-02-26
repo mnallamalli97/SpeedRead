@@ -2,114 +2,67 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/backgroundColor"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    >
 
 
     <Button
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/montserrat_regular"
         android:background="@drawable/my_shape"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.warkiz.widget.IndicatorSeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:isb_max="600"
-        app:isb_min="150"
-        app:isb_progress="50"
-        app:isb_seek_smoothly="true"
-        app:isb_ticks_count="6"
-        app:isb_show_tick_marks_type="oval"
-        app:isb_tick_marks_size="13dp"
-        app:isb_tick_marks_drawable="@mipmap/ic_launcher"
-        app:isb_show_tick_texts="true"
-        app:isb_tick_texts_size="15sp"
-        app:isb_tick_texts_color="@color/color_blue"
-        app:isb_thumb_color="@color/color_green"
-        app:isb_thumb_size="20dp"
-        app:isb_show_indicator="rounded_rectangle"
-        app:isb_indicator_color="@color/color_gray"
-        app:isb_indicator_text_color="@color/color_black"
-        app:isb_indicator_text_size="18sp"
-        app:isb_track_background_color="@color/color_gray"
-        app:isb_track_background_size="2dp"
-        app:isb_track_progress_color="@color/color_blue"
-        app:isb_track_progress_size="4dp"
-        app:isb_only_thumb_draggable="false"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resultText"
         />
 
 
-    <TextView
-        android:id="@+id/bookAuthor"
-        android:layout_width="357dp"
-        android:layout_height="47dp"
-        android:gravity="center_vertical"
-        android:text="TextView"
-        android:textAlignment="textEnd"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bookTitle" />
-
-    <TextView
-        android:id="@+id/resultText"
-        android:layout_width="109dp"
-        android:layout_height="54dp"
-        android:gravity="center_vertical"
-        android:text="20"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bookAuthor" />
-
-    <TextView
-        android:id="@+id/bookPath"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/rickRollButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="32dp"
-        android:text="bookPath"
-        android:textColor="@color/colorPrimary"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/my_shape"
+        android:backgroundTint="@color/color_red"
+        android:fontFamily="@font/montserrat_regular"
+        android:padding="10dp"
+        android:text="DO NOT PRESS THIS BUTTON"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
-    <TextView
-        android:id="@+id/bookChapter"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/darkMode"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="65dp"
-        android:text="bookChapter"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:background="@drawable/my_shape"
+        android:text="Enable Dark Mode"
+        app:layout_constraintBottom_toTopOf="@+id/rickRollButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <TextView
         android:id="@+id/bookTitle"
-        android:layout_width="364dp"
+        android:layout_width="match_parent"
         android:layout_height="88dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
         android:autoSizeMaxTextSize="60sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeStepGranularity="2sp"
@@ -117,54 +70,129 @@
         android:gravity="center_vertical"
         android:text="TextView"
         android:textAlignment="center"
+        android:fontFamily="@font/montserrat_regular"
         android:textColor="@color/colorPrimary"
         android:textSize="55sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintBottom_toTopOf="@+id/bookAuthor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <TextView
+        android:id="@+id/bookAuthor"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        android:layout_height="47dp"
+        android:gravity="center_vertical"
+        android:text="TextView"
+        android:textAlignment="textEnd"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="15dp"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="@font/montserrat_regular"
+        android:textSize="20sp"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar">
-
-        <Button
-            android:id="@+id/libraryButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/my_shape"
-            android:shadowRadius="10"
-            android:text="Library"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary" />
-
-        <Switch
-            android:id="@+id/darkMode"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:background="@drawable/my_shape"
-            android:textAlignment="textStart"
-            android:thumb="@drawable/thumb2"
-            android:track="@drawable/track1" />
+        app:layout_constraintTop_toBottomOf="@+id/bookTitle"
+        />
 
 
-        </LinearLayout>
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:text="@string/words_per_min_settings_page"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bookAuthor"
+        />
+    <com.warkiz.widget.IndicatorSeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultText"
+        app:isb_indicator_color="@color/color_gray"
+        app:isb_indicator_text_color="@color/color_black"
+        android:fontFamily="@font/montserrat_regular"
+        app:isb_indicator_text_size="18sp"
+        app:isb_max="500"
+        app:isb_min="100"
+        app:isb_only_thumb_draggable="false"
+        app:isb_progress="50"
+        app:isb_ticks_count="5"
+        app:isb_seek_smoothly="true"
+        app:isb_show_indicator="rounded_rectangle"
+        app:isb_show_tick_marks_type="divider"
+        app:isb_tick_marks_color="@color/color_black"
+        app:isb_show_tick_texts="true"
+        app:isb_thumb_color="@color/color_black"
+        app:isb_thumb_size="15dp"
+        app:isb_tick_marks_size="13dp"
+        app:isb_tick_texts_color="@color/color_black"
+        app:isb_tick_texts_size="15sp"
+        app:isb_track_rounded_corners="true"
+        app:isb_track_background_size="2dp"
+        app:isb_track_progress_size="4dp"
+        />
+
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/linearLayout"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_marginBottom="10dp"-->
+    <!--        android:layout_marginTop="10dp"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:weightSum="2"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/saveButton"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/seekBar">-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/libraryButton"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_marginEnd="2dp"-->
+    <!--            android:layout_marginStart="8dp"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:background="@drawable/my_shape"-->
+    <!--            android:shadowRadius="10"-->
+    <!--            android:text="Library"-->
+    <!--            android:textAlignment="center"-->
+    <!--            android:textColor="@color/colorPrimary" />-->
+
+    <!--        <Switch-->
+    <!--            android:id="@+id/darkMode"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_marginEnd="8dp"-->
+    <!--            android:layout_marginStart="4dp"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:background="@drawable/my_shape"-->
+    <!--            android:textAlignment="textStart"-->
+    <!--            android:thumb="@drawable/thumb2"-->
+    <!--            android:track="@drawable/track1" />-->
+    <!--        -->
+    <!--        </LinearLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
