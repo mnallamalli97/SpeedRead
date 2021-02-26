@@ -125,13 +125,14 @@
         app:layout_constraintTop_toBottomOf="@id/icons"
         />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/topSellersRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"
-        app:layoutManager="LinearLayoutManager"
-         />
+        <com.example.mnallamalli97.speedread.NonScrollListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.example.mnallamalli97.speedread.NonScrollListView>
+
+
 
 
     </LinearLayout>

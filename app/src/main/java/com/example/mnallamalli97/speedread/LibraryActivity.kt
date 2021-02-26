@@ -8,12 +8,17 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
@@ -38,10 +43,13 @@ class LibraryActivity : AppCompatActivity(),
     OnClickListener {
   private val libraryList = ArrayList<Book>()
   private var book: Book? = null
+  private var listView: ListView? = null
+
+  private var bookCoverImageButton: ImageButton? = null
+  private var rateItemButton: ImageView? = null
   private var booksRecyclerView: RecyclerView? = null
-  private var topChartsAdapter: TopChartsAdapter = TopChartsAdapter(libraryList)
-  private var featuredBooksAdapter: CustomBookAdapter = CustomBookAdapter(libraryList)
-  private var topChartsRecyclerView: RecyclerView? = null
+  private var topChartsListView: ListView? = null
+  private var nonScrollListView: NonScrollListView? = null
   private var currentBookPosition: Int = 0
 
   // SETUP FIREBASE
@@ -54,7 +62,8 @@ class LibraryActivity : AppCompatActivity(),
     setContentView(layout.library_activity)
     val layoutManager = CenterZoomLayout( this)
     booksRecyclerView = findViewById<RecyclerView>(R.id.tourRV)
-    topChartsRecyclerView = findViewById(R.id.topSellersRecyclerView)
+    nonScrollListView = findViewById(R.id.listView)
+
 
 
     layoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -64,21 +73,31 @@ class LibraryActivity : AppCompatActivity(),
     // To Auto Centre View
     val snapHelper = LinearSnapHelper()
     snapHelper.attachToRecyclerView(booksRecyclerView)
+    booksRecyclerView!!.isNestedScrollingEnabled = false
 
     book = Book?.get(applicationContext)
 
-
+    //Arraylist to recyclerview
+    val featuredBooksAdapter = CustomBookAdapter(libraryList)
+    val topChartsListViewAdapter = TopChartsListViewAdapter(this, libraryList)
     booksRecyclerView!!.adapter = featuredBooksAdapter
-    topChartsRecyclerView!!.adapter = topChartsAdapter
+    nonScrollListView!!.adapter = topChartsListViewAdapter
 
 
-    retrieve(featuredBooksAdapter, topChartsAdapter)
+
+
+    bookCoverImageButton = findViewById(R.id.bookCoverImageButton)
+    rateItemButton = findViewById<ImageView>(id.item_btn_news)
+
+
+
+    retrieve(featuredBooksAdapter, topChartsListViewAdapter)
 
     findViewById<View>(id.item_btn_news).setOnClickListener(this)
     findViewById<View>(id.item_btn_buy).setOnClickListener(this)
     findViewById<View>(id.item_btn_upload).setOnClickListener(this)
     findViewById<View>(id.item_btn_comment).setOnClickListener(this)
-
+    
     booksRecyclerView!!.addOnScrollListener(object : OnScrollListener() {
       override fun onScrollStateChanged(
         recyclerView: RecyclerView,
@@ -163,7 +182,7 @@ class LibraryActivity : AppCompatActivity(),
     }
   }
 
-  private fun retrieve(adapter: CustomBookAdapter, topChartsAdapter: TopChartsAdapter) {
+  private fun retrieve(adapter: CustomBookAdapter, topChartsListViewAdapter: TopChartsListViewAdapter) {
     databaseReference = FirebaseDatabase.getInstance()
         .getReference("speedread")
         .child("books")
@@ -184,8 +203,8 @@ class LibraryActivity : AppCompatActivity(),
           val bookPath = book?.bookPath
           libraryList.add(Book(id, title, author, bookChaptersNames, bookChaptersPaths, cover, bookPath))
         }
-        topChartsAdapter!!.notifyDataSetChanged()
         adapter!!.notifyDataSetChanged()
+        topChartsListViewAdapter!!.notifyDataSetChanged()
       }
 
       override fun onCancelled(databaseError: DatabaseError) {
@@ -206,7 +225,12 @@ class LibraryActivity : AppCompatActivity(),
     }
 
     popupMenu.setOnMenuItemClickListener { item ->
+
+
+
       val chapterPath = libraryList[currentBookPosition].bookChaptersPaths?.get(item.itemId)
+
+
       val intent = Intent(this@LibraryActivity, SettingsActivity::class.java)
 
 
@@ -252,21 +276,34 @@ class LibraryActivity : AppCompatActivity(),
      * (custom ViewHolder).
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+//      val title: TextView
+//      val author: TextView
       val cover: ImageView
 
       init {
+        // Define click listener for the ViewHolder's View.
+//        title = view.findViewById<View>(id.bookTitle) as TextView
+//        author = view.findViewById<View>(id.author) as TextView
         cover = view.findViewById<View>(id.bookCoverImageButton) as ImageView
       }
     }
 
+    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+      // Create a new view, which defines the UI of the list item
       val view = LayoutInflater.from(viewGroup.context)
           .inflate(R.layout.book_layout, viewGroup, false)
 
       return ViewHolder(view)
     }
 
+    // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+
+//      // set title and author attributes
+//      viewHolder.title.text = "Title: " + dataSet[position].title.toString()
+//      viewHolder.author.text = "Author: " + dataSet[position].author.toString()
+
       val url = dataSet[position].bookCover
       Glide.with(viewHolder.itemView.context)
           .load(url)
@@ -274,6 +311,7 @@ class LibraryActivity : AppCompatActivity(),
           .into(viewHolder.cover)
     }
 
+    // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
   }
 
@@ -319,43 +357,37 @@ class LibraryActivity : AppCompatActivity(),
     }
   }
 
-
-  class TopChartsAdapter(private val list: List<Book>) :
-      RecyclerView.Adapter<TopChartsAdapter.ViewHolder>() {
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-      val bookCover: ImageView
-      val bookTitle: TextView
-      val bookAuthor: TextView
-
-
-      init {
-        bookCover = itemView.findViewById(R.id.bookCover)
-        bookTitle = itemView.findViewById(R.id.bookTitle)
-        bookAuthor = itemView.findViewById(R.id.bookAuthor)
-      }
+  //Class MyAdapter
+  open class TopChartsListViewAdapter(private val context: Context, private val arrayList: ArrayList<Book>) : BaseAdapter() {
+    private lateinit var bookCover: ImageView
+    private lateinit var bookTitle: TextView
+    private lateinit var bookAuthor: TextView
+    override fun getCount(): Int {
+      return arrayList.size
     }
-
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-      val view = LayoutInflater.from(viewGroup.context)
-          .inflate(R.layout.top_charts_row_item, viewGroup, false)
-
-      return ViewHolder(view)
+    override fun getItem(position: Int): Any {
+      return position
     }
+    override fun getItemId(position: Int): Long {
+      return position.toLong()
+    }
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+      var convertView = convertView
+      convertView = LayoutInflater.from(context).inflate(R.layout.top_charts_row_item, parent, false)
+      bookCover = convertView.findViewById(R.id.bookCover)
+      bookTitle = convertView.findViewById(R.id.bookTitle)
+      bookAuthor = convertView.findViewById(R.id.bookAuthor)
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-      viewHolder.bookTitle.text = list[position].title
-      viewHolder.bookAuthor.text = list[position].author
 
-      val url = list[position].bookCover
-      Glide.with(viewHolder.itemView.context)
+      val url = arrayList[position].bookCover
+      Glide.with(convertView.context)
           .load(url)
           .error(R.drawable.ic_library_books_24px)
-          .into(viewHolder.bookCover)
+          .into(bookCover)
 
+      bookTitle.text = " " + arrayList[position].title
+      bookAuthor.text = arrayList[position].author
+      return convertView
     }
-    override fun getItemCount() = list.size
   }
-
-
 }
