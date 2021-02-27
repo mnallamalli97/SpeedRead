@@ -1,20 +1,36 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
-        applicationId "com.example.mnallamalli97.speedread"
+        applicationId "com.mnallamalli97.speedread"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -23,8 +39,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.firebase:firebase-database:11.8.0'
-    implementation 'com.google.firebase:firebase-storage:11.8.0'
+    implementation 'com.google.firebase:firebase-database:19.6.0'
+    implementation 'com.google.firebase:firebase-storage:19.2.1'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -34,7 +50,12 @@ dependencies {
     implementation 'com.github.Spikeysanju:ZoomRecylerLayout:1.0'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.yarolegovich:discrete-scrollview:1.5.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.0'
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
+    implementation 'com.beardedhen:androidbootstrap:2.3.2'
+    def billing_version = "3.0.0"
 
+    implementation "com.android.billingclient:billing-ktx:$billing_version"
 
 
 

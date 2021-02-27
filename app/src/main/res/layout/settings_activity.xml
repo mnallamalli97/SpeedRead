@@ -7,6 +7,18 @@
     android:background="@color/backgroundColor"
     >
 
+    <ProgressBar
+        android:id="@+id/settingsProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+    </ProgressBar>
 
     <Button
         android:id="@+id/saveButton"
@@ -25,13 +37,14 @@
 
 
     <Button
-        android:id="@+id/rickRollButton"
+        android:id="@+id/showAdButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:background="@drawable/my_shape"
+        android:enabled="false"
         android:backgroundTint="@color/color_red"
         android:fontFamily="@font/montserrat_regular"
         android:padding="10dp"
@@ -52,7 +65,7 @@
         android:fontFamily="@font/montserrat_regular"
         android:background="@drawable/my_shape"
         android:text="Enable Dark Mode"
-        app:layout_constraintBottom_toTopOf="@+id/rickRollButton"
+        app:layout_constraintBottom_toTopOf="@+id/showAdButton"
         app:layout_constraintEnd_toEndOf="parent"
         />
 
@@ -152,8 +165,6 @@
         app:isb_track_background_size="2dp"
         app:isb_track_progress_size="4dp"
         />
-
-
     <!--    <LinearLayout-->
     <!--        android:id="@+id/linearLayout"-->
     <!--        android:layout_width="match_parent"-->

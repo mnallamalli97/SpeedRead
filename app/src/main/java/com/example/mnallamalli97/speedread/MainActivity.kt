@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     bookProgress = findViewById(id.bookProgress)
     pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
     editor = pref!!.edit()
-    val extras = intent.extras
+    val extras = intent.extras!!
     newSpeed = pref!!.getInt("speedreadSpeed", 250)
     bookTitle = extras.getString("title", "BOOKTITLE")
     bookAuthor = extras.getString("author", "BOOKAUTHOR")
@@ -317,7 +317,7 @@ class MainActivity : AppCompatActivity() {
 
     try {
       var line: String
-      InputStreamReader(contentResolver.openInputStream(uri))
+      InputStreamReader(contentResolver.openInputStream(uri!!))
           .use { isr ->
             BufferedReader(isr)
                 .use { br ->
@@ -365,9 +365,9 @@ class MainActivity : AppCompatActivity() {
     }
     if (result == null) {
       result = uri.path
-      val cut = result.lastIndexOf('/')
+      val cut = result!!.lastIndexOf('/')
       if (cut != -1) {
-        result = result.substring(cut + 1)
+        result = result!!.substring(cut + 1)
       }
     }
     return result

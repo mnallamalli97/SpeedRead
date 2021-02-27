@@ -6,13 +6,15 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -22,8 +24,6 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.example.mnallamalli97.speedread.LibraryActivity
-import com.example.mnallamalli97.speedread.MainActivity
-import com.example.mnallamalli97.speedread.MainActivity.Companion
 import com.example.mnallamalli97.speedread.R.color
 import com.example.mnallamalli97.speedread.R.drawable
 import com.example.mnallamalli97.speedread.R.id
@@ -52,6 +52,7 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
   private var errorTitle: TextView? = null
   private var errorMessage: TextView? = null
   private var btnRetry: Button? = null
+  private var newsUpgradeButton: Button? = null
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(layout.news_activity)
@@ -69,11 +70,11 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     errorImage = findViewById(id.errorImage)
     errorTitle = findViewById(id.errorTitle)
     errorMessage = findViewById(id.errorMessage)
+    newsUpgradeButton = findViewById(id.newsUpgradeButton)
     btnRetry = findViewById(id.btnRetry)
     val libraryFAB = findViewById<FloatingActionButton>(id.libraryFAB)
     val uploadFAB = findViewById<FloatingActionButton>(id.uploadFAB)
-
-
+    newsUpgradeButton!!.visibility = View.VISIBLE
 
     libraryFAB.setOnClickListener {
       val intent = Intent(this@NewsActivity, LibraryActivity::class.java)
@@ -87,6 +88,33 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
       intent.type = "text/plain"
       intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
       startActivityForResult(intent, 1214)
+    }
+
+    newsUpgradeButton!!.setOnTouchListener(object : OnTouchListener {
+      override fun onTouch(
+        v: View?,
+        event: MotionEvent
+      ): Boolean {
+        val DRAWABLE_LEFT = 0
+        val DRAWABLE_TOP = 1
+        val DRAWABLE_RIGHT = 2
+        val DRAWABLE_BOTTOM = 3
+        if (event.getAction() === MotionEvent.ACTION_DOWN) {
+          if (event.getRawX() >= newsUpgradeButton!!.getRight() - newsUpgradeButton!!.getCompoundDrawables()
+                  .get(DRAWABLE_RIGHT)
+                  .getBounds()
+                  .width()
+          ) {
+            newsUpgradeButton!!.visibility = View.GONE
+            return true
+          }
+        }
+        return false
+      }
+    })
+
+    newsUpgradeButton!!.setOnClickListener {
+      // upgrade to full version
     }
   }
 
@@ -121,9 +149,9 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     }
     if (result == null) {
       result = uri.path
-      val cut = result.lastIndexOf('/')
+      val cut = result!!.lastIndexOf('/')
       if (cut != -1) {
-        result = result.substring(cut + 1)
+        result = result!!.substring(cut + 1)
       }
     }
     return result
@@ -156,6 +184,7 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
             articles.clear()
           }
           articles = response.body()!!.article
+
           adapter = Adapter(articles, this@NewsActivity)
           recyclerView!!.adapter = adapter
           adapter!!.notifyDataSetChanged()
@@ -220,48 +249,9 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
         Pair.create(
             imageView as View, ViewCompat.getTransitionName(imageView)
         )
-      val optionsCompat =
-        ActivityOptionsCompat.makeSceneTransitionAnimation(
-            this@NewsActivity,
-            pair
-        )
       startActivityForResult(intent, 1214)
     }
   }
-
-  //    @Override
-  //    public boolean onCreateOptionsMenu(Menu menu) {
-  //
-  //        MenuInflater inflater = getMenuInflater();
-  //        inflater.inflate(R.menu.menu_main, menu);
-  //        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-  //        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-  //        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-  //
-  //        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-  //        searchView.setQueryHint("Search Latest News...");
-  //        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-  //            @Override
-  //            public boolean onQueryTextSubmit(String query) {
-  //                if (query.length() > 2){
-  //                    onLoadingSwipeRefresh(query);
-  //                }
-  //                else {
-  //                    Toast.makeText(NewsActivity.this, "Type more than two letters!", Toast.LENGTH_SHORT).show();
-  //                }
-  //                return false;
-  //            }
-  //
-  //            @Override
-  //            public boolean onQueryTextChange(String newText) {
-  //                return false;
-  //            }
-  //        });
-  //
-  //        searchMenuItem.getIcon().setVisible(false, false);
-  //
-  //        return true;
-  //    }
   override fun onRefresh() {
     LoadJson("")
   }
@@ -288,3 +278,104 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     const val API_KEY = "6c5a6f37e8dc4f6194dce74bf821d4b7"
   }
 }
+
+
+
+
+
+/*
+This code is used to fetch the urls of the top 100 news articles
+Use the second request builder to to call each of those requests to get the content of those articles
+ */
+
+
+// https://rapidapi.com/newscatcher-api-newscatcher-api-default/api/newscatcher?endpoint=apiendpoint_afd4bf15-9861-4285-b122-95d6df0de330
+//private var json: JSONObject? = null
+//
+//private var sample: TextView? = null
+//
+//
+//    // call send message here
+//
+//    val client = OkHttpClient()
+//
+//    val getTop100Articles = Request.Builder()
+//        .url("https://newscatcher.p.rapidapi.com/v1/latest_headlines?lang=en&media=True")
+//        .get()
+//        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
+//        .addHeader("x-rapidapi-host", "newscatcher.p.rapidapi.com")
+//        .build()
+//
+//    client.newCall(getTop100Articles).enqueue(object : Callback {
+//      override fun onFailure(
+//        call: Call,
+//        e: IOException
+//      ) {
+//        TODO("Not yet implemented")
+//      }
+//
+//      override fun onResponse(
+//        call: Call,
+//        response: Response
+//      ) {
+//        response.use {
+//          if (!response.isSuccessful) throw IOException("Unexpected code $response")
+//          else {
+//            val resStr = response.body!!.string()
+//            json = JSONObject(resStr)
+//            val keys: Iterator<String> = json!!.keys()
+//
+//            val content = json!!.getString("link")
+//
+//            for (i in 0 until articles.length()) {
+//              val item = persons.getJSONObject(i)
+//
+//              // Your code here
+//            }
+//
+//          }
+//        }
+//      }
+//
+//    })
+//
+
+//
+//    https://rapidapi.com/newscatcher-api-newscatcher-api-default/api/news-parser1?endpoint=apiendpoint_627103d7-92e1-4109-8d92-3a77b63302da
+//
+//    val request = Request.Builder()
+//        .url("https://news-parser1.p.rapidapi.com/article_v1?url=https%3A%2F%2Fwww.phillyvoice.com%2Fsatisfaction-bariatric-surgery-often-decreases-over-time-new-study-finds")
+//        .get()
+//        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
+//        .addHeader("x-rapidapi-host", "news-parser1.p.rapidapi.com")
+//        .build()
+//
+//
+//    client.newCall(request).enqueue(object : Callback {
+//      override fun onFailure(
+//        call: Call,
+//        e: IOException
+//      ) {
+//        TODO("Not yet implemented")
+//      }
+//
+//      override fun onResponse(
+//        call: Call,
+//        response: Response
+//      ) {
+//        response.use {
+//          if (!response.isSuccessful) throw IOException("Unexpected code $response")
+//          else {
+//            val resStr = response.body!!.string()
+//            json = JSONObject(resStr)
+//
+//            val content = json!!.getString("content_1")
+//            println(content)
+//
+//          }
+//        }
+//      }
+//
+//    })
+
+//

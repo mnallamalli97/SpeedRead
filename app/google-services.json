@@ -41,6 +41,36 @@
             }
           ]
         }
+      },
+      "admob_app_id": "ca-app-pub-5670228311791173~9340135910"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425239303758:android:9fb2119b52c0f8aae2d51f",
+        "android_client_info": {
+          "package_name": "com.mnallamalli97.speedread"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425239303758-gd3mt40vna2oeq7mb36v5o3ualghmc6q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEU7oCWpjYchLkA1qRSrhpOYKMwtDB934"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425239303758-gd3mt40vna2oeq7mb36v5o3ualghmc6q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
       }
     }
   ],

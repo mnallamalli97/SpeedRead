@@ -54,7 +54,6 @@
                     android:layout_alignParentBottom="true"
                     android:src="@drawable/bottom_shadow"
                     android:id="@+id/img2"
-                    android:layout_alignBottom="@id/img"
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="80dp" />
