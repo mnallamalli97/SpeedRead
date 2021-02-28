@@ -124,7 +124,7 @@ class LibraryActivity : AppCompatActivity(),
     val intent = if (book.title == "Google News") {
       Intent(this@LibraryActivity, NewsActivity::class.java)
     } else {
-      Intent(this@LibraryActivity, SettingsActivity::class.java)
+      Intent(this@LibraryActivity, CheckoutActivity::class.java)
     }
 
     intent.putExtra("title", book.title)
@@ -266,14 +266,9 @@ class LibraryActivity : AppCompatActivity(),
      * (custom ViewHolder).
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//      val title: TextView
-//      val author: TextView
       val cover: ImageView
 
       init {
-        // Define click listener for the ViewHolder's View.
-//        title = view.findViewById<View>(id.bookTitle) as TextView
-//        author = view.findViewById<View>(id.author) as TextView
         cover = view.findViewById<View>(id.bookCoverImageButton) as ImageView
       }
     }

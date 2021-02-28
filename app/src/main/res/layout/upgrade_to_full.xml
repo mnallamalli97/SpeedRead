@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    >
+
+    <ImageButton
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:src="@drawable/ic_forbidden_mark"
+        />
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:text="Upgrade to Pro"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        />
+
+    <TextView
+        android:id="@+id/feature_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginBottom="15dp"
+        android:text="Full length news articles"
+        android:fontFamily="@font/montserrat_regular"
+        />
+
+    <TextView
+        android:id="@+id/feature_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginBottom="15dp"
+        android:text="No more ads"
+        android:fontFamily="@font/montserrat_regular"
+        />
+
+    <TextView
+        android:id="@+id/feature_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginBottom="15dp"
+        android:text="Upload from your device"
+        android:fontFamily="@font/montserrat_regular"
+        />
+
+    <TextView
+        android:id="@+id/feature_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginBottom="15dp"
+        android:text="Discover new books"
+        android:fontFamily="@font/montserrat_regular"
+        />
+
+
+    <Button
+        android:id="@+id/upgrade_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:background="@drawable/my_shape"
+        android:text="Upgrade"
+        />
+</LinearLayout>

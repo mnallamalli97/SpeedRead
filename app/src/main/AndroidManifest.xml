@@ -49,10 +49,20 @@
             android:label="The place to pick out a book">
         </activity>
 
+        <activity
+            android:name=".CheckoutActivity"
+            android:label="The place to buy the books you want to read">
+        </activity>
+
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5670228311791173~9340135910"/>
+
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
     </application>
 
 </manifest>

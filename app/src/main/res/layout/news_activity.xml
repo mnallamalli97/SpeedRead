@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimaryDark"
-    >
-
-    <Button
-        android:id="@+id/newsUpgradeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingEnd="10dp"
-        android:paddingTop="35dp"
-        android:paddingBottom="35dp"
-        android:layout_margin="5dp"
-        android:drawableRight="@drawable/ic_forbidden_mark"
-        android:background="@drawable/my_shape"
-        app:layout_anchor="@id/swipe_refresh_layout"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="upgrade to pro">
-    </Button>
+    android:background="@color/colorPrimaryDark">
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -38,6 +23,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+
+                <Button
+                    android:id="@+id/newsUpgradeButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="35dp"
+                    android:paddingBottom="35dp"
+                    android:layout_margin="5dp"
+                    android:drawableRight="@drawable/ic_forbidden_mark"
+                    android:background="@drawable/my_shape"
+                    app:layout_anchor="@id/swipe_refresh_layout"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="upgrade to pro">
+                </Button>
 
 
                 <TextView

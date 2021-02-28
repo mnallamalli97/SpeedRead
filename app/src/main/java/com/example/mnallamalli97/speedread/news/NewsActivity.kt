@@ -1,6 +1,7 @@
 package com.example.mnallamalli97.speedread.news
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.database.Cursor
@@ -10,13 +11,17 @@ import android.provider.OpenableColumns
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import android.view.Window
+import android.view.WindowManager
+import android.view.WindowManager.LayoutParams
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.util.Pair
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -26,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.example.mnallamalli97.speedread.LibraryActivity
+import com.example.mnallamalli97.speedread.R
 import com.example.mnallamalli97.speedread.R.color
 import com.example.mnallamalli97.speedread.R.drawable
 import com.example.mnallamalli97.speedread.R.id
@@ -49,6 +55,7 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
   private val TAG = NewsActivity::class.java.simpleName
   private var topHeadline: TextView? = null
   private var swipeRefreshLayout: SwipeRefreshLayout? = null
+  private var newsActivityRootView: CoordinatorLayout? = null
   private var errorLayout: RelativeLayout? = null
   private var errorImage: ImageView? = null
   private var errorTitle: TextView? = null
@@ -75,6 +82,7 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     swipeRefreshLayout!!.setColorSchemeResources(color.colorPrimaryDark)
     topHeadline = findViewById(id.topheadelines)
     recyclerView = findViewById(id.recyclerView)
+    newsActivityRootView = findViewById(R.id.newsLayout)
     layoutManager = LinearLayoutManager(this@NewsActivity)
     recyclerView!!.setLayoutManager(layoutManager)
     recyclerView!!.setItemAnimator(DefaultItemAnimator())
@@ -109,14 +117,10 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
         v: View?,
         event: MotionEvent
       ): Boolean {
-        val DRAWABLE_LEFT = 0
-        val DRAWABLE_TOP = 1
         val DRAWABLE_RIGHT = 2
-        val DRAWABLE_BOTTOM = 3
-        if (event.getAction() === MotionEvent.ACTION_DOWN) {
-          if (event.getRawX() >= newsUpgradeButton!!.getRight() - newsUpgradeButton!!.getCompoundDrawables()
-                  .get(DRAWABLE_RIGHT)
-                  .getBounds()
+        if (event.action === MotionEvent.ACTION_DOWN) {
+          if (event.rawX >= newsUpgradeButton!!.right - newsUpgradeButton!!.compoundDrawables[DRAWABLE_RIGHT]
+                  .bounds
                   .width()
           ) {
             newsUpgradeButton!!.visibility = View.GONE
@@ -128,8 +132,31 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     })
 
     newsUpgradeButton!!.setOnClickListener {
-      // upgrade to full version
+      showDialog()
     }
+
+  }
+
+  private fun showDialog() {
+    val dialog = Dialog(this@NewsActivity)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.upgrade_to_full)
+    val closeButton = dialog.findViewById(R.id.close_button) as ImageButton
+    val upgradeButton = dialog.findViewById(R.id.upgrade_button) as Button
+    closeButton.setOnClickListener {
+      dialog.dismiss()
+    }
+    upgradeButton.setOnClickListener { }
+    dialog.show()
+
+    val layoutParams: WindowManager.LayoutParams = LayoutParams()
+    layoutParams.copyFrom(
+        dialog.window!!.attributes
+    )
+    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+    layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+    dialog.window!!.attributes = layoutParams
   }
 
   override fun onActivityResult(

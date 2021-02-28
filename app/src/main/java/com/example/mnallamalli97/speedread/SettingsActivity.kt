@@ -62,11 +62,6 @@ class SettingsActivity : AppCompatActivity() {
     editor = pref!!.edit()
     val isDarkModeOn = pref!!.getBoolean("isDarkModeOn", false)
 
-//    if (!isDarkModeOn) {
-//      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//    } else {
-//      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//    }
 
     val author = extras.getString("author")
     val title = extras.getString("title")
@@ -102,6 +97,13 @@ class SettingsActivity : AppCompatActivity() {
       it[3] = resources.getColor(R.color.color_red, null)
       true //true if apply color , otherwise no change
     }
+
+    if (isDarkModeOn) {
+      darkModeButton!!.text = "DISABLE DARK MODE"
+    } else {
+      darkModeButton!!.text = "ENABLE DARK MODE"
+    }
+
 
     darkModeButton!!.setOnClickListener {
 
