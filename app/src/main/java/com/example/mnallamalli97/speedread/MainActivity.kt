@@ -53,9 +53,9 @@ class MainActivity : AppCompatActivity() {
   private var bookAuthor: String? = null
   private var bookPath: String? = null
   private var bookContent: String? = null
-  private var isDark = false
   private var currentWordCount = 0
   private var totalWordCount = 0
+  private var isDarkModeOn = false
   private var pref: SharedPreferences? = null
   private var editor: SharedPreferences.Editor? = null
   private var userUploadUri: String? = null
@@ -69,11 +69,18 @@ class MainActivity : AppCompatActivity() {
   var storageReference: StorageReference? = null
   var ref: StorageReference? = null
   override fun onCreate(savedInstanceState: Bundle?) {
+    pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
+    editor = pref!!.edit()
+    isDarkModeOn = pref!!.getBoolean("isDarkModeOn", false)
+    if (isDarkModeOn) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    }
+    else {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+    }
     super.onCreate(savedInstanceState)
     setContentView(layout.activity_main)
 
-    // set default to light mode
-    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     wordTextView = findViewById(id.mainWord)
     wordSpeedTextView = findViewById(id.wordSpeed)
     bookTitleTextView = findViewById(id.bookTitle)
@@ -83,25 +90,18 @@ class MainActivity : AppCompatActivity() {
     forwardButton = findViewById(id.forwardButton)
     rewindButton = findViewById(id.rewindButton)
     bookProgress = findViewById(id.bookProgress)
-    pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
-    editor = pref!!.edit()
+
     val extras = intent.extras!!
     newSpeed = pref!!.getInt("speedreadSpeed", 250)
     bookTitle = extras.getString("title", "BOOKTITLE")
     bookAuthor = extras.getString("author", "BOOKAUTHOR")
     bookPath = extras.getString("book_path", "BOOKPATH")
     bookContent = extras.getString("content", "BOOKCONTENT")
-    isDark = extras.getBoolean("darkModeEnabled")
     currentWordCount = extras.getInt("wordCount", 0)
     userUploadUri = extras.getString("userUploadUri", "USERUPLOADURI")
     wordSpeedTextView!!.text = String.format(resources.getString(R.string.words_per_min_settings_page),  newSpeed.toString())
     bookTitleTextView!!.text = bookTitle.toString()
 
-    if (isDark) {
-      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-    } else {
-      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-    }
     val bottomNavigationView =
       findViewById<View>(id.bottomNavigation) as BottomNavigationView
     bottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity() {
           extras.putString("title", bookTitle)
           extras.putString("author", bookAuthor)
           extras.putString("book_path", bookPath)
-          extras.putBoolean("darkModeEnabled", isDark)
           extras.putInt("wordCount", currentWordCount)
           extras.putString("content", bookContent)
           extras.putString("userUploadUri", userUploadUri)
@@ -238,7 +237,7 @@ class MainActivity : AppCompatActivity() {
     // load file into input stream and split each word to display in textview
     var line: String
     val downloadPath = arrayOf(
-        "/storage/emulated/0/Android/data/com.example.mnallamalli97.speedread/files/Download/$bookPath.txt"
+        "/storage/emulated/0/Android/data/com.mnallamalli97.speedread/files/Download/$bookPath.txt"
     )
     val tmpDir = File(downloadPath[0])
     val exists = tmpDir.exists()
@@ -373,32 +372,6 @@ class MainActivity : AppCompatActivity() {
     return result
   }
 
-  //    void countdown(final int time) {
-
-  //        final ArrayList<Integer> count = new ArrayList<>();
-  //        int j = 0;
-  //        for(int i = time; i >= 0; i--) {
-  //            count.add(j, i);
-  //            j++;
-  //        }
-  //
-  //        final android.os.Handler handler = new android.os.Handler();
-  //        handler.post(new Runnable() {
-  //            int i = 0;
-  //            @Override
-  //            public void run() {
-  //                wordTextView.setText((count.get(i)).toString());
-  //                i++;
-  //                if (i == time) {
-  //                    handler.removeCallbacks(this);
-  //                } else {
-  //
-  //                    handler.postDelayed(this, 1000);
-  //                }
-  //            }
-  //        });
-  //
-  //    }
   companion object {
     // Request code for selecting a PDF document.
     private const val PICK_PDF_FILE = 1214

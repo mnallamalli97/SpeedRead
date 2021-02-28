@@ -1,8 +1,10 @@
 <resources>
 
-
-    <style name="MyAppBarLayoutTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+    <style name="AppFullScreenTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="ClickableImageView">
@@ -10,12 +12,6 @@
         <item name="android:background">?android:selectableItemBackground</item>
     </style>
 
-    <style name="AppFullScreenTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
 
 
 </resources>

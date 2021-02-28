@@ -2,6 +2,7 @@ package com.example.mnallamalli97.speedread
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.google.android.gms.ads.AdError
@@ -22,40 +24,28 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import org.json.JSONObject
-import java.io.IOException
 
 class SettingsActivity : AppCompatActivity() {
   private var seekBarValue: Int = 0
   private var seekBar: IndicatorSeekBar? = null
   private var saveButton: Button? = null
   private var showAdButton: Button? = null
+  private var darkModeButton: Button? = null
   private var resultText: TextView? = null
   private var bookTitle: TextView? = null
   private var settingsProgressBar: ProgressBar? = null
   private var bookAuthor: TextView? = null
   private var pref: SharedPreferences? = null
   private var editor: SharedPreferences.Editor? = null
-  private var result = false
   private var wordCount = 0
   private var userUploadUri: String? = null
   private var mInterstitialAd: InterstitialAd? = null
-  private var json: JSONObject? = null
-
-  private var sample: TextView? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(layout.settings_activity)
     MobileAds.initialize(this)
-    pref =
-      applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
-    editor = pref!!.edit()
+
     val extras = intent.extras!!
     showAdButton = findViewById(id.showAdButton)
     saveButton = findViewById(id.saveButton)
@@ -64,7 +54,19 @@ class SettingsActivity : AppCompatActivity() {
     bookAuthor = findViewById(id.bookAuthor)
     settingsProgressBar = findViewById(id.settingsProgressBar)
     bookTitle = findViewById(id.bookTitle)
+    darkModeButton = findViewById(id.darkMode)
     loadInterstitialAd()
+
+    pref =
+      applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
+    editor = pref!!.edit()
+    val isDarkModeOn = pref!!.getBoolean("isDarkModeOn", false)
+
+//    if (!isDarkModeOn) {
+//      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//    } else {
+//      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//    }
 
     val author = extras.getString("author")
     val title = extras.getString("title")
@@ -99,12 +101,34 @@ class SettingsActivity : AppCompatActivity() {
       it[2] = resources.getColor(R.color.color_yellow, null)
       it[3] = resources.getColor(R.color.color_red, null)
       true //true if apply color , otherwise no change
-
     }
 
-    showAdButton!!.setOnClickListener ( OnClickListener {
+    darkModeButton!!.setOnClickListener {
+
+      if (isDarkModeOn) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        editor!!.putBoolean("isDarkModeOn", false)
+        editor!!.apply()
+        val intent = intent
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("isDarkModeOn", false)
+        finish()
+        startActivity(intent)
+      } else {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        editor!!.putBoolean("isDarkModeOn", true)
+        editor!!.apply()
+        val intent = intent
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("isDarkModeOn", true)
+        finish()
+        startActivity(intent)
+      }
+    }
+
+    showAdButton!!.setOnClickListener(OnClickListener {
       showInterstitialAd()
-      })
+    })
 
     saveButton!!.setOnClickListener(OnClickListener {
       val startIntent = Intent(this@SettingsActivity, MainActivity::class.java)
@@ -116,7 +140,6 @@ class SettingsActivity : AppCompatActivity() {
       extras.putString("book_path", path)
       extras.putString("bookChaptersNames", bookChaptersNames)
       extras.putString("bookChaptersPaths", bookChaptersPaths)
-      extras.putBoolean("darkModeEnabled", result)
       extras.putString("content", content)
       extras.putInt("wordCount", wordCount)
       extras.putString("userUploadUri", userUploadUri)

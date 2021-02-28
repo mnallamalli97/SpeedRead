@@ -2,6 +2,7 @@ package com.example.mnallamalli97.speedread.news
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.util.Pair
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -53,7 +55,19 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
   private var errorMessage: TextView? = null
   private var btnRetry: Button? = null
   private var newsUpgradeButton: Button? = null
+  private var isDarkModeOn = false
+  private var pref: SharedPreferences? = null
+  private var editor: SharedPreferences.Editor? = null
   override fun onCreate(savedInstanceState: Bundle?) {
+    pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
+    editor = pref!!.edit()
+    isDarkModeOn = pref!!.getBoolean("isDarkModeOn", false)
+    if (isDarkModeOn) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    }
+    else {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+    }
     super.onCreate(savedInstanceState)
     setContentView(layout.news_activity)
     swipeRefreshLayout = findViewById(id.swipe_refresh_layout)
