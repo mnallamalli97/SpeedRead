@@ -205,6 +205,10 @@ class CheckoutActivity : AppCompatActivity() {
         when (resultCode) {
           RESULT_OK ->
             data?.let { intent ->
+              // removing the Buy button and replacing with "Read Now button"
+              googlePayButton!!.visibility = View.GONE
+              readNowButton!!.visibility = View.VISIBLE
+
               PaymentData.getFromIntent(intent)
                   ?.let(::handlePaymentSuccess)
             }
@@ -261,10 +265,6 @@ class CheckoutActivity : AppCompatActivity() {
       paymentSuccess = true
       retrieve()
 
-      // removing the Buy button and replacing with "Read Now button"
-      googlePayButton!!.visibility = View.GONE
-      readNowButton!!.visibility = View.VISIBLE
-
     } catch (e: JSONException) {
       Log.e("handlePaymentSuccess", "Error: " + e.toString())
     }
@@ -279,23 +279,20 @@ class CheckoutActivity : AppCompatActivity() {
       override fun onDataChange(dataSnapshot: DataSnapshot) {
         for (ds in dataSnapshot.children) {
           val book = ds.getValue(Book::class.java)
-          isBookPurchased = book!!.purchased!!
+
+          if (paymentSuccess) {
+            updateData(book)
+          }
 
           if (bookId == book!!.id) {
-            if (isBookPurchased) {
+            if (book!!.purchased!!) {
               googlePayButton!!.visibility = View.GONE
               readNowButton!!.visibility = View.VISIBLE
             } else {
               googlePayButton!!.visibility = View.VISIBLE
               readNowButton!!.visibility = View.GONE
             }
-
-            if (paymentSuccess) {
-              updateData(book)
-            }
-
           }
-
         }
       }
 
@@ -310,6 +307,9 @@ class CheckoutActivity : AppCompatActivity() {
       databaseReference!!.child("book$bookId")
           .child("purchased")
           .setValue(true)
+      val intent = intent
+      finish()
+      startActivity(intent)
     }
   }
 

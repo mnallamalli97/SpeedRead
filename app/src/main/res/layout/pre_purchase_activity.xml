@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/readSummaryButton"
         android:background="@drawable/googlepay_button_no_shadow_background"
+        android:visibility="gone"
         android:padding="2sp"
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="10dp"
