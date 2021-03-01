@@ -19,9 +19,14 @@ class Book {
     private set
   var bookChaptersPaths: ArrayList<String>? = null
     private set
+  var bookPrice: Float? = null
+    private set
+  var bookSummaryPath: String? = null
+    private set
+  var purchased: Boolean? = null
   private var storage: SharedPreferences? = null
 
-  constructor() { }
+  constructor() {}
 
   constructor(context: Context) {
     context.getSharedPreferences("MyPref", 0)
@@ -34,7 +39,10 @@ class Book {
     bookChaptersNames: ArrayList<String>?,
     bookChaptersPaths: ArrayList<String>?,
     bookCover: String?,
-    bookPath: String?
+    bookSummaryPath: String?,
+    bookPath: String?,
+    bookPrice: Float?,
+    isPurchased: Boolean?
   ) {
     this.id = id
     this.title = title
@@ -42,21 +50,10 @@ class Book {
     this.bookChaptersNames = bookChaptersNames
     this.bookChaptersPaths = bookChaptersPaths
     this.bookCover = bookCover
+    this.bookSummaryPath = bookSummaryPath
     this.bookPath = bookPath
-  }
-
-
-  fun isRated(itemId: Int): Boolean {
-    return storage!!.getBoolean(itemId.toString(), false)
-  }
-
-  fun setRated(
-    itemId: Int,
-    isRated: Boolean
-  ) {
-    storage!!.edit()
-        .putBoolean(itemId.toString(), isRated)
-        .apply()
+    this.bookPrice = bookPrice
+    this.purchased = isPurchased
   }
 
   companion object {

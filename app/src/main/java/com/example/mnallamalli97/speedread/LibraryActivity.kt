@@ -102,14 +102,6 @@ class LibraryActivity : AppCompatActivity(),
       }
     })
 
-
-
-//    val pullToRefresh = findViewById<SwipeRefreshLayout>(id.pullToRefresh)
-//    pullToRefresh.setOnRefreshListener {
-//      retrieve(adapter)
-//      pullToRefresh.isRefreshing = false
-//    }
-
   }
 
   private fun getCurrentItem(): Int {
@@ -129,6 +121,7 @@ class LibraryActivity : AppCompatActivity(),
 
     intent.putExtra("title", book.title)
     intent.putExtra("book_path", book.bookPath)
+    intent.putExtra("book_summary_path", book.bookSummaryPath)
     intent.putExtra("id", book.id)
     intent.putExtra("author", book.author)
     intent.putExtra("cover", book.bookCover)
@@ -176,7 +169,6 @@ class LibraryActivity : AppCompatActivity(),
     databaseReference = FirebaseDatabase.getInstance()
         .getReference("speedread")
         .child("books")
-    booksDataReference = databaseReference!!.child("bookChaptersName")
     libraryList.clear()
     databaseReference!!.addListenerForSingleValueEvent(object : ValueEventListener {
       override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -191,7 +183,10 @@ class LibraryActivity : AppCompatActivity(),
               .value
               .toString()
           val bookPath = book?.bookPath
-          libraryList.add(Book(id, title, author, bookChaptersNames, bookChaptersPaths, cover, bookPath))
+          val bookPrice = book?.bookPrice
+          val bookSummaryPath = book?.bookSummaryPath
+          val isPurchased = book!!.purchased
+          libraryList.add(Book(id, title, author, bookChaptersNames, bookChaptersPaths, cover, bookSummaryPath, bookPath, bookPrice, isPurchased))
         }
         adapter!!.notifyDataSetChanged()
         topChartsListViewAdapter!!.notifyDataSetChanged()
@@ -229,6 +224,7 @@ class LibraryActivity : AppCompatActivity(),
       intent.putExtra("id", libraryList[currentBookPosition].id)
       intent.putExtra("author", libraryList[currentBookPosition].author)
       intent.putExtra("cover", libraryList[currentBookPosition].bookCover)
+      intent.putExtra("book_price", libraryList[currentBookPosition].bookPrice)
 
       startActivity(intent)
       true

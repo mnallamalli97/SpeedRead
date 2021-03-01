@@ -7,20 +7,59 @@
     android:background="@color/backgroundColor"
     >
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/googlePayButton"
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/readSummaryButton"
+        android:background="@drawable/googlepay_button_no_shadow_background"
+        android:padding="2sp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:contentDescription="@string/buy_with_googlepay_button_content_description">
+        <LinearLayout
+            android:duplicateParentState="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="2"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="fitCenter"
+                android:duplicateParentState="true"
+                android:src="@drawable/buy_with_googlepay_button_content"/>
+        </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:duplicateParentState="true"
+            android:src="@drawable/googlepay_button_overlay"/>
+    </RelativeLayout>
 
     <Button
-        android:id="@+id/googlePayButton"
+        android:id="@+id/readNowButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/googlepay_button_background"
+        android:visibility="gone"
+        android:background="@drawable/my_shape"
         android:fontFamily="@font/montserrat_regular"
+        android:text="read now"
+        app:layout_constraintBottom_toTopOf="@+id/readSummaryButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/readSummaryButton"
         />
 
 
