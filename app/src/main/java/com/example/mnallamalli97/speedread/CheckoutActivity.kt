@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.PopupMenu
 import com.bumptech.glide.Glide
 import com.example.mnallamalli97.speedread.R.layout
 import com.google.android.gms.common.api.ApiException
@@ -21,14 +22,22 @@ import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.PaymentsClient
+import com.google.android.gms.wallet.Wallet
+import com.google.android.gms.wallet.WalletConstants
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.stripe.android.ApiResultCallback
+import com.stripe.android.GooglePayConfig
+import com.stripe.android.PaymentConfiguration
+import com.stripe.android.Stripe
+import com.stripe.android.model.PaymentMethod
+import com.stripe.android.model.PaymentMethodCreateParams
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import kotlin.math.roundToLong
 
 class CheckoutActivity : AppCompatActivity() {
   private var prePurchasebookTitle: TextView? = null
@@ -42,11 +51,22 @@ class CheckoutActivity : AppCompatActivity() {
   private var bookPrice: Float? = null
   private var pref: SharedPreferences? = null
   private var editor: SharedPreferences.Editor? = null
-  private lateinit var paymentsClient: PaymentsClient
-  private var isBookPurchased: Boolean = false
   private var paymentSuccess: Boolean = false
   private var bookId: Int? = null
+  private var selectedBook: Book? = null
   private val LOAD_PAYMENT_DATA_REQUEST_CODE = 1214
+  private val stripe: Stripe by lazy {
+    Stripe(this, PUBLISHABLE_KEY)
+  }
+
+  private val paymentsClient: PaymentsClient by lazy {
+    Wallet.getPaymentsClient(
+        this,
+        Wallet.WalletOptions.Builder()
+            .setEnvironment(WalletConstants.ENVIRONMENT_TEST)
+            .build()
+    )
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
@@ -81,10 +101,10 @@ class CheckoutActivity : AppCompatActivity() {
     retrieve()
     // Initialize a Google Pay API client for an environment suitable for testing.
     // It's recommended to create the PaymentsClient object inside of the onCreate method.
-    paymentsClient = PaymentsUtil.createPaymentsClient(this)
-    possiblyShowGooglePayButton()
+    PaymentConfiguration.init(this, PUBLISHABLE_KEY)
+    isReadyToPay()
 
-    googlePayButton!!.setOnClickListener { requestPayment() }
+    googlePayButton!!.setOnClickListener { payWithGoogle() }
 
     prePurchaseBookAuthor!!.text = author
     prePurchasebookTitle!!.text = title
@@ -108,80 +128,246 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     readNowButton!!.setOnClickListener {
-      val intent = Intent(this@CheckoutActivity, SettingsActivity::class.java)
-      intent.putExtra("title", title)
-      intent.putExtra("book_path", bookPath)
-      intent.putExtra("book_summary_path", bookSummaryPath)
-      intent.putExtra("id", bookId!!)
-      intent.putExtra("author", author)
-      intent.putExtra("cover", bookCoverPath)
-
-      startActivity(intent)
+      selectAndLoadChapter(selectedBook!!, readNowButton)
     }
+
+    readSummaryButton!!.setOnClickListener {
+      selectAndReadSummary(selectedBook!!)
+    }
+
   }
 
-  private fun possiblyShowGooglePayButton() {
-    val isReadyToPayJson = PaymentsUtil.isReadyToPayRequest() ?: return
-    val request = IsReadyToPayRequest.fromJson(isReadyToPayJson.toString()) ?: return
+  private fun selectAndLoadChapter(
+    currentBook: Book,
+    anchor: View?
+  ) {
+    val popupMenu = PopupMenu(this@CheckoutActivity, anchor!!)
+    val menu = popupMenu.menu
+    val numberOfChapters = currentBook.bookChaptersName?.size ?: 0
 
-    // The call to isReadyToPay is asynchronous and returns a Task. We need to provide an
-    // OnCompleteListener to be triggered when the result of the call is known.
-    val task = paymentsClient.isReadyToPay(request)
-    task.addOnCompleteListener { completedTask ->
-      try {
-        completedTask.getResult(ApiException::class.java)
-            ?.let(::setGooglePayAvailable)
-      } catch (exception: ApiException) {
-        // Process error
-        Log.w("isReadyToPay failed", exception)
-      }
+    for (i in 0 until numberOfChapters) {
+      menu.add(i, i, i, currentBook.bookChaptersName?.get(i))
     }
+
+    popupMenu.setOnMenuItemClickListener { item ->
+
+      val chapterPath = currentBook.bookChaptersPath?.get(item.itemId)
+      val intent = Intent(this@CheckoutActivity, SettingsActivity::class.java)
+
+      intent.putExtra("title", currentBook.title)
+      intent.putExtra("book_path", chapterPath)
+      intent.putExtra("id", currentBook.id)
+      intent.putExtra("author", currentBook.author)
+      intent.putExtra("cover", currentBook.bookCover)
+      intent.putExtra("book_price", currentBook.bookPrice)
+
+      startActivity(intent)
+      true
+    }
+    popupMenu.show()
+  }
+
+  private fun selectAndReadSummary(currentBook: Book) {
+    val intent = Intent(this@CheckoutActivity, SettingsActivity::class.java)
+
+    intent.putExtra("title", currentBook.title + ": Summary")
+    intent.putExtra("author", currentBook.author)
+    intent.putExtra("book_summary_path", currentBook.bookSummaryPath)
+    startActivity(intent)
+  }
+
+  private fun isReadyToPay() {
+    paymentsClient.isReadyToPay(createIsReadyToPayRequest())
+        .addOnCompleteListener { task ->
+          try {
+            if (task.isSuccessful) {
+              // show Google Pay as payment option
+              googlePayButton!!.visibility = View.VISIBLE
+            } else {
+              // hide Google Pay as payment option
+              Toast.makeText(
+                  this,
+                  "Unfortunately, Google Pay is not available on this device",
+                  Toast.LENGTH_LONG
+              )
+                  .show();
+            }
+          } catch (exception: ApiException) {
+          }
+        }
   }
 
   /**
-   * If isReadyToPay returned `true`, show the button and hide the "checking" text. Otherwise,
-   * notify the user that Google Pay is not available. Please adjust to fit in with your current
-   * user flow. You are not required to explicitly let the user know if isReadyToPay returns `false`.
-   *
-   * @param available isReadyToPay API response.
+   * See https://developers.google.com/pay/api/android/reference/request-objects#example
+   * for an example of the generated JSON.
    */
-  private fun setGooglePayAvailable(available: Boolean) {
-    if (available) {
-      googlePayButton!!.visibility = View.VISIBLE
-    } else {
-      Toast.makeText(
-          this,
-          "Unfortunately, Google Pay is not available on this device",
-          Toast.LENGTH_LONG
-      )
-          .show();
-    }
+  private fun createIsReadyToPayRequest(): IsReadyToPayRequest {
+    return IsReadyToPayRequest.fromJson(
+        JSONObject()
+            .put("apiVersion", 2)
+            .put("apiVersionMinor", 0)
+            .put(
+                "allowedPaymentMethods",
+                JSONArray().put(
+                    JSONObject()
+                        .put("type", "CARD")
+                        .put(
+                            "parameters",
+                            JSONObject()
+                                .put(
+                                    "allowedAuthMethods",
+                                    JSONArray()
+                                        .put("PAN_ONLY")
+                                        .put("CRYPTOGRAM_3DS")
+                                )
+                                .put(
+                                    "allowedCardNetworks",
+                                    JSONArray()
+                                        .put("AMEX")
+                                        .put("DISCOVER")
+                                        .put("MASTERCARD")
+                                        .put("VISA")
+                                )
+                        )
+                )
+            )
+            .toString()
+    )
   }
 
-  private fun requestPayment() {
+//  private fun possiblyShowGooglePayButton() {
+//    val isReadyToPayJson = PaymentsUtil.isReadyToPayRequest() ?: return
+//    val request = IsReadyToPayRequest.fromJson(isReadyToPayJson.toString()) ?: return
+//
+//    // The call to isReadyToPay is asynchronous and returns a Task. We need to provide an
+//    // OnCompleteListener to be triggered when the result of the call is known.
+//    val task = paymentsClient.isReadyToPay(request)
+//    task.addOnCompleteListener { completedTask ->
+//      try {
+//        completedTask.getResult(ApiException::class.java)
+//            ?.let(::setGooglePayAvailable)
+//      } catch (exception: ApiException) {
+//        // Process error
+//        Log.w("isReadyToPay failed", exception)
+//      }
+//    }
+//  }
 
-    // Disables the button to prevent multiple clicks.
-    googlePayButton!!.isClickable = false
+//  /**
+//   * If isReadyToPay returned `true`, show the button and hide the "checking" text. Otherwise,
+//   * notify the user that Google Pay is not available. Please adjust to fit in with your current
+//   * user flow. You are not required to explicitly let the user know if isReadyToPay returns `false`.
+//   *
+//   * @param available isReadyToPay API response.
+//   */
+//  private fun setGooglePayAvailable(available: Boolean) {
+//    if (available) {
+//      googlePayButton!!.visibility = View.VISIBLE
+//    } else {
+//      Toast.makeText(
+//          this,
+//          "Unfortunately, Google Pay is not available on this device",
+//          Toast.LENGTH_LONG
+//      )
+//          .show();
+//    }
+//  }
+//
+//  private fun requestPayment() {
+//
+//    // Disables the button to prevent multiple clicks.
+//    googlePayButton!!.isClickable = false
+//
+//    // The price provided to the API should include taxes and shipping.
+//    val priceCents = bookPrice!!.times(PaymentsUtil.CENTS.toLong())
+//        .roundToLong()
+//
+//    val paymentDataRequestJson = PaymentsUtil.getPaymentDataRequest(priceCents)
+//    if (paymentDataRequestJson == null) {
+//      Log.e("RequestPayment", "Can't fetch payment data request")
+//      return
+//    }
+//    val request = PaymentDataRequest.fromJson(paymentDataRequestJson.toString())
+//
+//    // Since loadPaymentData may show the UI asking the user to select a payment method, we use
+//    // AutoResolveHelper to wait for the user interacting with it. Once completed,
+//    // onActivityResult will be called with the result.
+//    if (request != null) {
+//      AutoResolveHelper.resolveTask(
+//          paymentsClient.loadPaymentData(request), this, LOAD_PAYMENT_DATA_REQUEST_CODE
+//      )
+//    }
+//  }
 
-    // The price provided to the API should include taxes and shipping.
-    val priceCents = bookPrice!!.times(PaymentsUtil.CENTS.toLong())
-        .roundToLong()
+  private fun createPaymentDataRequest(): PaymentDataRequest {
+    val cardPaymentMethod = JSONObject()
+        .put("type", "CARD")
+        .put(
+            "parameters",
+            JSONObject()
+                .put(
+                    "allowedAuthMethods", JSONArray()
+                    .put("PAN_ONLY")
+                    .put("CRYPTOGRAM_3DS")
+                )
+                .put(
+                    "allowedCardNetworks",
+                    JSONArray()
+                        .put("AMEX")
+                        .put("DISCOVER")
+                        .put("MASTERCARD")
+                        .put("VISA")
+                )
 
-    val paymentDataRequestJson = PaymentsUtil.getPaymentDataRequest(priceCents)
-    if (paymentDataRequestJson == null) {
-      Log.e("RequestPayment", "Can't fetch payment data request")
-      return
-    }
-    val request = PaymentDataRequest.fromJson(paymentDataRequestJson.toString())
+                // require billing address
+                .put("billingAddressRequired", true)
+                .put(
+                    "billingAddressParameters",
+                    JSONObject()
+                        // require full billing address
+                        .put("format", "MIN")
 
-    // Since loadPaymentData may show the UI asking the user to select a payment method, we use
-    // AutoResolveHelper to wait for the user interacting with it. Once completed,
-    // onActivityResult will be called with the result.
-    if (request != null) {
-      AutoResolveHelper.resolveTask(
-          paymentsClient.loadPaymentData(request), this, LOAD_PAYMENT_DATA_REQUEST_CODE
-      )
-    }
+                        // require phone number
+                        .put("phoneNumberRequired", true)
+                )
+        )
+        .put(
+            "tokenizationSpecification",
+            GooglePayConfig(this).tokenizationSpecification
+        )
+
+    // create PaymentDataRequest
+    val paymentDataRequest = JSONObject()
+        .put("apiVersion", 2)
+        .put("apiVersionMinor", 0)
+        .put(
+            "allowedPaymentMethods",
+            JSONArray().put(cardPaymentMethod)
+        )
+        .put(
+            "transactionInfo", JSONObject()
+            .put("totalPrice", "10.00")
+            .put("totalPriceStatus", "FINAL")
+            .put("currencyCode", "USD")
+        )
+        .put(
+            "merchantInfo", JSONObject()
+            .put("merchantName", "Example Merchant")
+        )
+
+        // require email address
+        .put("emailRequired", true)
+        .toString()
+
+    return PaymentDataRequest.fromJson(paymentDataRequest)
+  }
+
+  private fun payWithGoogle() {
+    AutoResolveHelper.resolveTask(
+        paymentsClient.loadPaymentData(createPaymentDataRequest()),
+        this@CheckoutActivity,
+        LOAD_PAYMENT_DATA_REQUEST_CODE
+    )
   }
 
   /**
@@ -204,13 +390,10 @@ class CheckoutActivity : AppCompatActivity() {
       LOAD_PAYMENT_DATA_REQUEST_CODE -> {
         when (resultCode) {
           RESULT_OK ->
-            data?.let { intent ->
-              // removing the Buy button and replacing with "Read Now button"
+            if (data != null) {
               googlePayButton!!.visibility = View.GONE
               readNowButton!!.visibility = View.VISIBLE
-
-              PaymentData.getFromIntent(intent)
-                  ?.let(::handlePaymentSuccess)
+              onGooglePayResult(data)
             }
 
           RESULT_CANCELED -> {
@@ -231,6 +414,27 @@ class CheckoutActivity : AppCompatActivity() {
     }
   }
 
+  private fun onGooglePayResult(data: Intent) {
+    val paymentData = PaymentData.getFromIntent(data) ?: return
+    val paymentMethodCreateParams =
+      PaymentMethodCreateParams.createFromGooglePay(
+          JSONObject(paymentData.toJson())
+      )
+
+    // now use the `paymentMethodCreateParams` object to create a PaymentMethod
+    stripe!!.createPaymentMethod(
+        paymentMethodCreateParams,
+        callback = object : ApiResultCallback<PaymentMethod> {
+          override fun onSuccess(result: PaymentMethod) {
+            handlePaymentSuccess(result)
+          }
+
+          override fun onError(e: Exception) {
+          }
+        }
+    )
+  }
+
   /**
    * PaymentData response object contains the payment information, as well as any additional
    * requested information, such as billing and shipping address.
@@ -239,28 +443,18 @@ class CheckoutActivity : AppCompatActivity() {
    * @see [Payment
    * Data](https://developers.google.com/pay/api/android/reference/object.PaymentData)
    */
-  private fun handlePaymentSuccess(paymentData: PaymentData) {
-    val paymentInformation = paymentData.toJson() ?: return
+  private fun handlePaymentSuccess(paymentMethod: PaymentMethod) {
+
 
     try {
       // Token will be null if PaymentDataRequest was not constructed using fromJson(String).
-      val paymentMethodData = JSONObject(paymentInformation).getJSONObject("paymentMethodData")
-      val billingName = paymentMethodData.getJSONObject("info")
-          .getJSONObject("billingAddress")
-          .getString("name")
+      val billingName = paymentMethod.billingDetails!!.name
       Log.d("BillingName", billingName)
 
       Toast.makeText(
           this, getString(R.string.payments_show_name, prePurchasebookTitle), Toast.LENGTH_LONG
       )
           .show()
-
-      // Logging token string.
-      Log.d(
-          "GooglePaymentToken", paymentMethodData
-          .getJSONObject("tokenizationData")
-          .getString("token")
-      )
 
       paymentSuccess = true
       retrieve()
@@ -288,6 +482,7 @@ class CheckoutActivity : AppCompatActivity() {
             if (book!!.purchased!!) {
               googlePayButton!!.visibility = View.GONE
               readNowButton!!.visibility = View.VISIBLE
+              selectedBook = book
             } else {
               googlePayButton!!.visibility = View.VISIBLE
               readNowButton!!.visibility = View.GONE
@@ -324,6 +519,11 @@ class CheckoutActivity : AppCompatActivity() {
    */
   private fun handleError(statusCode: Int) {
     Log.w("loadPaymentData failed", String.format("Error code: %d", statusCode))
+  }
+  companion object {
+    const val TEST_KEY = "sk_test_51IQ8HECuzAs95gvcmI1ixDpPaoWBtrEVlvDJYoCYOuYSmEaucQ6iMytS62fo1p1XKLZncHkaVSeQOT9KUAVNUj7W00XuMwyMEh"
+    const val PUBLISHABLE_KEY = "pk_test_51IQ8HECuzAs95gvcBSRsGYl7PgVhVUAwTA3YwBPjvEoqpB9ygaLL97NmxpAzKvxUT89cy7XDZ7iNFf8G5Gz8azFw00hOaPuCBC"
+
   }
 }
 

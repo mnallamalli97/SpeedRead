@@ -15,9 +15,9 @@ class Book {
     private set
   var id: Int? = null
     private set
-  var bookChaptersNames: ArrayList<String>? = null
+  var bookChaptersName: ArrayList<String>? = null
     private set
-  var bookChaptersPaths: ArrayList<String>? = null
+  var bookChaptersPath: ArrayList<String>? = null
     private set
   var bookPrice: Float? = null
     private set
@@ -47,8 +47,8 @@ class Book {
     this.id = id
     this.title = title
     this.author = author
-    this.bookChaptersNames = bookChaptersNames
-    this.bookChaptersPaths = bookChaptersPaths
+    this.bookChaptersName = bookChaptersNames
+    this.bookChaptersPath = bookChaptersPaths
     this.bookCover = bookCover
     this.bookSummaryPath = bookSummaryPath
     this.bookPath = bookPath

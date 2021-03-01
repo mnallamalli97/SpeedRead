@@ -86,7 +86,6 @@ class LibraryActivity : AppCompatActivity(),
     findViewById<View>(id.discoveryPageNewsButton).setOnClickListener(this)
     findViewById<View>(id.discoveryPageUpgradeButton).setOnClickListener(this)
     findViewById<View>(id.discoveryPageUploadButton).setOnClickListener(this)
-    findViewById<View>(id.selectChapterButton).setOnClickListener(this)
 
     booksRecyclerView!!.addOnScrollListener(object : OnScrollListener() {
       override fun onScrollStateChanged(
@@ -132,7 +131,6 @@ class LibraryActivity : AppCompatActivity(),
 
   override fun onClick(v: View) {
     when (v.id) {
-      id.selectChapterButton -> selectAndLoadChapter(v)
 //      id.discoveryPageUpgradeButton -> bookCoverClick(v)
       id.discoveryPageNewsButton -> {
         val startNewsIntent = Intent(this@LibraryActivity, NewsActivity::class.java)
@@ -196,40 +194,6 @@ class LibraryActivity : AppCompatActivity(),
         Log.d(ContentValues.TAG, databaseError.message) // Don't ignore errors!
       }
     })
-  }
-
-  private fun selectAndLoadChapter(
-    anchor: View?
-  ) {
-    val popupMenu = PopupMenu(this@LibraryActivity, anchor!!)
-    val menu = popupMenu.menu
-    val numberOfChapters = libraryList[currentBookPosition].bookChaptersNames?.size ?: 0
-
-    for (i in 0 until numberOfChapters) {
-      menu.add(i, i, i, libraryList[currentBookPosition].bookChaptersNames?.get(i))
-    }
-
-    popupMenu.setOnMenuItemClickListener { item ->
-
-
-
-      val chapterPath = libraryList[currentBookPosition].bookChaptersPaths?.get(item.itemId)
-
-
-      val intent = Intent(this@LibraryActivity, SettingsActivity::class.java)
-
-
-      intent.putExtra("title",libraryList[currentBookPosition].title)
-      intent.putExtra("book_path", chapterPath)
-      intent.putExtra("id", libraryList[currentBookPosition].id)
-      intent.putExtra("author", libraryList[currentBookPosition].author)
-      intent.putExtra("cover", libraryList[currentBookPosition].bookCover)
-      intent.putExtra("book_price", libraryList[currentBookPosition].bookPrice)
-
-      startActivity(intent)
-      true
-    }
-    popupMenu.show()
   }
 
   fun getFileName(uri: Uri): String? {

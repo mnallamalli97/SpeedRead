@@ -52,6 +52,7 @@ dependencies {
     implementation 'com.yarolegovich:discrete-scrollview:1.5.1'
     implementation 'com.squareup.okhttp3:okhttp:4.2.0'
     implementation 'com.google.android.gms:play-services-ads:19.7.0'
+    implementation 'com.stripe:stripe-android:16.3.0'
     implementation 'com.beardedhen:androidbootstrap:2.3.2'
     def billing_version = "3.0.0"
 

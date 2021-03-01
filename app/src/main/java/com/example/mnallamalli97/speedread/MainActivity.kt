@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.OpenableColumns
-
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
@@ -32,11 +31,9 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStreamReader
-import java.lang.NullPointerException
 import java.nio.charset.Charset
 import java.util.Timer
 import java.util.TimerTask
-import kotlin.jvm.Throws
 
 class MainActivity : AppCompatActivity() {
   private var pauseButton: Button? = null
@@ -52,6 +49,7 @@ class MainActivity : AppCompatActivity() {
   private var bookTitle: String? = null
   private var bookAuthor: String? = null
   private var bookPath: String? = null
+  private var bookSummaryPath: String? = null
   private var bookContent: String? = null
   private var currentWordCount = 0
   private var totalWordCount = 0
@@ -95,7 +93,8 @@ class MainActivity : AppCompatActivity() {
     newSpeed = pref!!.getInt("speedreadSpeed", 250)
     bookTitle = extras.getString("title", "BOOKTITLE")
     bookAuthor = extras.getString("author", "BOOKAUTHOR")
-    bookPath = extras.getString("book_path", "BOOKPATH")
+    bookPath = extras.getString("book_path")
+    bookSummaryPath = extras.getString("book_summary_path")
     bookContent = extras.getString("content", "BOOKCONTENT")
     currentWordCount = extras.getInt("wordCount", 0)
     userUploadUri = extras.getString("userUploadUri", "USERUPLOADURI")
@@ -115,6 +114,7 @@ class MainActivity : AppCompatActivity() {
           extras.putString("title", bookTitle)
           extras.putString("author", bookAuthor)
           extras.putString("book_path", bookPath)
+          extras.putString("book_summary_path", bookSummaryPath)
           extras.putInt("wordCount", currentWordCount)
           extras.putString("content", bookContent)
           extras.putString("userUploadUri", userUploadUri)
@@ -134,7 +134,11 @@ class MainActivity : AppCompatActivity() {
     } else if (bookAuthor == "User") {
       readTextFromUri(Uri.parse(userUploadUri))
     } else {
-      runLibraryWords(bookPath, newSpeed)
+      if (bookTitle!!.contains("Summary")) {
+        runLibraryWords(bookSummaryPath = bookSummaryPath, speed = newSpeed)
+      } else {
+        runLibraryWords(bookPath = bookPath, speed = newSpeed)
+      }
     }
 
     pauseButton!!.setOnClickListener(OnClickListener {
@@ -164,8 +168,9 @@ class MainActivity : AppCompatActivity() {
   }
 
   fun runLibraryWords(
-      bookPath: String? = null,
-      speed: Int
+    bookPath: String? = null,
+    bookSummaryPath: String? = null,
+    speed: Int
   ) {
     if (bookPath != null) {
 
@@ -178,6 +183,18 @@ class MainActivity : AppCompatActivity() {
             val url = uri.toString()
             downloadFileAndShowWords(
                 this@MainActivity, bookPath, ".txt", Environment.DIRECTORY_DOWNLOADS,
+                url, speed
+            )
+          }
+          .addOnFailureListener { e -> e.printStackTrace() }
+    } else if (bookSummaryPath != null) {
+      storageReference = firebaseStorage.reference
+      ref = storageReference!!.child("books/$bookSummaryPath")
+      ref!!.downloadUrl
+          .addOnSuccessListener { uri ->
+            val url = uri.toString()
+            downloadFileAndShowWords(
+                this@MainActivity, bookSummaryPath, ".txt", Environment.DIRECTORY_DOWNLOADS,
                 url, speed
             )
           }
@@ -236,9 +253,12 @@ class MainActivity : AppCompatActivity() {
     // Local temp file has been created
     // load file into input stream and split each word to display in textview
     var line: String
-    val downloadPath = arrayOf(
+    val downloadPath = if (bookPath != null) arrayOf(
         "/storage/emulated/0/Android/data/com.mnallamalli97.speedread/files/Download/$bookPath.txt"
+    ) else arrayOf(
+        "/storage/emulated/0/Android/data/com.mnallamalli97.speedread/files/Download/$bookSummaryPath.txt"
     )
+
     val tmpDir = File(downloadPath[0])
     val exists = tmpDir.exists()
     if (!exists) {
