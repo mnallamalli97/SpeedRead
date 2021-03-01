@@ -54,6 +54,9 @@ class CheckoutActivity : AppCompatActivity() {
   private var paymentSuccess: Boolean = false
   private var bookId: Int? = null
   private var selectedBook: Book? = null
+  var bookSummaryPath: String? = ""
+  var author: String? = ""
+  var title: String? = ""
   private val LOAD_PAYMENT_DATA_REQUEST_CODE = 1214
   private val stripe: Stripe by lazy {
     Stripe(this, PUBLISHABLE_KEY)
@@ -91,9 +94,9 @@ class CheckoutActivity : AppCompatActivity() {
     val extras = intent.extras!!
     bookId = extras.getInt("id")
     val bookPath = extras.getString("book_path")
-    val bookSummaryPath = extras.getString("book_summary_path")
-    val author = extras.getString("author")
-    val title = extras.getString("title")
+    bookSummaryPath = extras.getString("book_summary_path")
+    author = extras.getString("author")
+    title = extras.getString("title")
     val bookCoverPath = extras.getString("cover")
     bookPrice = extras.getFloat("book_price")
 
@@ -115,24 +118,12 @@ class CheckoutActivity : AppCompatActivity() {
         .into(prePurchaseBookCover!!)
     prePurchaseBookCover!!.isEnabled = false
 
-    readSummaryButton!!.setOnClickListener {
-      val intent = Intent(this@CheckoutActivity, SettingsActivity::class.java)
-      intent.putExtra("title", title)
-      intent.putExtra("book_summary_path", bookSummaryPath)
-      intent.putExtra("book_path", bookPath)
-      intent.putExtra("id", bookId!!)
-      intent.putExtra("author", author)
-      intent.putExtra("cover", bookCoverPath)
-
-      startActivity(intent)
-    }
-
     readNowButton!!.setOnClickListener {
       selectAndLoadChapter(selectedBook!!, readNowButton)
     }
 
     readSummaryButton!!.setOnClickListener {
-      selectAndReadSummary(selectedBook!!)
+      selectAndReadSummary()
     }
 
   }
@@ -167,12 +158,12 @@ class CheckoutActivity : AppCompatActivity() {
     popupMenu.show()
   }
 
-  private fun selectAndReadSummary(currentBook: Book) {
+  private fun selectAndReadSummary() {
     val intent = Intent(this@CheckoutActivity, SettingsActivity::class.java)
 
-    intent.putExtra("title", currentBook.title + ": Summary")
-    intent.putExtra("author", currentBook.author)
-    intent.putExtra("book_summary_path", currentBook.bookSummaryPath)
+    intent.putExtra("title", title + ": Summary")
+    intent.putExtra("author", author)
+    intent.putExtra("book_summary_path", bookSummaryPath)
     startActivity(intent)
   }
 
