@@ -59,23 +59,6 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp">
-
-                    <TableRow
-                        android:id="@+id/tableRow1"
-                        android:layout_width="fill_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" >
-
-
-                        <Button
-                            android:id="@+id/discoveryPageUpgradeButton"
-                            android:layout_width="0dp"
-                            android:text="Upgrade to full"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:layout_height="fill_parent"
-                            android:layout_weight="1" />
-                    </TableRow>
-
                     <TableRow
                         android:id="@+id/tableRow2"
                         android:layout_width="fill_parent"
@@ -87,14 +70,19 @@
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
                             android:fontFamily="@font/montserrat_bold"
+                            android:textColor="#ffffff"
+                            android:backgroundTint="@color/colorPrimary"
                             android:text="latest news"
-                            android:drawableLeft="@drawable/icon_news"
+                            android:drawableLeft="@drawable/ic_world_news"
+                            android:drawableTint="#ffffff"
                             android:layout_weight="1" />
 
                         <Button
                             android:id="@+id/discoveryPageUploadButton"
                             android:layout_width="0dp"
                             android:layout_height="fill_parent"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:textColor="#ffffff"
                             android:fontFamily="@font/montserrat_bold"
                             android:text="Device import"
                             android:drawableLeft="@drawable/ic_cloud_upload_black_72dp"

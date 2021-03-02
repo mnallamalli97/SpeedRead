@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest.Builder
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -41,6 +42,7 @@ class SettingsActivity : AppCompatActivity() {
   private var userUploadUri: String? = null
   private var mInterstitialAd: InterstitialAd? = null
 
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(layout.settings_activity)
@@ -55,7 +57,8 @@ class SettingsActivity : AppCompatActivity() {
     settingsProgressBar = findViewById(id.settingsProgressBar)
     bookTitle = findViewById(id.bookTitle)
     darkModeButton = findViewById(id.darkMode)
-    loadInterstitialAd()
+
+    loadInterstitial()
 
     pref =
       applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
@@ -153,10 +156,10 @@ class SettingsActivity : AppCompatActivity() {
     })
   }
 
-  private fun loadInterstitialAd() {
+  private fun loadInterstitial() {
     var adRequest = Builder().build()
 
-    InterstitialAd.load(this,"ca-app-pub-5670228311791173/6462050508", adRequest, object : InterstitialAdLoadCallback() {
+    InterstitialAd.load(this,"ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
       override fun onAdFailedToLoad(adError: LoadAdError) {
         Log.d(TAG, adError?.message)
         mInterstitialAd = null
@@ -173,6 +176,7 @@ class SettingsActivity : AppCompatActivity() {
     mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
       override fun onAdDismissedFullScreenContent() {
         Log.d(TAG, "Ad was dismissed.")
+        loadInterstitial()
       }
 
       override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
@@ -183,14 +187,13 @@ class SettingsActivity : AppCompatActivity() {
         Log.d(TAG, "Ad showed fullscreen content.")
       }
     }
-
   }
 
   private fun showInterstitialAd() {
     if (mInterstitialAd != null) {
       mInterstitialAd?.show(this)
       var adRequest = Builder().build()
-      InterstitialAd.load(this,"ca-app-pub-5670228311791173/6462050508", adRequest, object : InterstitialAdLoadCallback() {
+      InterstitialAd.load(this,"ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
         override fun onAdFailedToLoad(adError: LoadAdError) {
           Log.d(TAG, adError?.message)
           mInterstitialAd = null
@@ -201,6 +204,7 @@ class SettingsActivity : AppCompatActivity() {
           showAdButton!!.isEnabled = true
           settingsProgressBar!!.visibility = View.GONE
           mInterstitialAd = interstitialAd
+          loadInterstitial()
         }
       })
     } else {

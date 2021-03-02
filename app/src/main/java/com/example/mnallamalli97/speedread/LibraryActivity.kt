@@ -75,7 +75,6 @@ class LibraryActivity : AppCompatActivity(),
     retrieve(featuredBooksAdapter, topChartsListViewAdapter)
 
     findViewById<View>(id.discoveryPageNewsButton).setOnClickListener(this)
-    findViewById<View>(id.discoveryPageUpgradeButton).setOnClickListener(this)
     findViewById<View>(id.discoveryPageUploadButton).setOnClickListener(this)
 
     booksRecyclerView!!.addOnScrollListener(object : OnScrollListener() {
