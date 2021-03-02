@@ -225,71 +225,7 @@ class CheckoutActivity : AppCompatActivity() {
             .toString()
     )
   }
-
-//  private fun possiblyShowGooglePayButton() {
-//    val isReadyToPayJson = PaymentsUtil.isReadyToPayRequest() ?: return
-//    val request = IsReadyToPayRequest.fromJson(isReadyToPayJson.toString()) ?: return
-//
-//    // The call to isReadyToPay is asynchronous and returns a Task. We need to provide an
-//    // OnCompleteListener to be triggered when the result of the call is known.
-//    val task = paymentsClient.isReadyToPay(request)
-//    task.addOnCompleteListener { completedTask ->
-//      try {
-//        completedTask.getResult(ApiException::class.java)
-//            ?.let(::setGooglePayAvailable)
-//      } catch (exception: ApiException) {
-//        // Process error
-//        Log.w("isReadyToPay failed", exception)
-//      }
-//    }
-//  }
-
-//  /**
-//   * If isReadyToPay returned `true`, show the button and hide the "checking" text. Otherwise,
-//   * notify the user that Google Pay is not available. Please adjust to fit in with your current
-//   * user flow. You are not required to explicitly let the user know if isReadyToPay returns `false`.
-//   *
-//   * @param available isReadyToPay API response.
-//   */
-//  private fun setGooglePayAvailable(available: Boolean) {
-//    if (available) {
-//      googlePayButton!!.visibility = View.VISIBLE
-//    } else {
-//      Toast.makeText(
-//          this,
-//          "Unfortunately, Google Pay is not available on this device",
-//          Toast.LENGTH_LONG
-//      )
-//          .show();
-//    }
-//  }
-//
-//  private fun requestPayment() {
-//
-//    // Disables the button to prevent multiple clicks.
-//    googlePayButton!!.isClickable = false
-//
-//    // The price provided to the API should include taxes and shipping.
-//    val priceCents = bookPrice!!.times(PaymentsUtil.CENTS.toLong())
-//        .roundToLong()
-//
-//    val paymentDataRequestJson = PaymentsUtil.getPaymentDataRequest(priceCents)
-//    if (paymentDataRequestJson == null) {
-//      Log.e("RequestPayment", "Can't fetch payment data request")
-//      return
-//    }
-//    val request = PaymentDataRequest.fromJson(paymentDataRequestJson.toString())
-//
-//    // Since loadPaymentData may show the UI asking the user to select a payment method, we use
-//    // AutoResolveHelper to wait for the user interacting with it. Once completed,
-//    // onActivityResult will be called with the result.
-//    if (request != null) {
-//      AutoResolveHelper.resolveTask(
-//          paymentsClient.loadPaymentData(request), this, LOAD_PAYMENT_DATA_REQUEST_CODE
-//      )
-//    }
-//  }
-
+  
   private fun createPaymentDataRequest(): PaymentDataRequest {
     val cardPaymentMethod = JSONObject()
         .put("type", "CARD")
@@ -343,7 +279,7 @@ class CheckoutActivity : AppCompatActivity() {
         )
         .put(
             "merchantInfo", JSONObject()
-            .put("merchantName", "Example Merchant")
+            .put("merchantName", "Stripe")
         )
 
         // require email address

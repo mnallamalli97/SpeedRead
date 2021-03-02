@@ -121,9 +121,9 @@ class LibraryActivity : AppCompatActivity(),
 
   override fun onClick(v: View) {
     when (v.id) {
-//      id.discoveryPageUpgradeButton -> bookCoverClick(v)
       id.discoveryPageNewsButton -> {
         val startNewsIntent = Intent(this@LibraryActivity, NewsActivity::class.java)
+        finish()
         startActivity(startNewsIntent)
       }
       id.discoveryPageUploadButton -> {
