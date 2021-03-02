@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.util.Pair
 import androidx.core.view.ViewCompat
+import androidx.core.view.get
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,29 +43,32 @@ import com.example.mnallamalli97.speedread.api.ApiInterface
 import com.example.mnallamalli97.speedread.models.Article
 import com.example.mnallamalli97.speedread.models.News
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+import nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.ArrayList
 
-class NewsActivity : AppCompatActivity(), OnRefreshListener {
+class NewsActivity : AppCompatActivity() {
   private var recyclerView: RecyclerView? = null
   private var layoutManager: LayoutManager? = null
   private var articles: MutableList<Article> = ArrayList()
   private var adapter: Adapter? = null
   private val TAG = NewsActivity::class.java.simpleName
   private var topHeadline: TextView? = null
-  private var swipeRefreshLayout: SwipeRefreshLayout? = null
   private var newsActivityRootView: CoordinatorLayout? = null
   private var errorLayout: RelativeLayout? = null
   private var errorImage: ImageView? = null
   private var errorTitle: TextView? = null
   private var errorMessage: TextView? = null
   private var btnRetry: Button? = null
-  private var newsUpgradeButton: Button? = null
+  private var themedButtonGroup: ThemedToggleButtonGroup? = null
+  // private var newsUpgradeButton: Button? = null
   private var isDarkModeOn = false
   private var pref: SharedPreferences? = null
   private var editor: SharedPreferences.Editor? = null
+  private var selectedCategory: String? = null
   override fun onCreate(savedInstanceState: Bundle?) {
     pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
     editor = pref!!.edit()
@@ -77,9 +81,6 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     }
     super.onCreate(savedInstanceState)
     setContentView(layout.news_activity)
-    swipeRefreshLayout = findViewById(id.swipe_refresh_layout)
-    swipeRefreshLayout!!.setOnRefreshListener(this)
-    swipeRefreshLayout!!.setColorSchemeResources(color.colorPrimaryDark)
     topHeadline = findViewById(id.topheadelines)
     recyclerView = findViewById(id.recyclerView)
     newsActivityRootView = findViewById(R.id.newsLayout)
@@ -87,16 +88,17 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     recyclerView!!.setLayoutManager(layoutManager)
     recyclerView!!.setItemAnimator(DefaultItemAnimator())
     recyclerView!!.setNestedScrollingEnabled(false)
-    onLoadingSwipeRefresh("")
     errorLayout = findViewById(id.errorLayout)
     errorImage = findViewById(id.errorImage)
     errorTitle = findViewById(id.errorTitle)
+    themedButtonGroup = findViewById(id.newsCategorySelection)
     errorMessage = findViewById(id.errorMessage)
-    newsUpgradeButton = findViewById(id.newsUpgradeButton)
+    // newsUpgradeButton = findViewById(id.newsUpgradeButton)
     btnRetry = findViewById(id.btnRetry)
     val libraryFAB = findViewById<FloatingActionButton>(id.libraryFAB)
     val uploadFAB = findViewById<FloatingActionButton>(id.uploadFAB)
-    newsUpgradeButton!!.visibility = View.VISIBLE
+    themedButtonGroup = findViewById(id.newsCategorySelection)
+    // newsUpgradeButton!!.visibility = View.VISIBLE
 
     libraryFAB.setOnClickListener {
       val intent = Intent(this@NewsActivity, LibraryActivity::class.java)
@@ -112,28 +114,38 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
       startActivityForResult(intent, 1214)
     }
 
-    newsUpgradeButton!!.setOnTouchListener(object : OnTouchListener {
-      override fun onTouch(
-        v: View?,
-        event: MotionEvent
-      ): Boolean {
-        val DRAWABLE_RIGHT = 2
-        if (event.action === MotionEvent.ACTION_DOWN) {
-          if (event.rawX >= newsUpgradeButton!!.right - newsUpgradeButton!!.compoundDrawables[DRAWABLE_RIGHT]
-                  .bounds
-                  .width()
-          ) {
-            newsUpgradeButton!!.visibility = View.GONE
-            return true
-          }
-        }
-        return false
-      }
-    })
+    LoadJson("General")
+    val btn0: ThemedButton = findViewById(id.btn0)
+    themedButtonGroup!!.selectButton(btn0)
 
-    newsUpgradeButton!!.setOnClickListener {
-      showDialog()
+    themedButtonGroup!!.setOnSelectListener { button: ThemedButton ->
+      // handle selected button
+      selectedCategory = button.text
+      LoadJson(selectedCategory!!)
     }
+
+//    newsUpgradeButton!!.setOnTouchListener(object : OnTouchListener {
+//      override fun onTouch(
+//        v: View?,
+//        event: MotionEvent
+//      ): Boolean {
+//        val DRAWABLE_RIGHT = 2
+//        if (event.action === MotionEvent.ACTION_DOWN) {
+//          if (event.rawX >= newsUpgradeButton!!.right - newsUpgradeButton!!.compoundDrawables[DRAWABLE_RIGHT]
+//                  .bounds
+//                  .width()
+//          ) {
+//            newsUpgradeButton!!.visibility = View.GONE
+//            return true
+//          }
+//        }
+//        return false
+//      }
+//    })
+//
+//    newsUpgradeButton!!.setOnClickListener {
+//      showDialog()
+//    }
 
   }
 
@@ -198,9 +210,8 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     return result
   }
 
-  fun LoadJson(keyword: String) {
+  fun LoadJson(category: String) {
     errorLayout!!.visibility = View.GONE
-    swipeRefreshLayout!!.isRefreshing = true
     val apiInterface = ApiClient.getApiClient()
         .create(
             ApiInterface::class.java
@@ -208,8 +219,8 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     val country = Utils.getCountry()
     val language = Utils.getLanguage()
     val call: Call<News>
-    call = if (keyword.length > 0) {
-      apiInterface.getNewsSearch(keyword, language, "publishedAt", API_KEY)
+    call = if (selectedCategory != "General") {
+      apiInterface.getNewsSearch(language, category,"publishedAt", API_KEY)
     } else {
       apiInterface.getNews(country, API_KEY)
     }
@@ -231,10 +242,8 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
           adapter!!.notifyDataSetChanged()
           initListener()
           topHeadline!!.visibility = View.VISIBLE
-          swipeRefreshLayout!!.isRefreshing = false
         } else {
           topHeadline!!.visibility = View.INVISIBLE
-          swipeRefreshLayout!!.isRefreshing = false
           val errorCode: String
           errorCode = when (response.code()) {
             404 -> "404 not found"
@@ -257,7 +266,6 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
         t: Throwable
       ) {
         topHeadline!!.visibility = View.INVISIBLE
-        swipeRefreshLayout!!.isRefreshing = false
         showErrorMessage(
             drawable.oops,
             "Oops..",
@@ -293,13 +301,6 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
       startActivityForResult(intent, 1214)
     }
   }
-  override fun onRefresh() {
-    LoadJson("")
-  }
-
-  private fun onLoadingSwipeRefresh(keyword: String) {
-    swipeRefreshLayout!!.post { LoadJson(keyword) }
-  }
 
   private fun showErrorMessage(
     imageView: Int,
@@ -312,7 +313,7 @@ class NewsActivity : AppCompatActivity(), OnRefreshListener {
     errorImage!!.setImageResource(imageView)
     errorTitle!!.text = title
     errorMessage!!.text = message
-    btnRetry!!.setOnClickListener { onLoadingSwipeRefresh("") }
+    btnRetry!!.setOnClickListener { LoadJson("") }
   }
 
   companion object {

@@ -16,11 +16,10 @@ public interface ApiInterface {
 
     );
 
-    @GET("everything")
+    @GET("top-headlines")
     Call<News> getNewsSearch(
-
-            @Query("q") String keyword,
             @Query("language") String language,
+            @Query("category") String category,
             @Query("sortBy") String sortBy,
             @Query("apiKey") String apiKey
 

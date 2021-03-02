@@ -225,7 +225,7 @@ class CheckoutActivity : AppCompatActivity() {
             .toString()
     )
   }
-  
+
   private fun createPaymentDataRequest(): PaymentDataRequest {
     val cardPaymentMethod = JSONObject()
         .put("type", "CARD")
