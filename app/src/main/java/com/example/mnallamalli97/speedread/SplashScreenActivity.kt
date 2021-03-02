@@ -20,7 +20,7 @@ class SplashScreenActivity : Activity() {
   private val SPLASH_DISPLAY_LENGTH = 1500
 
   private val SPLASH_TEXT_1_TIME_IN_MILLISECONDS = 11000L
-  private val SPLASH_TEXT_2_TIME_IN_MILLISECONDS = 6000L
+  private val SPLASH_TEXT_2_TIME_IN_MILLISECONDS = 7500L
   private val TOTAL_SPLASH_TEXT_TIME_IN_MILLISECONDS =
     SPLASH_TEXT_1_TIME_IN_MILLISECONDS + SPLASH_TEXT_2_TIME_IN_MILLISECONDS
   private var splashWordTextView: TextView? = null
@@ -32,9 +32,9 @@ class SplashScreenActivity : Activity() {
   val applicationJob = Job()
 
   var helloWorldContent150 =
-    "The average person can read at this speed: 150 words per minute. But, our brains can process information faster than our eyes can move."
+    "The average person can read at 150 words per minute. But, our brains can process information faster than our eyes can move."
   var helloWorldContent300 =
-    "You are now reading at 300 words a minute. That was a quick improvement. You can read even faster with a little practice."
+    "You are now reading this at 300 words a minute. Catch up on the news or read a new book even faster using"
 
   /** Called when the activity is first created.  */
   public override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +110,7 @@ class SplashScreenActivity : Activity() {
         .toTypedArray()
     val totalWordCount = wc300.size
     var currentWordCount = 0
-    val switchWordPeriod300 = (MILLISECOND_PER_MINUTE / 300).toLong()
+    val switchWordPeriod300 = (MILLISECOND_PER_MINUTE / 250).toLong()
 
     splashTimer2.scheduleAtFixedRate(object : TimerTask() {
       override fun run() {
@@ -119,11 +119,19 @@ class SplashScreenActivity : Activity() {
             splashWordTextView!!.text = wc300[currentWordCount]
             currentWordCount++
           } else {
+            GlobalScope.launch {
+              suspend {
+                delay(1000L)
+              }.invoke()
+            }
+            splashWordTextView!!.text = "Speed Read"
             splashTimer2.cancel()
           }
+
         }
       }
     }, 0, switchWordPeriod300)
+
 
   }
 }
