@@ -14,12 +14,9 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -41,18 +38,12 @@ class LibraryActivity : AppCompatActivity(),
     OnClickListener {
   private val libraryList = ArrayList<Book>()
   private var book: Book? = null
-  private var listView: ListView? = null
-
-  private var bookCoverImageButton: ImageButton? = null
-  private var rateItemButton: ImageView? = null
   private var booksRecyclerView: RecyclerView? = null
-  private var topChartsListView: ListView? = null
-  private var nonScrollListView: NonScrollListView? = null
+  private var topBooksListView: NonScrollListView? = null
   private var currentBookPosition: Int = 0
 
   // SETUP FIREBASE
   var databaseReference: DatabaseReference? = null
-  var booksDataReference: DatabaseReference? = null
   var t: GenericTypeIndicator<ArrayList<String>> = object : GenericTypeIndicator<ArrayList<String>>() {}
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +51,7 @@ class LibraryActivity : AppCompatActivity(),
     setContentView(layout.library_activity)
     val layoutManager = CenterZoomLayout( this)
     booksRecyclerView = findViewById<RecyclerView>(R.id.tourRV)
-    nonScrollListView = findViewById(R.id.listView)
+    topBooksListView = findViewById(R.id.listView)
 
 
 
@@ -79,7 +70,7 @@ class LibraryActivity : AppCompatActivity(),
     val featuredBooksAdapter = CustomBookAdapter(libraryList)
     val topChartsListViewAdapter = TopChartsListViewAdapter(this, libraryList)
     booksRecyclerView!!.adapter = featuredBooksAdapter
-    nonScrollListView!!.adapter = topChartsListViewAdapter
+    topBooksListView!!.adapter = topChartsListViewAdapter
 
     retrieve(featuredBooksAdapter, topChartsListViewAdapter)
 
