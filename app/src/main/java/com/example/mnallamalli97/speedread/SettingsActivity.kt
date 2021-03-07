@@ -74,7 +74,7 @@ class SettingsActivity : AppCompatActivity() {
     val bookChaptersPaths = extras.getString("bookChaptersPaths")
     val content = extras.getString("content")
     wordCount = extras.getInt("wordCount")
-    seekBarValue = pref!!.getInt("speedreadSpeed", 250)
+    seekBarValue = pref!!.getInt("speedreadSpeed", 300)
     userUploadUri = extras.getString("userUploadUri")
 
     bookTitle!!.setText(title)

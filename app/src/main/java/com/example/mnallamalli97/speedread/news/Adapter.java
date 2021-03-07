@@ -57,7 +57,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder>{
         requestOptions.centerCrop();
 
         Glide.with(context)
-                .load(model.getUrlToImage())
+                .load(model.getImage())
                 .apply(requestOptions)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -77,10 +77,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder>{
 
         holder.title.setText(model.getTitle());
         holder.desc.setText(model.getDescription());
-        holder.source.setText(model.getSource().getName());
-        holder.time.setText(" \u2022 " + Utils.DateToTimeFormat(model.getPublishedAt()));
-        holder.published_ad.setText(Utils.DateFormat(model.getPublishedAt()));
-        holder.author.setText(model.getAuthor());
+        holder.source.setText(model.getSource());
+        holder.published_ad.setText(Utils.DateFormat(model.getPublishedDate()));
+       // holder.author.setText(model.author);
 
     }
 

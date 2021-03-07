@@ -165,45 +165,5 @@
         app:isb_track_background_size="2dp"
         app:isb_track_progress_size="4dp"
         />
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/linearLayout"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:layout_marginBottom="10dp"-->
-    <!--        android:layout_marginTop="10dp"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:weightSum="2"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/saveButton"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/seekBar">-->
-
-    <!--        <Button-->
-    <!--            android:id="@+id/libraryButton"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_marginEnd="2dp"-->
-    <!--            android:layout_marginStart="8dp"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:background="@drawable/my_shape"-->
-    <!--            android:shadowRadius="10"-->
-    <!--            android:text="Library"-->
-    <!--            android:textAlignment="center"-->
-    <!--            android:textColor="@color/colorPrimary" />-->
-
-    <!--        <Switch-->
-    <!--            android:id="@+id/darkMode"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_marginEnd="8dp"-->
-    <!--            android:layout_marginStart="4dp"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:background="@drawable/my_shape"-->
-    <!--            android:textAlignment="textStart"-->
-    <!--            android:thumb="@drawable/thumb2"-->
-    <!--            android:track="@drawable/track1" />-->
-    <!--        -->
-    <!--        </LinearLayout>-->
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

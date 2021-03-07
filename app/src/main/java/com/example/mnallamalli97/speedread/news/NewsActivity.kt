@@ -8,9 +8,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.view.MotionEvent
+import android.util.Log
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.Window
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams
@@ -24,30 +23,24 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.util.Pair
 import androidx.core.view.ViewCompat
-import androidx.core.view.get
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.example.mnallamalli97.speedread.LibraryActivity
 import com.example.mnallamalli97.speedread.R
-import com.example.mnallamalli97.speedread.R.color
 import com.example.mnallamalli97.speedread.R.drawable
 import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.example.mnallamalli97.speedread.SettingsActivity
-import com.example.mnallamalli97.speedread.api.ApiClient
-import com.example.mnallamalli97.speedread.api.ApiInterface
 import com.example.mnallamalli97.speedread.models.Article
-import com.example.mnallamalli97.speedread.models.News
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
 import nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+import java.io.IOException
 import java.util.ArrayList
 
 class NewsActivity : AppCompatActivity() {
@@ -61,6 +54,7 @@ class NewsActivity : AppCompatActivity() {
   private var errorLayout: RelativeLayout? = null
   private var errorImage: ImageView? = null
   private var errorTitle: TextView? = null
+  private var test: TextView? = null
   private var errorMessage: TextView? = null
   private var btnRetry: Button? = null
   private var themedButtonGroup: ThemedToggleButtonGroup? = null
@@ -69,6 +63,12 @@ class NewsActivity : AppCompatActivity() {
   private var pref: SharedPreferences? = null
   private var editor: SharedPreferences.Editor? = null
   private var selectedCategory: String? = null
+  // private var listOfArticleUrls = mutableListOf<String>()
+  private var articleMapping: MutableMap<String, String> = mutableMapOf()
+
+  private var th1: Thread? = null
+  private var th2: Thread? = null
+  private var th3: Thread? = null
   override fun onCreate(savedInstanceState: Bundle?) {
     pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
     editor = pref!!.edit()
@@ -91,6 +91,7 @@ class NewsActivity : AppCompatActivity() {
     errorLayout = findViewById(id.errorLayout)
     errorImage = findViewById(id.errorImage)
     errorTitle = findViewById(id.errorTitle)
+    test = findViewById(id.test)
     themedButtonGroup = findViewById(id.newsCategorySelection)
     errorMessage = findViewById(id.errorMessage)
     // newsUpgradeButton = findViewById(id.newsUpgradeButton)
@@ -103,7 +104,7 @@ class NewsActivity : AppCompatActivity() {
     libraryFAB.setOnClickListener {
       val intent = Intent(this@NewsActivity, LibraryActivity::class.java)
       this@NewsActivity.startActivity(intent)
-      this.overridePendingTransition(0,0)
+      this.overridePendingTransition(0, 0)
     }
 
     uploadFAB.setOnClickListener {
@@ -114,14 +115,41 @@ class NewsActivity : AppCompatActivity() {
       startActivityForResult(intent, 1214)
     }
 
-    LoadJson("General")
+
+    th1 = Thread( object : Thread() {
+      override fun run() {
+        testingGetUrls()
+      }
+    })
+//    th2 = Thread( object : Thread() {
+//      override fun run() {
+//        initListener()
+//      }
+//    })
+
+    th1!!.start()
+
+//    try {
+//      th1!!.join()
+//    } catch (ie: InterruptedException) {
+//      ie.printStackTrace()
+//    }
+//    th2!!.start()
+
+
+
+
+
+
+
+    // LoadJson("General")
     val btn0: ThemedButton = findViewById(id.btn0)
     themedButtonGroup!!.selectButton(btn0)
 
     themedButtonGroup!!.setOnSelectListener { button: ThemedButton ->
       // handle selected button
       selectedCategory = button.text
-      LoadJson(selectedCategory!!)
+      //LoadJson(selectedCategory!!)
     }
 
 //    newsUpgradeButton!!.setOnTouchListener(object : OnTouchListener {
@@ -149,7 +177,131 @@ class NewsActivity : AppCompatActivity() {
 
   }
 
-  private fun showDialog() {
+  fun testingGetUrls() {
+    val client = OkHttpClient()
+    val request = Request.Builder()
+        .url("https://news67.p.rapidapi.com/trending?limit=10&langs=en&skip=5")
+        .get()
+        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
+        .addHeader("x-rapidapi-host", "news67.p.rapidapi.com")
+        .build()
+
+
+
+    client.newCall(request)
+        .enqueue(object : okhttp3.Callback {
+          override fun onFailure(
+            call: okhttp3.Call,
+            e: IOException
+          ) {
+            topHeadline!!.visibility = View.INVISIBLE
+            showErrorMessage(
+                drawable.oops,
+                "Oops..",
+                """
+              Network failure, Please Try Again
+              $e
+              """.trimIndent()
+            )
+          }
+
+          override fun onResponse(
+            call: okhttp3.Call,
+            response: okhttp3.Response
+          ) {
+            val jsonData = "{\"result\":" + response.body!!.string() + "}"
+            Log.d("test", jsonData)
+
+            val obj = JSONObject(jsonData)
+            val resultArray: org.json.JSONArray = obj.getJSONArray("result")
+            for (i in 0 until resultArray.length()) {
+              val obj: JSONObject = resultArray.getJSONObject(i)
+              //store your variable
+              val id = obj.getString("id")
+              val title = obj.getString("title")
+              val url = obj.getString("url")
+              val description = obj.getString("description")
+              val image = obj.getString("image")
+              val publishedDate = obj.getString("publishedDate")
+              val source = obj.getString("source")
+
+              articleMapping.put(id, url)
+              articles.add(Article(id, title, url, description, image, publishedDate, source))
+            }
+
+
+
+            runOnUiThread {
+              adapter = Adapter(articles, this@NewsActivity)
+              adapter!!.notifyDataSetChanged()
+              recyclerView!!.adapter = adapter
+              initListener()
+            }
+
+
+          }
+
+        })
+  }
+
+  fun getFullContent(articlesUrlMap: MutableMap<String, String>, selectedId: String) {
+    val client = OkHttpClient()
+
+    val request = Request.Builder()
+        .url("https://news-article-data-extract-and-summarization1.p.rapidapi.com/extract/v2/?url=" + articlesUrlMap[selectedId] + "&useCache=true")
+        .get()
+        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
+        .addHeader("x-rapidapi-host", "news-article-data-extract-and-summarization1.p.rapidapi.com")
+        .build()
+
+    client.newCall(request)
+        .enqueue(object : okhttp3.Callback {
+          override fun onFailure(
+            call: okhttp3.Call,
+            e: IOException
+          ) {
+            topHeadline!!.visibility = View.INVISIBLE
+            showErrorMessage(
+                drawable.oops,
+                "Oops..",
+                """
+              Network failure, Please Try Again
+              $e
+              """.trimIndent()
+            )
+          }
+
+          override fun onResponse(
+            call: okhttp3.Call,
+            response: okhttp3.Response
+          ) {
+            val jsonData = response.body!!.string()
+            Log.d("test", jsonData)
+
+//            val obj = JSONObject(jsonData)
+//            val resultArray: org.json.JSONArray = obj.getJSONArray("result")
+//            for (i in 0 until resultArray.length()) {
+//              val obj: JSONObject = resultArray.getJSONObject(i)
+//              //store your variable
+//              val id = obj.getString("id")
+//              val title = obj.getString("title")
+//              val url = obj.getString("url")
+//              val description = obj.getString("description")
+//              val image = obj.getString("image")
+//              val publishedDate = obj.getString("publishedDate")
+//              val source = obj.getString("source")
+//
+//              articleMapping.put(id, url)
+//              articles.add(Article(id, title, url, description, image, publishedDate, source))
+//            }
+
+          }
+
+        })
+
+  }
+
+  private fun showUpgradeDialog() {
     val dialog = Dialog(this@NewsActivity)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.setCancelable(false)
@@ -210,73 +362,74 @@ class NewsActivity : AppCompatActivity() {
     return result
   }
 
-  fun LoadJson(category: String) {
-    errorLayout!!.visibility = View.GONE
-    val apiInterface = ApiClient.getApiClient()
-        .create(
-            ApiInterface::class.java
-        )
-    val country = Utils.getCountry()
-    val language = Utils.getLanguage()
-    val call: Call<News>
-    call = if (selectedCategory != "General") {
-      apiInterface.getNewsSearch(language, category,"publishedAt", API_KEY)
-    } else {
-      apiInterface.getNews(country, API_KEY)
-    }
-    call.enqueue(object : Callback<News> {
-      override fun onResponse(
-        call: Call<News>,
-        response: Response<News>
-      ) {
-        if (response.isSuccessful && response.body()
-                !!.getArticle() != null
-        ) {
-          if (!articles.isEmpty()) {
-            articles.clear()
-          }
-          articles = response.body()!!.article
-
-          adapter = Adapter(articles, this@NewsActivity)
-          recyclerView!!.adapter = adapter
-          adapter!!.notifyDataSetChanged()
-          initListener()
-          topHeadline!!.visibility = View.VISIBLE
-        } else {
-          topHeadline!!.visibility = View.INVISIBLE
-          val errorCode: String
-          errorCode = when (response.code()) {
-            404 -> "404 not found"
-            500 -> "500 server broken"
-            else -> "unknown error"
-          }
-          showErrorMessage(
-              drawable.no_result,
-              "No Result",
-              """
-                Please Try Again!
-                $errorCode
-                """.trimIndent()
-          )
-        }
-      }
-
-      override fun onFailure(
-        call: Call<News>,
-        t: Throwable
-      ) {
-        topHeadline!!.visibility = View.INVISIBLE
-        showErrorMessage(
-            drawable.oops,
-            "Oops..",
-            """
-              Network failure, Please Try Again
-              $t
-              """.trimIndent()
-        )
-      }
-    })
-  }
+//  fun LoadJson(category: String) {
+//    errorLayout!!.visibility = View.GONE
+//
+//    val apiInterface = ApiClient.apiClient
+//        .create(
+//            ApiInterface::class.java
+//        )
+//    val country = Utils.getCountry()
+//    val language = Utils.getLanguage()
+//    val call: Call<News>
+//    call = if (selectedCategory != "General") {
+//      apiInterface.getNewsSearch(language, category,"publishedAt", API_KEY)
+//    } else {
+//      apiInterface.getNews(country, API_KEY)
+//    }
+//    call.enqueue(object : Callback<News> {
+//      override fun onResponse(
+//        call: Call<News>,
+//        response: Response<News>
+//      ) {
+//        if (response.isSuccessful && response.body()
+//                !!.getArticle() != null
+//        ) {
+//          if (!articles.isEmpty()) {
+//            articles.clear()
+//          }
+//          articles = response.body()!!.article
+//
+//          adapter = Adapter(articles, this@NewsActivity)
+//          recyclerView!!.adapter = adapter
+//          adapter!!.notifyDataSetChanged()
+//          initListener()
+//          topHeadline!!.visibility = View.VISIBLE
+//        } else {
+//          topHeadline!!.visibility = View.INVISIBLE
+//          val errorCode: String
+//          errorCode = when (response.code()) {
+//            404 -> "404 not found"
+//            500 -> "500 server broken"
+//            else -> "unknown error"
+//          }
+//          showErrorMessage(
+//              drawable.no_result,
+//              "No Result",
+//              """
+//                Please Try Again!
+//                $errorCode
+//                """.trimIndent()
+//          )
+//        }
+//      }
+//
+//      override fun onFailure(
+//        call: Call<News>,
+//        t: Throwable
+//      ) {
+//        topHeadline!!.visibility = View.INVISIBLE
+//        showErrorMessage(
+//            drawable.oops,
+//            "Oops..",
+//            """
+//              Network failure, Please Try Again
+//              $t
+//              """.trimIndent()
+//        )
+//      }
+//    })
+//  }
 
   private fun initListener() {
     adapter!!.setOnItemClickListener { view, position ->
@@ -284,16 +437,23 @@ class NewsActivity : AppCompatActivity() {
         view.findViewById<ImageView>(id.img)
       val intent = Intent(this@NewsActivity, SettingsActivity::class.java)
       val article = articles[position]
+
+      var tests = ""
+      object : Thread() {
+        override fun run() {
+          getFullContent(articleMapping, article.id!!)
+        }
+      }.start()
+
+
       intent.putExtra("url", article.url)
       intent.putExtra("title", article.title)
-      intent.putExtra("img", article.urlToImage)
-      intent.putExtra("date", article.publishedAt)
-      intent.putExtra(
-          "source", article.source
-          .name
-      )
+      intent.putExtra("img", article.image)
+      intent.putExtra("date", article.publishedDate)
+      intent.putExtra("source", article.source)
       intent.putExtra("author", "Google News")
-      intent.putExtra("content", article.content)
+      intent.putExtra("content", tests)
+
       val pair =
         Pair.create(
             imageView as View, ViewCompat.getTransitionName(imageView)
@@ -313,7 +473,7 @@ class NewsActivity : AppCompatActivity() {
     errorImage!!.setImageResource(imageView)
     errorTitle!!.text = title
     errorMessage!!.text = message
-    btnRetry!!.setOnClickListener { LoadJson("") }
+    // btnRetry!!.setOnClickListener { LoadJson("") }
   }
 
   companion object {
