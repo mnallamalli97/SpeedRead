@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 class Article {
 
-  @SerializedName("id") @Expose var id: String? = null
+  @SerializedName("author") @Expose var author: String? = null
 
   @SerializedName("title") @Expose var title: String? = null
 
@@ -13,23 +13,23 @@ class Article {
 
   @SerializedName("description") @Expose var description: String? = null
 
-  @SerializedName("image") @Expose var image: String? = null
+  @SerializedName("urlToImage") @Expose var image: String? = null
 
-  @SerializedName("publishedDate") @Expose var publishedDate: String? = null
+  @SerializedName("publishedAt") @Expose var publishedDate: String? = null
 
   @SerializedName("source") @Expose var source: String? = null
 
   constructor(
-    id: String?,
     title: String?,
+    author: String?,
     url: String?,
     description: String?,
     image: String?,
     publishedDate: String?,
     source: String?
   ) {
-    this.id = id
     this.title = title
+    this.author = author
     this.url = url
     this.description = description
     this.image = image

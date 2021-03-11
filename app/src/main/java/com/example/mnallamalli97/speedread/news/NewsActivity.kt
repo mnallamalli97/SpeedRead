@@ -21,8 +21,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.util.Pair
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,8 +35,10 @@ import com.example.mnallamalli97.speedread.models.Article
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
 import nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import org.json.JSONObject
 import java.io.IOException
 import java.util.ArrayList
@@ -63,7 +63,9 @@ class NewsActivity : AppCompatActivity() {
   private var pref: SharedPreferences? = null
   private var editor: SharedPreferences.Editor? = null
   private var selectedCategory: String? = null
-  // private var listOfArticleUrls = mutableListOf<String>()
+  private var selectedArticle: Article? = null
+  private var fullArticleContent = ""
+  private var articleId = ""
   private var articleMapping: MutableMap<String, String> = mutableMapOf()
 
   private var th1: Thread? = null
@@ -180,79 +182,10 @@ class NewsActivity : AppCompatActivity() {
   fun testingGetUrls() {
     val client = OkHttpClient()
     val request = Request.Builder()
-        .url("https://news67.p.rapidapi.com/trending?limit=10&langs=en&skip=5")
-        .get()
-        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
-        .addHeader("x-rapidapi-host", "news67.p.rapidapi.com")
+        .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=6c5a6f37e8dc4f6194dce74bf821d4b7")
         .build()
 
 
-
-    client.newCall(request)
-        .enqueue(object : okhttp3.Callback {
-          override fun onFailure(
-            call: okhttp3.Call,
-            e: IOException
-          ) {
-            topHeadline!!.visibility = View.INVISIBLE
-            showErrorMessage(
-                drawable.oops,
-                "Oops..",
-                """
-              Network failure, Please Try Again
-              $e
-              """.trimIndent()
-            )
-          }
-
-          override fun onResponse(
-            call: okhttp3.Call,
-            response: okhttp3.Response
-          ) {
-            val jsonData = "{\"result\":" + response.body!!.string() + "}"
-            Log.d("test", jsonData)
-
-            val obj = JSONObject(jsonData)
-            val resultArray: org.json.JSONArray = obj.getJSONArray("result")
-            for (i in 0 until resultArray.length()) {
-              val obj: JSONObject = resultArray.getJSONObject(i)
-              //store your variable
-              val id = obj.getString("id")
-              val title = obj.getString("title")
-              val url = obj.getString("url")
-              val description = obj.getString("description")
-              val image = obj.getString("image")
-              val publishedDate = obj.getString("publishedDate")
-              val source = obj.getString("source")
-
-              articleMapping.put(id, url)
-              articles.add(Article(id, title, url, description, image, publishedDate, source))
-            }
-
-
-
-            runOnUiThread {
-              adapter = Adapter(articles, this@NewsActivity)
-              adapter!!.notifyDataSetChanged()
-              recyclerView!!.adapter = adapter
-              initListener()
-            }
-
-
-          }
-
-        })
-  }
-
-  fun getFullContent(articlesUrlMap: MutableMap<String, String>, selectedId: String) {
-    val client = OkHttpClient()
-
-    val request = Request.Builder()
-        .url("https://news-article-data-extract-and-summarization1.p.rapidapi.com/extract/v2/?url=" + articlesUrlMap[selectedId] + "&useCache=true")
-        .get()
-        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
-        .addHeader("x-rapidapi-host", "news-article-data-extract-and-summarization1.p.rapidapi.com")
-        .build()
 
     client.newCall(request)
         .enqueue(object : okhttp3.Callback {
@@ -278,27 +211,92 @@ class NewsActivity : AppCompatActivity() {
             val jsonData = response.body!!.string()
             Log.d("test", jsonData)
 
-//            val obj = JSONObject(jsonData)
-//            val resultArray: org.json.JSONArray = obj.getJSONArray("result")
-//            for (i in 0 until resultArray.length()) {
-//              val obj: JSONObject = resultArray.getJSONObject(i)
-//              //store your variable
-//              val id = obj.getString("id")
-//              val title = obj.getString("title")
-//              val url = obj.getString("url")
-//              val description = obj.getString("description")
-//              val image = obj.getString("image")
-//              val publishedDate = obj.getString("publishedDate")
-//              val source = obj.getString("source")
-//
-//              articleMapping.put(id, url)
-//              articles.add(Article(id, title, url, description, image, publishedDate, source))
-//            }
+            val obj = JSONObject(jsonData)
+            val resultArray: org.json.JSONArray = obj.getJSONArray("articles")
+            for (i in 0 until resultArray.length()) {
+              val obj: JSONObject = resultArray.getJSONObject(i)
+              //store your variable
+              articleId = i.toString()
+              val title = obj.getString("title")
+              val author = obj.getString("author")
+              val url = obj.getString("url")
+              val description = obj.getString("description")
+              val urlToImage = obj.getString("urlToImage")
+              val publishedDate = obj.getString("publishedAt")
+              val sourceArray: org.json.JSONObject = obj.getJSONObject("source")
+              val source = sourceArray.getString("name")
+
+              articleMapping[articleId] = url
+              articles.add(Article(title, author, url, description, urlToImage, publishedDate, source))
+            }
+
+
+
+            runOnUiThread {
+              adapter = Adapter(articles, this@NewsActivity)
+              adapter!!.notifyDataSetChanged()
+              recyclerView!!.adapter = adapter
+              initListener()
+            }
+
 
           }
 
         })
+  }
 
+  fun getFullContent(articlesUrlMap: MutableMap<String, String>, selectedId: String) {
+    val client = OkHttpClient()
+    val mediaType = "application/json".toMediaTypeOrNull()
+    val body = RequestBody.create(mediaType, "{\"url\":\"https://www.oneindia.com/india/dalai-lama-receives-first-dose-of-anti-coronavirus-vaccine-3226222.html?ref_source=articlepage-Slot1-8&ref_medium=dsktp&ref_campaign=similar-topic-slider\"}")
+    val request = Request.Builder()
+        .url("https://news-article-extraction.p.rapidapi.com/")
+        .post(body)
+        .addHeader("content-type", "application/json")
+        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
+        .addHeader("x-rapidapi-host", "news-article-extraction.p.rapidapi.com")
+        .build()
+
+    client.newCall(request)
+        .enqueue(object : okhttp3.Callback {
+          override fun onFailure(
+            call: okhttp3.Call,
+            e: IOException
+          ) {
+            topHeadline!!.visibility = View.INVISIBLE
+            showErrorMessage(
+                drawable.oops,
+                "Oops..",
+                """
+              Network failure, Please Try Again
+              $e
+              """.trimIndent()
+            )
+          }
+
+          override fun onResponse(
+            call: okhttp3.Call,
+            response: okhttp3.Response
+          ) {
+            val jsonData = response.body!!.string()
+            Log.d("testArticle", jsonData)
+
+            val obj = JSONObject(jsonData)
+            val resultArray: org.json.JSONObject = obj.getJSONObject("result")
+            for (i in 0 until resultArray.length()) {
+
+              val author = resultArray.getString("author")
+              fullArticleContent = resultArray.getString("content")
+            }
+
+            startActivityForResult(intent, 1215)
+
+
+
+
+
+          }
+        })
   }
 
   private fun showUpgradeDialog() {
@@ -338,6 +336,26 @@ class NewsActivity : AppCompatActivity() {
         startActivity(intent)
       }
     }
+
+    if (requestCode == 1215) {
+
+        val intent = Intent(this@NewsActivity, SettingsActivity::class.java)
+
+        val article = selectedArticle!!
+
+        intent.putExtra("url", article.url)
+        intent.putExtra("title", article.title)
+        intent.putExtra("img", article.image)
+        intent.putExtra("date", article.publishedDate)
+        intent.putExtra("source", article.source)
+        intent.putExtra("author", "Google News")
+
+        intent.putExtra("content", fullArticleContent)
+        startActivity(intent)
+
+
+    }
+
   }
 
   fun getFileName(uri: Uri): String? {
@@ -362,104 +380,19 @@ class NewsActivity : AppCompatActivity() {
     return result
   }
 
-//  fun LoadJson(category: String) {
-//    errorLayout!!.visibility = View.GONE
-//
-//    val apiInterface = ApiClient.apiClient
-//        .create(
-//            ApiInterface::class.java
-//        )
-//    val country = Utils.getCountry()
-//    val language = Utils.getLanguage()
-//    val call: Call<News>
-//    call = if (selectedCategory != "General") {
-//      apiInterface.getNewsSearch(language, category,"publishedAt", API_KEY)
-//    } else {
-//      apiInterface.getNews(country, API_KEY)
-//    }
-//    call.enqueue(object : Callback<News> {
-//      override fun onResponse(
-//        call: Call<News>,
-//        response: Response<News>
-//      ) {
-//        if (response.isSuccessful && response.body()
-//                !!.getArticle() != null
-//        ) {
-//          if (!articles.isEmpty()) {
-//            articles.clear()
-//          }
-//          articles = response.body()!!.article
-//
-//          adapter = Adapter(articles, this@NewsActivity)
-//          recyclerView!!.adapter = adapter
-//          adapter!!.notifyDataSetChanged()
-//          initListener()
-//          topHeadline!!.visibility = View.VISIBLE
-//        } else {
-//          topHeadline!!.visibility = View.INVISIBLE
-//          val errorCode: String
-//          errorCode = when (response.code()) {
-//            404 -> "404 not found"
-//            500 -> "500 server broken"
-//            else -> "unknown error"
-//          }
-//          showErrorMessage(
-//              drawable.no_result,
-//              "No Result",
-//              """
-//                Please Try Again!
-//                $errorCode
-//                """.trimIndent()
-//          )
-//        }
-//      }
-//
-//      override fun onFailure(
-//        call: Call<News>,
-//        t: Throwable
-//      ) {
-//        topHeadline!!.visibility = View.INVISIBLE
-//        showErrorMessage(
-//            drawable.oops,
-//            "Oops..",
-//            """
-//              Network failure, Please Try Again
-//              $t
-//              """.trimIndent()
-//        )
-//      }
-//    })
-//  }
 
   private fun initListener() {
     adapter!!.setOnItemClickListener { view, position ->
-      val imageView =
-        view.findViewById<ImageView>(id.img)
-      val intent = Intent(this@NewsActivity, SettingsActivity::class.java)
-      val article = articles[position]
-
-      var tests = ""
       object : Thread() {
         override fun run() {
-          getFullContent(articleMapping, article.id!!)
+          selectedArticle = articles.get(index = position)
+          getFullContent(articleMapping, articleId)
         }
       }.start()
-
-
-      intent.putExtra("url", article.url)
-      intent.putExtra("title", article.title)
-      intent.putExtra("img", article.image)
-      intent.putExtra("date", article.publishedDate)
-      intent.putExtra("source", article.source)
-      intent.putExtra("author", "Google News")
-      intent.putExtra("content", tests)
-
-      val pair =
-        Pair.create(
-            imageView as View, ViewCompat.getTransitionName(imageView)
-        )
-      startActivityForResult(intent, 1214)
     }
+
+
+
   }
 
   private fun showErrorMessage(
@@ -482,102 +415,3 @@ class NewsActivity : AppCompatActivity() {
 }
 
 
-
-
-
-/*
-This code is used to fetch the urls of the top 100 news articles
-Use the second request builder to to call each of those requests to get the content of those articles
- */
-
-
-// https://rapidapi.com/newscatcher-api-newscatcher-api-default/api/newscatcher?endpoint=apiendpoint_afd4bf15-9861-4285-b122-95d6df0de330
-//private var json: JSONObject? = null
-//
-//private var sample: TextView? = null
-//
-//
-//    // call send message here
-//
-//    val client = OkHttpClient()
-//
-//    val getTop100Articles = Request.Builder()
-//        .url("https://newscatcher.p.rapidapi.com/v1/latest_headlines?lang=en&media=True")
-//        .get()
-//        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
-//        .addHeader("x-rapidapi-host", "newscatcher.p.rapidapi.com")
-//        .build()
-//
-//    client.newCall(getTop100Articles).enqueue(object : Callback {
-//      override fun onFailure(
-//        call: Call,
-//        e: IOException
-//      ) {
-//        TODO("Not yet implemented")
-//      }
-//
-//      override fun onResponse(
-//        call: Call,
-//        response: Response
-//      ) {
-//        response.use {
-//          if (!response.isSuccessful) throw IOException("Unexpected code $response")
-//          else {
-//            val resStr = response.body!!.string()
-//            json = JSONObject(resStr)
-//            val keys: Iterator<String> = json!!.keys()
-//
-//            val content = json!!.getString("link")
-//
-//            for (i in 0 until articles.length()) {
-//              val item = persons.getJSONObject(i)
-//
-//              // Your code here
-//            }
-//
-//          }
-//        }
-//      }
-//
-//    })
-//
-
-//
-//    https://rapidapi.com/newscatcher-api-newscatcher-api-default/api/news-parser1?endpoint=apiendpoint_627103d7-92e1-4109-8d92-3a77b63302da
-//
-//    val request = Request.Builder()
-//        .url("https://news-parser1.p.rapidapi.com/article_v1?url=https%3A%2F%2Fwww.phillyvoice.com%2Fsatisfaction-bariatric-surgery-often-decreases-over-time-new-study-finds")
-//        .get()
-//        .addHeader("x-rapidapi-key", "f46e5c8c90msh9778f06fc8c5a49p16d051jsn87608541b961")
-//        .addHeader("x-rapidapi-host", "news-parser1.p.rapidapi.com")
-//        .build()
-//
-//
-//    client.newCall(request).enqueue(object : Callback {
-//      override fun onFailure(
-//        call: Call,
-//        e: IOException
-//      ) {
-//        TODO("Not yet implemented")
-//      }
-//
-//      override fun onResponse(
-//        call: Call,
-//        response: Response
-//      ) {
-//        response.use {
-//          if (!response.isSuccessful) throw IOException("Unexpected code $response")
-//          else {
-//            val resStr = response.body!!.string()
-//            json = JSONObject(resStr)
-//
-//            val content = json!!.getString("content_1")
-//            println(content)
-//
-//          }
-//        }
-//      }
-//
-//    })
-
-//
