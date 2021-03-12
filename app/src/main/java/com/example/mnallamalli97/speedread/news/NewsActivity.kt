@@ -40,6 +40,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.ArrayList
@@ -245,23 +246,26 @@ class NewsActivity : AppCompatActivity() {
             call: okhttp3.Call,
             response: okhttp3.Response
           ) {
-            val jsonData = response.body!!.string()
-            Log.d("testArticle", jsonData)
+            try {
+              val jsonData = response.body!!.string()
+              val obj = JSONObject(jsonData)
+              val resultArray: org.json.JSONObject = obj.getJSONObject("result")
+              for (i in 0 until resultArray.length()) {
 
-            val obj = JSONObject(jsonData)
-            val resultArray: org.json.JSONObject = obj.getJSONObject("result")
-            for (i in 0 until resultArray.length()) {
+                val author = resultArray.getString("author")
+                fullArticleContent = resultArray.getString("content")
+              }
 
-              val author = resultArray.getString("author")
-              fullArticleContent = resultArray.getString("content")
+              startActivityForResult(intent, 1215)
+            } catch (ex: Exception) {
+              when(ex) {
+                is JSONException, is IndexOutOfBoundsException -> {
+                  runOnUiThread {
+                    showUpgradeDialog()
+                  }
+                }
+              }
             }
-
-            startActivityForResult(intent, 1215)
-
-
-
-
-
           }
         })
   }
@@ -275,6 +279,8 @@ class NewsActivity : AppCompatActivity() {
     val upgradeButton = dialog.findViewById(R.id.upgrade_button) as Button
     closeButton.setOnClickListener {
       dialog.dismiss()
+      getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+      loadingArticleProgressBar!!.visibility = View.GONE
     }
     upgradeButton.setOnClickListener { }
     dialog.show()
@@ -354,12 +360,13 @@ class NewsActivity : AppCompatActivity() {
       loadingArticleProgressBar!!.visibility = View.VISIBLE
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
           WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-      object : Thread() {
+      th1 = object : Thread() {
         override fun run() {
           selectedArticle = articles.get(index = position)
           getFullContent(selectedArticle)
         }
-      }.start()
+      }
+      th1!!.start()
     }
 
 
