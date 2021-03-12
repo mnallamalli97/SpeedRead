@@ -1,172 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/newsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
+    >
 
+  <LinearLayout
+      android:id="@+id/header_news"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/color_red"
+      android:orientation="vertical"
+      android:paddingBottom="75dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      >
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-<!--                <Button-->
-<!--                    android:id="@+id/newsUpgradeButton"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:paddingEnd="10dp"-->
-<!--                    android:paddingTop="35dp"-->
-<!--                    android:paddingBottom="35dp"-->
-<!--                    android:layout_margin="5dp"-->
-<!--                    android:visibility="gone"-->
-<!--                    android:drawableRight="@drawable/ic_forbidden_mark"-->
-<!--                    android:background="@drawable/my_shape"-->
-<!--                    app:layout_anchor="@id/swipe_refresh_layout"-->
-<!--                    android:fontFamily="@font/montserrat_bold"-->
-<!--                    android:text="upgrade to pro">-->
-<!--                </Button>-->
-
-
-                <TextView
-                    android:id="@+id/topheadelines"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="Top Headlines"
-                    android:gravity="center"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:textSize="25sp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="20dp"
-                    />
-
-
-              <nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
-                  android:id="@+id/newsCategorySelection"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:layout_marginBottom="15dp"
-                  app:justifyContent="space_between"
-                  app:flexWrap="wrap"
-                  >
-
-
-                    <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-                        android:id="@+id/btn0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:layout_margin="3dp"
-                        app:layout_flexShrink="0"
-                        app:toggle_text="General"
-                        />
-
-                <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-                    android:id="@+id/btn4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_margin="3dp"
-                    app:layout_flexShrink="0"
-                    app:toggle_text="Science"
-                    />
-
-                <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-                    android:id="@+id/btn5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_margin="3dp"
-                    app:layout_flexShrink="0"
-                    app:toggle_text="Sports"
-                    />
-
-                <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-                    android:id="@+id/btn3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_margin="3dp"
-                    app:layout_flexShrink="0"
-                    app:toggle_text="Health"
-                    />
-
-
-                <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-                        android:id="@+id/btn1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:layout_margin="3dp"
-                        app:layout_flexShrink="0"
-                        app:toggle_text="Business"
-                        />
-
-                    <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-                        android:id="@+id/btn2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:layout_margin="3dp"
-                        app:layout_flexShrink="0"
-                        app:toggle_text="Entertainment"
-                        />
-
-                    <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
-                        android:id="@+id/btn6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:layout_margin="3dp"
-                        app:layout_flexShrink="0"
-                        app:toggle_text="Technology"
-                        />
-
-              </nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup>
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:scrollbars="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </androidx.recyclerview.widget.RecyclerView>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/headlines_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical">
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/top_headlines"
+        android:maxLines="1"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"
+        android:fontFamily="@font/montserrat_regular"
+        android:textSize="25sp"
+        />
 
-      <TextView
-        android:id="@+id/test"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-        android:text="This is a test"></TextView>
+    <LinearLayout
+        android:id="@+id/news_categories"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/libraryFAB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_library_books_24px"
-            app:layout_anchor="@id/uploadFAB"
-            app:layout_anchorGravity="top" />
+        android:gravity="center_horizontal|center_vertical"
+        >
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/uploadFAB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:src="@android:drawable/stat_sys_upload_done" />
+      <ImageButton
+          android:id="@+id/general_news"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:scaleType="fitCenter"
+          android:adjustViewBounds="true"
+          android:padding="10dp"
+          android:layout_marginEnd="15dp"
+          android:background="@drawable/round_button"
+          android:src="@drawable/ic_general"
+          />
+
+      <ImageButton
+          android:id="@+id/business_news"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:scaleType="fitCenter"
+          android:adjustViewBounds="true"
+          android:padding="10dp"
+          android:layout_marginEnd="15dp"
+          android:background="@drawable/round_button"
+          android:src="@drawable/ic_money"
+          />
+
+      <ImageButton
+          android:id="@+id/entertainment_news"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:scaleType="fitCenter"
+          android:adjustViewBounds="true"
+          android:padding="10dp"
+          android:layout_marginEnd="15dp"
+          android:background="@drawable/round_button"
+          android:src="@drawable/ic_popcorn"
+          />
+
+      <ImageButton
+          android:id="@+id/sports_news"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:scaleType="fitCenter"
+          android:adjustViewBounds="true"
+          android:padding="10dp"
+          android:layout_marginEnd="15dp"
+          android:background="@drawable/round_button"
+          android:src="@drawable/ic_sport"
+          />
+
+      <ImageButton
+          android:id="@+id/health_news"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:scaleType="fitCenter"
+          android:adjustViewBounds="true"
+          android:padding="10dp"
+          android:src="@drawable/ic_stethoscope"
+          android:background="@drawable/round_button"
+          />
+
     </LinearLayout>
+  </LinearLayout>
 
-    <include layout="@layout/error"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+  <!--                <Button-->
+  <!--                    android:id="@+id/newsUpgradeButton"-->
+  <!--                    android:layout_width="match_parent"-->
+  <!--                    android:layout_height="wrap_content"-->
+  <!--                    android:paddingEnd="10dp"-->
+  <!--                    android:paddingTop="35dp"-->
+  <!--                    android:paddingBottom="35dp"-->
+  <!--                    android:layout_margin="5dp"-->
+  <!--                    android:visibility="gone"-->
+  <!--                    android:drawableRight="@drawable/ic_forbidden_mark"-->
+  <!--                    android:background="@drawable/my_shape"-->
+  <!--                    app:layout_anchor="@id/swipe_refresh_layout"-->
+  <!--                    android:fontFamily="@font/montserrat_bold"-->
+  <!--                    android:text="upgrade to pro">-->
+  <!--                </Button>-->
+
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:translationY="-50dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:background="@drawable/rounded_corners"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/header_news"
+      ></androidx.recyclerview.widget.RecyclerView>
+
+  <ProgressBar
+      android:id="@+id/loadingArticleProgressBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      >
+  </ProgressBar>
+
+
+  <LinearLayout
+      android:id="@+id/linearLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      >
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/libraryFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_library_books_24px"
+        app:layout_anchor="@id/uploadFAB"
+        app:layout_anchorGravity="top"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/uploadFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/stat_sys_upload_done"
+        />
+  </LinearLayout>
+
+
+
+
+  <include layout="@layout/error" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

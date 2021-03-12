@@ -16,11 +16,13 @@ import android.view.WindowManager.LayoutParams
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +35,6 @@ import com.example.mnallamalli97.speedread.R.layout
 import com.example.mnallamalli97.speedread.SettingsActivity
 import com.example.mnallamalli97.speedread.models.Article
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
 import nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -48,16 +49,14 @@ class NewsActivity : AppCompatActivity() {
   private var layoutManager: LayoutManager? = null
   private var articles: MutableList<Article> = ArrayList()
   private var adapter: Adapter? = null
-  private val TAG = NewsActivity::class.java.simpleName
-  private var topHeadline: TextView? = null
-  private var newsActivityRootView: CoordinatorLayout? = null
+  private var newsActivityRootView: ConstraintLayout? = null
+  private var loadingArticleProgressBar: ProgressBar? = null
   private var errorLayout: RelativeLayout? = null
   private var errorImage: ImageView? = null
   private var errorTitle: TextView? = null
   private var test: TextView? = null
   private var errorMessage: TextView? = null
   private var btnRetry: Button? = null
-  private var themedButtonGroup: ThemedToggleButtonGroup? = null
   // private var newsUpgradeButton: Button? = null
   private var isDarkModeOn = false
   private var pref: SharedPreferences? = null
@@ -69,8 +68,6 @@ class NewsActivity : AppCompatActivity() {
   private var articleMapping: MutableMap<String, String> = mutableMapOf()
 
   private var th1: Thread? = null
-  private var th2: Thread? = null
-  private var th3: Thread? = null
   override fun onCreate(savedInstanceState: Bundle?) {
     pref = applicationContext.getSharedPreferences("MyPref", 0) // 0 - for private mode
     editor = pref!!.edit()
@@ -83,7 +80,6 @@ class NewsActivity : AppCompatActivity() {
     }
     super.onCreate(savedInstanceState)
     setContentView(layout.news_activity)
-    topHeadline = findViewById(id.topheadelines)
     recyclerView = findViewById(id.recyclerView)
     newsActivityRootView = findViewById(R.id.newsLayout)
     layoutManager = LinearLayoutManager(this@NewsActivity)
@@ -91,16 +87,17 @@ class NewsActivity : AppCompatActivity() {
     recyclerView!!.setItemAnimator(DefaultItemAnimator())
     recyclerView!!.setNestedScrollingEnabled(false)
     errorLayout = findViewById(id.errorLayout)
+    loadingArticleProgressBar = findViewById(id.loadingArticleProgressBar)
     errorImage = findViewById(id.errorImage)
     errorTitle = findViewById(id.errorTitle)
     test = findViewById(id.test)
-    themedButtonGroup = findViewById(id.newsCategorySelection)
+
     errorMessage = findViewById(id.errorMessage)
     // newsUpgradeButton = findViewById(id.newsUpgradeButton)
     btnRetry = findViewById(id.btnRetry)
     val libraryFAB = findViewById<FloatingActionButton>(id.libraryFAB)
     val uploadFAB = findViewById<FloatingActionButton>(id.uploadFAB)
-    themedButtonGroup = findViewById(id.newsCategorySelection)
+
     // newsUpgradeButton!!.visibility = View.VISIBLE
 
     libraryFAB.setOnClickListener {
@@ -118,41 +115,14 @@ class NewsActivity : AppCompatActivity() {
     }
 
 
+
+
     th1 = Thread( object : Thread() {
       override fun run() {
-        testingGetUrls()
+        getUrlsFromGoogleNews("general")
       }
     })
-//    th2 = Thread( object : Thread() {
-//      override fun run() {
-//        initListener()
-//      }
-//    })
-
     th1!!.start()
-
-//    try {
-//      th1!!.join()
-//    } catch (ie: InterruptedException) {
-//      ie.printStackTrace()
-//    }
-//    th2!!.start()
-
-
-
-
-
-
-
-    // LoadJson("General")
-    val btn0: ThemedButton = findViewById(id.btn0)
-    themedButtonGroup!!.selectButton(btn0)
-
-    themedButtonGroup!!.setOnSelectListener { button: ThemedButton ->
-      // handle selected button
-      selectedCategory = button.text
-      //LoadJson(selectedCategory!!)
-    }
 
 //    newsUpgradeButton!!.setOnTouchListener(object : OnTouchListener {
 //      override fun onTouch(
@@ -179,13 +149,13 @@ class NewsActivity : AppCompatActivity() {
 
   }
 
-  fun testingGetUrls() {
+  fun getUrlsFromGoogleNews(newsCategory: String) {
     val client = OkHttpClient()
     val request = Request.Builder()
-        .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=6c5a6f37e8dc4f6194dce74bf821d4b7")
+        .url(
+            "https://newsapi.org/v2/top-headlines?category=$newsCategory&country=us&apiKey=6c5a6f37e8dc4f6194dce74bf821d4b7"
+        )
         .build()
-
-
 
     client.newCall(request)
         .enqueue(object : okhttp3.Callback {
@@ -193,7 +163,6 @@ class NewsActivity : AppCompatActivity() {
             call: okhttp3.Call,
             e: IOException
           ) {
-            topHeadline!!.visibility = View.INVISIBLE
             showErrorMessage(
                 drawable.oops,
                 "Oops..",
@@ -209,7 +178,6 @@ class NewsActivity : AppCompatActivity() {
             response: okhttp3.Response
           ) {
             val jsonData = response.body!!.string()
-            Log.d("test", jsonData)
 
             val obj = JSONObject(jsonData)
             val resultArray: org.json.JSONArray = obj.getJSONArray("articles")
@@ -245,10 +213,10 @@ class NewsActivity : AppCompatActivity() {
         })
   }
 
-  fun getFullContent(articlesUrlMap: MutableMap<String, String>, selectedId: String) {
+  fun getFullContent(selectedArticle: Article?) {
     val client = OkHttpClient()
     val mediaType = "application/json".toMediaTypeOrNull()
-    val body = RequestBody.create(mediaType, "{\"url\":\"https://www.oneindia.com/india/dalai-lama-receives-first-dose-of-anti-coronavirus-vaccine-3226222.html?ref_source=articlepage-Slot1-8&ref_medium=dsktp&ref_campaign=similar-topic-slider\"}")
+    val body = RequestBody.create(mediaType, "{\"url\":\"${selectedArticle?.url}\"}")
     val request = Request.Builder()
         .url("https://news-article-extraction.p.rapidapi.com/")
         .post(body)
@@ -263,7 +231,6 @@ class NewsActivity : AppCompatActivity() {
             call: okhttp3.Call,
             e: IOException
           ) {
-            topHeadline!!.visibility = View.INVISIBLE
             showErrorMessage(
                 drawable.oops,
                 "Oops..",
@@ -341,18 +308,19 @@ class NewsActivity : AppCompatActivity() {
 
         val intent = Intent(this@NewsActivity, SettingsActivity::class.java)
 
-        val article = selectedArticle!!
+      val article = selectedArticle!!
 
-        intent.putExtra("url", article.url)
-        intent.putExtra("title", article.title)
-        intent.putExtra("img", article.image)
-        intent.putExtra("date", article.publishedDate)
-        intent.putExtra("source", article.source)
-        intent.putExtra("author", "Google News")
+      intent.putExtra("url", article.url)
+      intent.putExtra("title", article.title)
+      intent.putExtra("img", article.image)
+      intent.putExtra("date", article.publishedDate)
+      intent.putExtra("source", article.source)
+      intent.putExtra("author", "Google News")
+      intent.putExtra("content", fullArticleContent)
 
-        intent.putExtra("content", fullArticleContent)
-        startActivity(intent)
-
+      getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+      loadingArticleProgressBar!!.visibility = View.GONE
+      startActivity(intent)
 
     }
 
@@ -383,10 +351,13 @@ class NewsActivity : AppCompatActivity() {
 
   private fun initListener() {
     adapter!!.setOnItemClickListener { view, position ->
+      loadingArticleProgressBar!!.visibility = View.VISIBLE
+      getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+          WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
       object : Thread() {
         override fun run() {
           selectedArticle = articles.get(index = position)
-          getFullContent(articleMapping, articleId)
+          getFullContent(selectedArticle)
         }
       }.start()
     }

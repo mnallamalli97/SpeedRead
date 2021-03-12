@@ -41,7 +41,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder>{
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.news_item, parent, false);
         return new MyViewHolder(view, onItemClickListener);
     }
 
@@ -98,7 +98,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder>{
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener {
 
-        TextView title, desc, author, published_ad, source, time;
+        TextView title, desc, published_ad, source, time;
         ImageView imageView;
         ProgressBar progressBar;
         OnItemClickListener onItemClickListener;
@@ -110,7 +110,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder>{
             itemView.setOnClickListener(this);
             title = itemView.findViewById(R.id.title);
             desc = itemView.findViewById(R.id.desc);
-            author = itemView.findViewById(R.id.author);
             published_ad = itemView.findViewById(R.id.publishedAt);
             source = itemView.findViewById(R.id.source);
             time = itemView.findViewById(R.id.time);

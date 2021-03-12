@@ -4,6 +4,7 @@
     <string name="pref_key_transition_time">Testing</string>
     <string name="words_per_min_settings_page">%1$s Words per min</string>
 
+    <string name="top_headlines">Top Headlines: %1$s</string>
     <string name="googlepay_button_content_description">Google Pay</string>
     <string name="buy_with_googlepay_button_content_description">Buy with Google Pay</string>
     <string name="donate_with_googlepay_button_content_description">Donate with Google Pay</string>
