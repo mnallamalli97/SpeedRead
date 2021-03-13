@@ -1,130 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    >
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
-
-            <TextView
-                android:id="@+id/discoveryTitle"
+            android:orientation="vertical">
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/brandon_medium"
-                android:text="Discover"
-                android:textColor="@color/colorPrimary"
-                android:textSize="28sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/tourRV"
-                android:layout_width="match_parent"
-                android:layout_height="552dp"
-                android:layout_margin="10dp"
-                app:layout_constraintBottom_toTopOf="@+id/icons"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/discoveryTitle"
-                />
-
-            <LinearLayout
-                android:id="@+id/icons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 >
-                <TableLayout
-                    android:id="@+id/discoveryPageButtonGrid"
+
+                <TextView
+                    android:id="@+id/discoveryTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp">
-                    <TableRow
-                        android:id="@+id/tableRow2"
-                        android:layout_width="fill_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/brandon_medium"
+                    android:text="Discover"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="28sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
-                        <Button
-                            android:id="@+id/discoveryPageNewsButton"
-                            android:layout_width="0dp"
-                            android:layout_height="fill_parent"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:textColor="#ffffff"
-                            android:layout_marginEnd="10dp"
-                            android:paddingLeft="10dp"
-                            android:background="@drawable/my_shape"
-                            android:backgroundTint="@color/colorPrimary"
-                            android:text="latest news"
-                            android:drawableLeft="@drawable/ic_world_news"
-                            android:drawableTint="#ffffff"
-                            android:layout_weight="1" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tourRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="552dp"
+                    android:layout_margin="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/discoveryTitle"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <Button
-                            android:id="@+id/discoveryPageUploadButton"
-                            android:layout_width="0dp"
-                            android:layout_height="fill_parent"
-                            android:backgroundTint="@color/colorPrimary"
-                            android:paddingLeft="10dp"
-                            android:textColor="#ffffff"
-                            android:background="@drawable/my_shape"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:text="Device import"
-                            android:drawableLeft="@drawable/ic_cloud_upload_black_72dp"
-                            android:drawableTint="#ffffff"
-                            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/top10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="28dp"
+            android:fontFamily="@font/brandon_medium"
+            android:text="Top Sellers"
+            android:textColor="@color/colorPrimary"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tourRV"
+            />
 
-                    </TableRow>
+            <com.example.mnallamalli97.speedread.NonScrollListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="50dp">
+            </com.example.mnallamalli97.speedread.NonScrollListView>
 
-                </TableLayout>
-            </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    <TextView
-        android:id="@+id/top10"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/bottom_panel"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="28dp"
-        android:fontFamily="@font/brandon_medium"
-        android:text="Top Sellers"
-        android:textColor="@color/colorPrimary"
-        android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/icons"
+        android:layout_alignParentBottom="true">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        app:labelVisibilityMode="unlabeled"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        app:itemBackground="@color/colorPrimaryDark"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/colorPrimary"
+        app:menu="@menu/bottom_nav_menu"
         />
-
-        <com.example.mnallamalli97.speedread.NonScrollListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </com.example.mnallamalli97.speedread.NonScrollListView>
-
-
-
-
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+
+
+</RelativeLayout>

@@ -105,13 +105,17 @@ class NewsActivity : AppCompatActivity() {
       findViewById<View>(id.bottomNavigation) as BottomNavigationView
     bottomNavigationView.setOnNavigationItemSelectedListener { item ->
       when (item.itemId) {
-        id.action_settings -> { }
+        id.action_settings -> {
+          item.isEnabled = false
+        }
         id.action_library -> {
           val intent = Intent(this@NewsActivity, LibraryActivity::class.java)
           this@NewsActivity.startActivity(intent)
           this.overridePendingTransition(0, 0)
         }
-        id.action_news -> { }
+        id.action_news -> {
+          item.isEnabled = false
+        }
         id.action_upload -> {
           val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
           intent.addCategory(Intent.CATEGORY_OPENABLE)

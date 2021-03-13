@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide
 import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.example.mnallamalli97.speedread.news.NewsActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -74,9 +75,6 @@ class LibraryActivity : AppCompatActivity(),
 
     retrieve(featuredBooksAdapter, topChartsListViewAdapter)
 
-    findViewById<View>(id.discoveryPageNewsButton).setOnClickListener(this)
-    findViewById<View>(id.discoveryPageUploadButton).setOnClickListener(this)
-
     booksRecyclerView!!.addOnScrollListener(object : OnScrollListener() {
       override fun onScrollStateChanged(
         recyclerView: RecyclerView,
@@ -90,6 +88,32 @@ class LibraryActivity : AppCompatActivity(),
         }
       }
     })
+
+    val bottomNavigationView =
+      findViewById<View>(id.bottomNavigation) as BottomNavigationView
+    bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+      when (item.itemId) {
+        id.action_settings -> {
+          item.isEnabled = false
+        }
+        id.action_library -> {
+          item.isEnabled = false
+        }
+        id.action_news -> {
+          val startNewsIntent = Intent(this@LibraryActivity, NewsActivity::class.java)
+          finish()
+          startActivity(startNewsIntent)
+        }
+        id.action_upload -> {
+          val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+          intent.addCategory(Intent.CATEGORY_OPENABLE)
+          intent.type = "text/plain"
+          intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+          startActivityForResult(intent, 1214)
+        }
+      }
+      true
+    }
 
   }
 
@@ -119,22 +143,7 @@ class LibraryActivity : AppCompatActivity(),
   }
 
 
-  override fun onClick(v: View) {
-    when (v.id) {
-      id.discoveryPageNewsButton -> {
-        val startNewsIntent = Intent(this@LibraryActivity, NewsActivity::class.java)
-        finish()
-        startActivity(startNewsIntent)
-      }
-      id.discoveryPageUploadButton -> {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "text/plain"
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        startActivityForResult(intent, 1214)
-      }
-    }
-  }
+  override fun onClick(v: View) {}
 
   override fun onActivityResult(
     requestCode: Int,
