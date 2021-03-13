@@ -96,8 +96,8 @@ class NewsActivity : AppCompatActivity() {
     errorMessage = findViewById(id.errorMessage)
     // newsUpgradeButton = findViewById(id.newsUpgradeButton)
     btnRetry = findViewById(id.btnRetry)
-    val libraryFAB = findViewById<FloatingActionButton>(id.libraryFAB)
-    val uploadFAB = findViewById<FloatingActionButton>(id.uploadFAB)
+    val libraryFAB = findViewById<ImageButton>(id.libraryFAB)
+    val uploadFAB = findViewById<ImageButton>(id.uploadFAB)
 
     // newsUpgradeButton!!.visibility = View.VISIBLE
 
