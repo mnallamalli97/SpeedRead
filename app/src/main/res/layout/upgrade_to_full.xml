@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_forbidden_mark"
         />
 
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
-        android:text="Upgrade to Pro"
+        android:text="Free Articles Limit Reached"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         />
 
@@ -32,17 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginBottom="15dp"
-        android:text="Full length news articles"
-        android:fontFamily="@font/montserrat_regular"
-        />
-
-    <TextView
-        android:id="@+id/feature_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginBottom="15dp"
-        android:text="No more ads"
+        android:text="Unlimited full length news articles"
         android:fontFamily="@font/montserrat_regular"
         />
 

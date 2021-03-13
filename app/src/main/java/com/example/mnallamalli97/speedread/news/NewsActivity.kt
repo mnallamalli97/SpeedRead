@@ -5,10 +5,10 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.database.Cursor
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -22,7 +22,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,8 +33,7 @@ import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.example.mnallamalli97.speedread.SettingsActivity
 import com.example.mnallamalli97.speedread.models.Article
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -96,23 +94,33 @@ class NewsActivity : AppCompatActivity() {
     errorMessage = findViewById(id.errorMessage)
     // newsUpgradeButton = findViewById(id.newsUpgradeButton)
     btnRetry = findViewById(id.btnRetry)
-    val libraryFAB = findViewById<ImageButton>(id.libraryFAB)
-    val uploadFAB = findViewById<ImageButton>(id.uploadFAB)
+//    val libraryFAB = findViewById<ImageButton>(id.libraryFAB)
+//    val uploadFAB = findViewById<ImageButton>(id.uploadFAB)
 
     // newsUpgradeButton!!.visibility = View.VISIBLE
 
-    libraryFAB.setOnClickListener {
-      val intent = Intent(this@NewsActivity, LibraryActivity::class.java)
-      this@NewsActivity.startActivity(intent)
-      this.overridePendingTransition(0, 0)
-    }
 
-    uploadFAB.setOnClickListener {
-      val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-      intent.addCategory(Intent.CATEGORY_OPENABLE)
-      intent.type = "text/plain"
-      intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-      startActivityForResult(intent, 1214)
+
+    val bottomNavigationView =
+      findViewById<View>(id.bottomNavigation) as BottomNavigationView
+    bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+      when (item.itemId) {
+        id.action_settings -> { }
+        id.action_library -> {
+          val intent = Intent(this@NewsActivity, LibraryActivity::class.java)
+          this@NewsActivity.startActivity(intent)
+          this.overridePendingTransition(0, 0)
+        }
+        id.action_news -> { }
+        id.action_upload -> {
+          val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+          intent.addCategory(Intent.CATEGORY_OPENABLE)
+          intent.type = "text/plain"
+          intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+          startActivityForResult(intent, 1214)
+        }
+      }
+      true
     }
 
 
@@ -121,9 +129,54 @@ class NewsActivity : AppCompatActivity() {
     th1 = Thread( object : Thread() {
       override fun run() {
         getUrlsFromGoogleNews("general")
+        findViewById<TextView>(R.id.headlines_title).text = resources.getString(R.string.top_headlines, "General")
       }
     })
     th1!!.start()
+
+    findViewById<ImageButton>(R.id.general_news).setOnClickListener {
+      getUrlsFromGoogleNews("general")
+      findViewById<TextView>(R.id.headlines_title).text = resources.getString(R.string.top_headlines, "General")
+    }
+
+    findViewById<ImageButton>(R.id.business_news).setOnClickListener {
+      getUrlsFromGoogleNews("business")
+      findViewById<TextView>(R.id.headlines_title).text = resources.getString(R.string.top_headlines, "Business")
+
+    }
+
+    findViewById<ImageButton>(R.id.technology_news).setOnClickListener {
+      Thread( object : Thread() {
+        override fun run() {
+          getUrlsFromGoogleNews("technology")
+          runOnUiThread {
+            findViewById<TextView>(R.id.headlines_title).text = resources.getString(R.string.top_headlines, "Technology")
+          }
+        }
+      }).start()
+    }
+
+    findViewById<ImageButton>(R.id.sports_news).setOnClickListener {
+      Thread( object : Thread() {
+        override fun run() {
+          getUrlsFromGoogleNews("sports")
+          runOnUiThread {
+            findViewById<TextView>(R.id.headlines_title).text = resources.getString(R.string.top_headlines, "Sports")
+          }
+        }
+      }).start()
+    }
+
+    findViewById<ImageButton>(R.id.health_news).setOnClickListener {
+      Thread( object : Thread() {
+        override fun run() {
+          getUrlsFromGoogleNews("health")
+          runOnUiThread {
+            findViewById<TextView>(R.id.headlines_title).text = resources.getString(R.string.top_headlines, "Health")
+          }
+        }
+      }).start()
+    }
 
 //    newsUpgradeButton!!.setOnTouchListener(object : OnTouchListener {
 //      override fun onTouch(
@@ -151,6 +204,7 @@ class NewsActivity : AppCompatActivity() {
   }
 
   fun getUrlsFromGoogleNews(newsCategory: String) {
+    articles.removeAll(articles)
     val client = OkHttpClient()
     val request = Request.Builder()
         .url(
@@ -164,16 +218,17 @@ class NewsActivity : AppCompatActivity() {
             call: okhttp3.Call,
             e: IOException
           ) {
-            showErrorMessage(
-                drawable.oops,
-                "Oops..",
-                """
+            runOnUiThread {
+              showErrorMessage(
+                  drawable.oops,
+                  "Oops..",
+                  """
               Network failure, Please Try Again
               $e
               """.trimIndent()
-            )
+              )
+            }
           }
-
           override fun onResponse(
             call: okhttp3.Call,
             response: okhttp3.Response
@@ -232,14 +287,16 @@ class NewsActivity : AppCompatActivity() {
             call: okhttp3.Call,
             e: IOException
           ) {
-            showErrorMessage(
-                drawable.oops,
-                "Oops..",
-                """
+            runOnUiThread {
+              showErrorMessage(
+                  drawable.oops,
+                  "Oops..",
+                  """
               Network failure, Please Try Again
               $e
               """.trimIndent()
-            )
+              )
+            }
           }
 
           override fun onResponse(
@@ -384,6 +441,8 @@ class NewsActivity : AppCompatActivity() {
     errorImage!!.setImageResource(imageView)
     errorTitle!!.text = title
     errorMessage!!.text = message
+    recyclerView!!.visibility = View.GONE
+    btnRetry!!.setTextColor(getResources().getColor(R.color.color_black))
     // btnRetry!!.setOnClickListener { LoadJson("") }
   }
 

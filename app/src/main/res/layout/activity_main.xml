@@ -7,12 +7,68 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:id="@+id/header_news"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/light_green_gradient"
+        android:orientation="vertical"
+        android:paddingBottom="140dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/bookTitle"
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:autoSizeMaxTextSize="60sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="#ffffff"
+            android:textSize="55sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/wordSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginStart="36dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:maxLines="1"
+            android:text="@string/words_per_min_settings_page"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bookTitle"
+            />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/mainWord"
         android:layout_width="match_parent"
         android:layout_height="191dp"
         android:layout_marginLeft="36dp"
         android:layout_marginRight="36dp"
+        android:translationY="-100dp"
         android:background="@drawable/my_shape"
         android:gravity="center_vertical"
         android:text=":)"
@@ -33,6 +89,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:translationY="-180dp"
+        android:backgroundTint="@color/color_light_green"
         android:background="@drawable/ic_pause_circle_outline_black_72dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,63 +98,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.87" />
 
-    <TextView
-        android:id="@+id/wordSpeed"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginStart="36dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:maxLines="1"
-        android:text="@string/words_per_min_settings_page"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bookTitle"
-        />
-
-
-
-    <TextView
-        android:id="@+id/bookTitle"
-        android:layout_width="match_parent"
-        android:layout_height="88dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:autoSizeMaxTextSize="60sp"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeStepGranularity="2sp"
-        android:autoSizeTextType="uniform"
-        android:gravity="center_vertical"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:fontFamily="@font/montserrat_regular"
-        android:textColor="@color/colorPrimary"
-        android:textSize="55sp"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
 
     <ProgressBar
         android:id="@+id/bookProgress"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="354dp"
         android:layout_height="24dp"
+        android:translationY="-220dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/wordSpeed"
-        app:layout_constraintVertical_bias="0.697" />
+        app:layout_constraintTop_toBottomOf="@+id/mainWord"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
@@ -105,14 +119,15 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimaryDark"
-        app:itemBackground="@color/colorPrimaryDark"
-        app:itemTextColor="@color/colorPrimary"
-        app:itemIconTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
-
+        app:itemBackground="@color/colorPrimaryDark"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/colorPrimary"
+        app:menu="@menu/bottom_nav_menu"
+        />
     <Button
         android:id="@+id/rewindButton"
         android:layout_width="48dp"
@@ -121,6 +136,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:translationY="-180dp"
         android:background="@drawable/ic_replay_10_black_48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/pauseButton"
@@ -137,6 +153,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:translationY="-180dp"
         android:background="@drawable/ic_forward_10_black_48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -145,30 +162,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.853" />
 
-    <Button
-        android:id="@+id/importButton"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/ic_cloud_upload_black_72dp"
-        app:layout_constraintBottom_toTopOf="@+id/bookProgress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainWord"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/newsButton"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/icon_news"
-        app:layout_constraintBottom_toTopOf="@+id/bookProgress"
-        app:layout_constraintEnd_toStartOf="@+id/importButton"
-        app:layout_constraintHorizontal_bias="0.906"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainWord"
-        app:layout_constraintVertical_bias="0.0" />
 
 <!--    <Button-->
 <!--        android:id="@+id/upgradeButton"-->

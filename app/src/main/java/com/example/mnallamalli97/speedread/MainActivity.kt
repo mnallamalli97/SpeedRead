@@ -34,6 +34,7 @@ import java.io.InputStreamReader
 import java.nio.charset.Charset
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.jvm.Throws
 
 class MainActivity : AppCompatActivity() {
   private var pauseButton: Button? = null
@@ -83,8 +84,6 @@ class MainActivity : AppCompatActivity() {
     wordSpeedTextView = findViewById(id.wordSpeed)
     bookTitleTextView = findViewById(id.bookTitle)
     pauseButton = findViewById(id.pauseButton)
-    importButton = findViewById(id.importButton)
-    newsButton = findViewById(id.newsButton)
     forwardButton = findViewById(id.forwardButton)
     rewindButton = findViewById(id.rewindButton)
     bookProgress = findViewById(id.bookProgress)
@@ -125,6 +124,14 @@ class MainActivity : AppCompatActivity() {
           val startLibraryIntent = Intent(this@MainActivity, LibraryActivity::class.java)
           startActivity(startLibraryIntent)
         }
+        id.action_news -> {
+          val startNewsIntent = Intent(this@MainActivity, NewsActivity::class.java)
+          startActivity(startNewsIntent)
+        }
+        id.action_upload -> {
+          pauseTimer = true
+          readUserUploadWords()
+        }
       }
       true
     }
@@ -155,16 +162,6 @@ class MainActivity : AppCompatActivity() {
     forwardButton!!.setOnClickListener(OnClickListener { // increase i by 10
       currentWordCount = if (currentWordCount + 10 < totalWordCount) currentWordCount + 10 else 0
     })
-    importButton!!.setOnClickListener(
-        OnClickListener { // open the pick to select and import the file
-          pauseTimer = true
-          readUserUploadWords()
-        })
-    newsButton!!.setOnClickListener(
-        OnClickListener { // open up a news feed and be able to select an article to play
-          val startNewsIntent = Intent(this@MainActivity, NewsActivity::class.java)
-          startActivity(startNewsIntent)
-        })
   }
 
   fun runLibraryWords(

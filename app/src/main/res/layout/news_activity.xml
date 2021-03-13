@@ -13,7 +13,7 @@
       android:id="@+id/header_news"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/color_light_red"
+      android:background="@color/color_light_green"
       android:orientation="vertical"
       android:paddingBottom="75dp"
       app:layout_constraintEnd_toEndOf="parent"
@@ -21,63 +21,62 @@
       app:layout_constraintTop_toTopOf="parent"
       >
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/header_news"
-        android:layout_margin="3dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        >
-      <RelativeLayout
-          android:id="@+id/relativeLayout1"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linearLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/header_news"-->
+<!--        android:layout_margin="3dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        >-->
+<!--      <RelativeLayout-->
+<!--          android:id="@+id/relativeLayout1"-->
+<!--          android:layout_width="fill_parent"-->
+<!--          android:layout_height="wrap_content">-->
 
-      <ImageButton
-          android:id="@+id/libraryFAB"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
-          android:layout_alignParentRight="true"
-          android:background="@android:color/transparent"
-          android:src="@drawable/ic_library_books_24px"
-          app:layout_anchor="@id/uploadFAB"
-          />
+<!--      <ImageButton-->
+<!--          android:id="@+id/libraryFAB"-->
+<!--          android:layout_width="wrap_content"-->
+<!--          android:layout_height="wrap_content"-->
+<!--          android:paddingLeft="10dp"-->
+<!--          android:paddingRight="10dp"-->
+<!--          android:layout_alignParentRight="true"-->
+<!--          android:background="@android:color/transparent"-->
+<!--          android:src="@drawable/ic_library_books_24px"-->
+<!--          app:layout_anchor="@id/uploadFAB"-->
+<!--          />-->
 
-      <ImageButton
-          android:id="@+id/uploadFAB"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="right"
-          android:layout_alignParentLeft="true"
-          android:background="@android:color/transparent"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
-          android:src="@android:drawable/stat_sys_upload_done"
-          />
-      </RelativeLayout>
-    </LinearLayout>
-
-
-
+<!--        <ImageButton-->
+<!--            android:id="@+id/uploadFAB"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:layout_gravity="right"-->
+<!--            android:layout_marginLeft="2dp"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:paddingLeft="10dp"-->
+<!--            android:paddingRight="10dp"-->
+<!--            android:src="@android:drawable/stat_sys_upload_done"-->
+<!--            />-->
+<!--      </RelativeLayout>-->
+<!--    </LinearLayout>-->
 
     <TextView
-        android:id="@+id/headlines_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
-        android:translationY="-8dp"
-        android:text="@string/top_headlines"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:drawableLeft="@drawable/ic_opera"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/montserrat_bold"
         android:maxLines="1"
-        android:textAlignment="center"
-        android:fontFamily="@font/montserrat_regular"
+        android:text="Speed Read"
+        android:textAlignment="textStart"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="25sp"
         />
-
     <LinearLayout
         android:id="@+id/news_categories"
         android:layout_width="match_parent"
@@ -155,6 +154,23 @@
           />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/headlines_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
+        android:maxLines="1"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:text="@string/top_headlines"
+        android:textAlignment="textEnd"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/news_categories"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
   </LinearLayout>
 
 
@@ -174,19 +190,21 @@
   <!--                    android:text="upgrade to pro">-->
   <!--                </Button>-->
 
-
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/recyclerView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:translationY="-50dp"
-      android:layout_marginStart="10dp"
       android:layout_marginEnd="10dp"
-      android:elevation="10dp"
+      android:layout_marginStart="10dp"
       android:background="@drawable/rounded_corners"
+      android:elevation="10dp"
+      android:translationY="-50dp"
+      app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
       app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/header_news"
+      app:layout_constraintVertical_bias="0.0"
       ></androidx.recyclerview.widget.RecyclerView>
 
   <ProgressBar
@@ -201,9 +219,31 @@
       >
   </ProgressBar>
 
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="bottom"
+      android:translationZ="15dp"
+      android:elevation="15dp"
+      android:layout_alignParentBottom="true"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent">
 
-
-
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:labelVisibilityMode="unlabeled"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimaryDark"
+        app:itemBackground="@color/colorPrimaryDark"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/colorPrimary"
+        app:menu="@menu/bottom_nav_menu"
+        />
+  </LinearLayout>
 
 
   <include layout="@layout/error" />
