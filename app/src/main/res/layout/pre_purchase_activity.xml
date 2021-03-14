@@ -134,8 +134,8 @@
     <include
         layout="@layout/book_layout"
         android:id="@+id/prePurchaseBookCover"
-        android:layout_width="343dp"
-        android:layout_height="520dp"
+        android:layout_width="302dp"
+        android:layout_height="431dp"
         android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@+id/googlePayButton"
         app:layout_constraintEnd_toEndOf="parent"
