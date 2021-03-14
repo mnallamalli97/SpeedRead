@@ -239,7 +239,7 @@
         android:layout_gravity="bottom"
         android:background="@color/colorPrimaryDark"
         app:itemBackground="@color/colorPrimaryDark"
-        app:itemIconTint="@color/colorPrimary"
+        app:itemIconTint="@drawable/bottom_nav_icon_selector_color"
         app:itemTextColor="@color/colorPrimary"
         app:menu="@menu/bottom_nav_menu"
         />

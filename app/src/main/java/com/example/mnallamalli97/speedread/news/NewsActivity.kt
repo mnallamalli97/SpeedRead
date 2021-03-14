@@ -19,9 +19,11 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +42,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
+import www.sanju.motiontoast.MotionToast
 import java.io.IOException
 import java.util.ArrayList
 
@@ -94,28 +97,34 @@ class NewsActivity : AppCompatActivity() {
     errorMessage = findViewById(id.errorMessage)
     // newsUpgradeButton = findViewById(id.newsUpgradeButton)
     btnRetry = findViewById(id.btnRetry)
-//    val libraryFAB = findViewById<ImageButton>(id.libraryFAB)
-//    val uploadFAB = findViewById<ImageButton>(id.uploadFAB)
 
     // newsUpgradeButton!!.visibility = View.VISIBLE
 
 
 
+
+
     val bottomNavigationView =
       findViewById<View>(id.bottomNavigation) as BottomNavigationView
+
     bottomNavigationView.setOnNavigationItemSelectedListener { item ->
       when (item.itemId) {
         id.action_settings -> {
-          item.isEnabled = false
+          MotionToast.createColorToast(
+              context = this,
+              message = "that not available from this page",
+              style = MotionToast.TOAST_INFO,
+              position = MotionToast.GRAVITY_BOTTOM,
+              duration = MotionToast.LONG_DURATION,
+              font = ResourcesCompat.getFont(this,R.font.montserrat_light)
+          )
         }
         id.action_library -> {
           val intent = Intent(this@NewsActivity, LibraryActivity::class.java)
           this@NewsActivity.startActivity(intent)
           this.overridePendingTransition(0, 0)
         }
-        id.action_news -> {
-          item.isEnabled = false
-        }
+        id.action_news -> { }
         id.action_upload -> {
           val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
           intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -177,6 +186,11 @@ class NewsActivity : AppCompatActivity() {
           getUrlsFromGoogleNews("health")
           runOnUiThread {
             findViewById<TextView>(R.id.headlines_title).text = resources.getString(R.string.top_headlines, "Health")
+            findViewById<ImageButton>(R.id.general_news).isSelected = false
+            findViewById<ImageButton>(R.id.business_news).isSelected = false
+            findViewById<ImageButton>(R.id.technology_news).isSelected = false
+            findViewById<ImageButton>(R.id.sports_news).isSelected = false
+            findViewById<ImageButton>(R.id.health_news).isSelected = true
           }
         }
       }).start()

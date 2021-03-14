@@ -81,6 +81,16 @@
         />
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/gradient_bg"
+        android:background="@drawable/light_green_gradient"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <TextView
         android:id="@+id/prePurchasebookTitle"
         android:layout_width="match_parent"
@@ -96,7 +106,7 @@
         android:gravity="center_vertical"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
+        android:textColor="#ffffff"
         android:textSize="55sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/bookAuthor"
@@ -114,7 +124,7 @@
         android:gravity="center_vertical"
         android:text="TextView"
         android:textAlignment="textEnd"
-        android:textColor="@color/colorPrimary"
+        android:textColor="#ffffff"
         android:textSize="20sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -124,13 +134,15 @@
     <include
         layout="@layout/book_layout"
         android:id="@+id/prePurchaseBookCover"
-        android:layout_width="239dp"
-        android:layout_height="357dp"
+        android:layout_width="343dp"
+        android:layout_height="520dp"
         android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@+id/googlePayButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/prePurchaseBookAuthor"
+        app:layout_constraintVertical_bias="0.308"
         />
 
 

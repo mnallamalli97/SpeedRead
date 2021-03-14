@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -17,6 +18,8 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +35,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
+import www.sanju.motiontoast.MotionToast
 import java.lang.Math.abs
 import java.util.ArrayList
 
@@ -91,14 +95,20 @@ class LibraryActivity : AppCompatActivity(),
 
     val bottomNavigationView =
       findViewById<View>(id.bottomNavigation) as BottomNavigationView
+
     bottomNavigationView.setOnNavigationItemSelectedListener { item ->
       when (item.itemId) {
         id.action_settings -> {
-          item.isEnabled = false
+          MotionToast.createColorToast(
+              context = this,
+              message = "that not available from this page",
+              style = MotionToast.TOAST_INFO,
+              position = MotionToast.GRAVITY_BOTTOM,
+              duration = MotionToast.LONG_DURATION,
+              font = ResourcesCompat.getFont(this,R.font.montserrat_light)
+          )
         }
-        id.action_library -> {
-          item.isEnabled = false
-        }
+        id.action_library -> { }
         id.action_news -> {
           val startNewsIntent = Intent(this@LibraryActivity, NewsActivity::class.java)
           finish()
