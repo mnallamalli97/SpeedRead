@@ -275,11 +275,6 @@ class LibraryActivity : AppCompatActivity(),
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, orientation: Int, reverseLayout: Boolean):
-        super(
-            context, orientation, reverseLayout
-        )
-
     override fun scrollHorizontallyBy(
       dx: Int,
       recycler: RecyclerView.Recycler?,

@@ -6,22 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="30dp"
-        android:drawableLeft="@drawable/ic_opera"
-        android:drawablePadding="10dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:elevation="20dp"
-        android:maxLines="1"
-        android:text="Discovery"
-        android:textAlignment="textStart"
-        android:textColor="#ffffff"
-        android:textSize="25sp"
-        />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -30,32 +14,53 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <View
+            <RelativeLayout  android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/light_green_gradient"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="30dp"
+                    android:drawableLeft="@drawable/ic_opera"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:elevation="20dp"
+                    android:maxLines="1"
+                    android:text="Discovery"
+                    android:textAlignment="textStart"
+                    android:textColor="#ffffff"
+                    android:textSize="25sp"
+                    />
+            </RelativeLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tourRV"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:background="@drawable/light_green_gradient"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/tourRV"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:background="@drawable/rounded_corners"
-                    android:elevation="10dp"
-                    android:translationY="-90dp"
-                    android:layout_margin="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    />
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_corners"
+                android:elevation="10dp"
+                android:translationY="-90dp"
+                />
 
             <TextView
                 android:id="@+id/top10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:fontFamily="@font/brandon_medium"
+                android:fontFamily="@font/montserrat_bold"
                 android:text="Top Sellers"
                 android:textColor="@color/colorPrimary"
                 android:textSize="28sp"
+                android:translationY="-50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tourRV"
@@ -65,9 +70,9 @@
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:translationY="-10dp"
                 android:layout_marginBottom="50dp">
             </com.example.mnallamalli97.speedread.NonScrollListView>
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

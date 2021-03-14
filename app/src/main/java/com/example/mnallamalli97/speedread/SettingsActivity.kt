@@ -32,6 +32,7 @@ class SettingsActivity : AppCompatActivity() {
   private var saveButton: Button? = null
   private var showAdButton: Button? = null
   private var darkModeButton: Button? = null
+  private var privacyPolicy: Button? = null
   private var resultText: TextView? = null
   private var bookTitle: TextView? = null
   private var settingsProgressBar: ProgressBar? = null
@@ -57,6 +58,7 @@ class SettingsActivity : AppCompatActivity() {
     settingsProgressBar = findViewById(id.settingsProgressBar)
     bookTitle = findViewById(id.bookTitle)
     darkModeButton = findViewById(id.darkMode)
+    privacyPolicy = findViewById(id.privacyPolicy)
 
     loadInterstitial()
 
