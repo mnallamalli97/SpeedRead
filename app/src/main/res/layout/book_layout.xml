@@ -18,7 +18,6 @@ app:cardCornerRadius="12dp">
         android:id="@+id/bookCoverImageButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="bookCoverClick"
         android:scaleType="centerCrop"/>
 
     <View

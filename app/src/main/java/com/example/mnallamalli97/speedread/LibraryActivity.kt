@@ -18,6 +18,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ import com.bumptech.glide.Glide
 import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.example.mnallamalli97.speedread.news.NewsActivity
+import com.example.mnallamalli97.speedread.news.Utils
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -44,7 +46,6 @@ class LibraryActivity : AppCompatActivity(),
   private var booksRecyclerView: RecyclerView? = null
   private var topBooksListView: NonScrollListView? = null
   private var currentBookPosition: Int = 0
-
   // SETUP FIREBASE
   var databaseReference: DatabaseReference? = null
   var t: GenericTypeIndicator<ArrayList<String>> = object : GenericTypeIndicator<ArrayList<String>>() {}
@@ -54,7 +55,8 @@ class LibraryActivity : AppCompatActivity(),
     setContentView(layout.library_activity)
     val layoutManager = CenterZoomLayout( this)
     booksRecyclerView = findViewById<RecyclerView>(R.id.tourRV)
-    topBooksListView = findViewById(R.id.listView)
+    topBooksListView = findViewById(R.id.topChartsListView)
+
 
 
 
@@ -91,6 +93,16 @@ class LibraryActivity : AppCompatActivity(),
       }
     })
 
+    featuredBooksAdapter.onItemClick = {
+      currentBookPosition = it
+       bookCoverClick(booksRecyclerView!!)
+    }
+
+    topBooksListView!!.setOnItemClickListener { parent, view, position, id ->
+      currentBookPosition = position
+      bookCoverClick(topBooksListView!!)
+    }
+
     val bottomNavigationView =
       findViewById<View>(id.bottomNavigation) as BottomNavigationView
 
@@ -99,7 +111,7 @@ class LibraryActivity : AppCompatActivity(),
         id.action_settings -> {
           MotionToast.createColorToast(
               context = this,
-              message = "that not available from this page",
+              message = "The settings page is not available until you select something to read",
               style = MotionToast.TOAST_INFO,
               position = MotionToast.GRAVITY_BOTTOM,
               duration = MotionToast.LONG_DURATION,
@@ -231,6 +243,8 @@ class LibraryActivity : AppCompatActivity(),
   class CustomBookAdapter(private val dataSet: List<Book>) :
       RecyclerView.Adapter<CustomBookAdapter.ViewHolder>() {
 
+    var onItemClick: ((Int) -> Unit)? = null
+
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -249,6 +263,8 @@ class LibraryActivity : AppCompatActivity(),
       val view = LayoutInflater.from(viewGroup.context)
           .inflate(R.layout.book_layout, viewGroup, false)
 
+
+
       return ViewHolder(view)
     }
 
@@ -259,6 +275,12 @@ class LibraryActivity : AppCompatActivity(),
           .load(url)
           .error(R.drawable.ic_library_books_24px)
           .into(viewHolder.cover)
+
+      viewHolder.itemView.setOnClickListener {
+        onItemClick?.invoke(position)
+      }
+
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
