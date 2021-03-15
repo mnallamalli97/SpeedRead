@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -19,7 +18,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -72,7 +70,7 @@ class LibraryActivity : AppCompatActivity(),
     book = Book?.get(applicationContext)
 
     //Arraylist to recyclerview
-    val featuredBooksAdapter = CustomBookAdapter(libraryList)
+    val featuredBooksAdapter = CustomBookAdapter(libraryList) // top 5 books are featured
     val topChartsListViewAdapter = TopChartsListViewAdapter(this, libraryList)
     booksRecyclerView!!.adapter = featuredBooksAdapter
     topBooksListView!!.adapter = topChartsListViewAdapter
@@ -172,7 +170,7 @@ class LibraryActivity : AppCompatActivity(),
     }
   }
 
-  private fun retrieve(adapter: CustomBookAdapter, topChartsListViewAdapter: TopChartsListViewAdapter) {
+  private fun retrieve(featuredListAdapter: CustomBookAdapter, topChartsListViewAdapter: TopChartsListViewAdapter) {
     databaseReference = FirebaseDatabase.getInstance()
         .getReference("speedread")
         .child("books")
@@ -189,13 +187,16 @@ class LibraryActivity : AppCompatActivity(),
           val cover = ds.child("cover")
               .value
               .toString()
+          val featuredCover = ds.child("featuredCover")
+              .value
+              .toString()
           val bookPath = book?.bookPath
           val bookPrice = book?.bookPrice
           val bookSummaryPath = book?.bookSummaryPath
           val isPurchased = book!!.purchased
-          libraryList.add(Book(id, title, author, bookChaptersNames, bookChaptersPaths, cover, bookSummaryPath, bookPath, bookPrice, isPurchased))
+          libraryList.add(Book(id, title, author, bookChaptersNames, bookChaptersPaths, cover, featuredCover, bookSummaryPath, bookPath, bookPrice, isPurchased))
         }
-        adapter!!.notifyDataSetChanged()
+        featuredListAdapter!!.notifyDataSetChanged()
         topChartsListViewAdapter!!.notifyDataSetChanged()
       }
 
@@ -253,12 +254,7 @@ class LibraryActivity : AppCompatActivity(),
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-//      // set title and author attributes
-//      viewHolder.title.text = "Title: " + dataSet[position].title.toString()
-//      viewHolder.author.text = "Author: " + dataSet[position].author.toString()
-
-      val url = dataSet[position].bookCover
+      val url = dataSet[position].featuredBookCover
       Glide.with(viewHolder.itemView.context)
           .load(url)
           .error(R.drawable.ic_library_books_24px)

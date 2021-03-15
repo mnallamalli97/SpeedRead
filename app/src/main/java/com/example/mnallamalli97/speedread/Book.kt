@@ -11,6 +11,8 @@ class Book {
     private set
   var bookCover: String? = null
     private set
+  var featuredBookCover: String? = null
+    private set
   var bookPath: String? = null
     private set
   var id: Int? = null
@@ -39,6 +41,7 @@ class Book {
     bookChaptersNames: ArrayList<String>?,
     bookChaptersPaths: ArrayList<String>?,
     bookCover: String?,
+    featuredBookCover: String?,
     bookSummaryPath: String?,
     bookPath: String?,
     bookPrice: Float?,
@@ -49,6 +52,7 @@ class Book {
     this.author = author
     this.bookChaptersName = bookChaptersNames
     this.bookChaptersPath = bookChaptersPaths
+    this.featuredBookCover = featuredBookCover
     this.bookCover = bookCover
     this.bookSummaryPath = bookSummaryPath
     this.bookPath = bookPath

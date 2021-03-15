@@ -3,8 +3,10 @@ package com.example.mnallamalli97.speedread
 import android.app.Activity
 import android.app.DownloadManager
 import android.app.DownloadManager.Request
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
@@ -34,7 +36,6 @@ import java.io.InputStreamReader
 import java.nio.charset.Charset
 import java.util.Timer
 import java.util.TimerTask
-import kotlin.jvm.Throws
 
 class MainActivity : AppCompatActivity() {
   private var pauseButton: Button? = null
@@ -256,50 +257,61 @@ class MainActivity : AppCompatActivity() {
         "/storage/emulated/0/Android/data/com.mnallamalli97.speedread/files/Download/$bookSummaryPath.txt"
     )
 
+    val downloadCompleteReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+      override fun onReceive(
+        context: Context?,
+        intent: Intent?
+      ) {
+        try {
+          FileInputStream(downloadPath[0])
+              .use { `is` ->
+                InputStreamReader(`is`, Charset.forName("UTF-8"))
+                    .use { isr ->
+                      BufferedReader(isr)
+                          .use { br ->
+                            // readLine here will be an entire chapter
+                            line = br.readLine()
+                            val wc = line.split(" ".toRegex())
+                                .toTypedArray()
+
+                            totalWordCount = wc.size
+                            bookProgress!!.max = totalWordCount
+                            val switchWordPeriod = (MILLISECOND_PER_MINUTE / speed).toLong()
+
+                            newsTimer.cancel()
+                            userUploadsTimer.cancel()
+
+                            booksTimer.scheduleAtFixedRate(object : TimerTask() {
+                              override fun run() {
+                                runOnUiThread {
+                                  if (totalWordCount != 1 && currentWordCount < totalWordCount) {
+                                    wordTextView!!.text = wc[currentWordCount]
+                                    if (!pauseTimer) currentWordCount++
+                                    bookProgress!!.progress = currentWordCount
+                                  } else {
+                                    booksTimer.cancel()
+                                  }
+                                }
+                              }
+                            }, 500, switchWordPeriod)
+                          }
+                    }
+              }
+        } catch (e: FileNotFoundException) {
+          e.printStackTrace()
+        } catch (e: IOException) {
+          e.printStackTrace()
+        }
+      }
+    }
+
     val tmpDir = File(downloadPath[0])
     val exists = tmpDir.exists()
     if (!exists) {
       downloadManager.enqueue(request)
-    }
-    try {
-      FileInputStream(downloadPath[0])
-          .use { `is` ->
-            InputStreamReader(`is`, Charset.forName("UTF-8"))
-                .use { isr ->
-                  BufferedReader(isr)
-                      .use { br ->
-                        // readLine here will be an entire chapter
-                        line = br.readLine()
-                        val wc = line.split(" ".toRegex())
-                            .toTypedArray()
-
-                        totalWordCount = wc.size
-                        bookProgress!!.max = totalWordCount
-                        val switchWordPeriod = (MILLISECOND_PER_MINUTE / speed).toLong()
-
-                        newsTimer.cancel()
-                        userUploadsTimer.cancel()
-
-                        booksTimer.scheduleAtFixedRate(object : TimerTask() {
-                          override fun run() {
-                            runOnUiThread {
-                              if (totalWordCount != 1 && currentWordCount < totalWordCount) {
-                                wordTextView!!.text = wc[currentWordCount]
-                                if (!pauseTimer) currentWordCount++
-                                bookProgress!!.progress = currentWordCount
-                              } else {
-                                booksTimer.cancel()
-                              }
-                            }
-                          }
-                        }, 500, switchWordPeriod)
-                      }
-                }
-          }
-    } catch (e: FileNotFoundException) {
-      e.printStackTrace()
-    } catch (e: IOException) {
-      e.printStackTrace()
+      registerReceiver(
+          downloadCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+      );
     }
   }
 
