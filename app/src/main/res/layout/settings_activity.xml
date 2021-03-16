@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
     >
-
     <Button
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
@@ -55,14 +54,14 @@
         android:layout_marginStart="10dp"
         android:padding="10dp"
         android:text="Enable Dark Mode"
-        app:layout_constraintBottom_toTopOf="@+id/privacyPolicy"
+        app:layout_constraintBottom_toTopOf="@+id/contactNews"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
 
 
     <Button
-        android:id="@+id/privacyPolicy"
+        android:id="@+id/contactNews"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/my_shape"
@@ -71,7 +70,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:padding="10dp"
-        android:text="Privacy Policy"
+        android:text="Contact Information"
         app:layout_constraintBottom_toTopOf="@+id/showAdButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -2,11 +2,14 @@ package com.example.mnallamalli97.speedread
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.View.OnClickListener
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -15,7 +18,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.mnallamalli97.speedread.R.id
 import com.example.mnallamalli97.speedread.R.layout
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest.Builder
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -32,7 +34,7 @@ class SettingsActivity : AppCompatActivity() {
   private var saveButton: Button? = null
   private var showAdButton: Button? = null
   private var darkModeButton: Button? = null
-  private var privacyPolicy: Button? = null
+  private var contactNewsButton: Button? = null
   private var resultText: TextView? = null
   private var bookTitle: TextView? = null
   private var settingsProgressBar: ProgressBar? = null
@@ -58,7 +60,7 @@ class SettingsActivity : AppCompatActivity() {
     settingsProgressBar = findViewById(id.settingsProgressBar)
     bookTitle = findViewById(id.bookTitle)
     darkModeButton = findViewById(id.darkMode)
-    privacyPolicy = findViewById(id.privacyPolicy)
+    contactNewsButton = findViewById(id.contactNews)
 
     loadInterstitial()
 
@@ -110,6 +112,10 @@ class SettingsActivity : AppCompatActivity() {
       darkModeButton!!.text = "ENABLE DARK MODE"
     }
 
+    contactNewsButton!!.setOnClickListener {
+      val startIntent = Intent(this@SettingsActivity, WebviewActivity::class.java)
+      startActivity(startIntent)
+    }
 
     darkModeButton!!.setOnClickListener {
 

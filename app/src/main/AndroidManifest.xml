@@ -42,6 +42,12 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".WebviewActivity"
+            android:configChanges="orientation"
+            android:label="Contact information for news sources"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".news.NewsActivity"
             android:configChanges="orientation"
             android:label="View the main stories of the day"
