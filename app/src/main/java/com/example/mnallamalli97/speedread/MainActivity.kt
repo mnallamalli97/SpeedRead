@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
   private var pref: SharedPreferences? = null
   private var editor: SharedPreferences.Editor? = null
   private var userUploadUri: String? = null
+  private var downloadPath: Array<String>? = null
   private var newsTimer = Timer()
   private var booksTimer = Timer()
   private var userUploadsTimer = Timer()
@@ -250,8 +251,8 @@ class MainActivity : AppCompatActivity() {
 
     // Local temp file has been created
     // load file into input stream and split each word to display in textview
-    var line: String
-    val downloadPath = if (bookPath != null) arrayOf(
+
+    downloadPath = if (bookPath != null) arrayOf(
         "/storage/emulated/0/Android/data/com.mnallamalli97.speedread/files/Download/$bookPath.txt"
     ) else arrayOf(
         "/storage/emulated/0/Android/data/com.mnallamalli97.speedread/files/Download/$bookSummaryPath.txt"
@@ -262,56 +263,63 @@ class MainActivity : AppCompatActivity() {
         context: Context?,
         intent: Intent?
       ) {
-        try {
-          FileInputStream(downloadPath[0])
-              .use { `is` ->
-                InputStreamReader(`is`, Charset.forName("UTF-8"))
-                    .use { isr ->
-                      BufferedReader(isr)
-                          .use { br ->
-                            // readLine here will be an entire chapter
-                            line = br.readLine()
-                            val wc = line.split(" ".toRegex())
-                                .toTypedArray()
-
-                            totalWordCount = wc.size
-                            bookProgress!!.max = totalWordCount
-                            val switchWordPeriod = (MILLISECOND_PER_MINUTE / speed).toLong()
-
-                            newsTimer.cancel()
-                            userUploadsTimer.cancel()
-
-                            booksTimer.scheduleAtFixedRate(object : TimerTask() {
-                              override fun run() {
-                                runOnUiThread {
-                                  if (totalWordCount != 1 && currentWordCount < totalWordCount) {
-                                    wordTextView!!.text = wc[currentWordCount]
-                                    if (!pauseTimer) currentWordCount++
-                                    bookProgress!!.progress = currentWordCount
-                                  } else {
-                                    booksTimer.cancel()
-                                  }
-                                }
-                              }
-                            }, 500, switchWordPeriod)
-                          }
-                    }
-              }
-        } catch (e: FileNotFoundException) {
-          e.printStackTrace()
-        } catch (e: IOException) {
-          e.printStackTrace()
-        }
+        parseByLine(speed)
       }
     }
 
-    val tmpDir = File(downloadPath[0])
+    val tmpDir = File(downloadPath!!.get(0))
     val exists = tmpDir.exists()
     if (!exists) {
       downloadManager.enqueue(request)
       registerReceiver(
           downloadCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-      );
+      )
+    } else {
+      parseByLine(speed)
+    }
+  }
+
+  fun parseByLine(speed: Int) {
+    try {
+      FileInputStream(downloadPath!!.get(0))
+          .use { `is` ->
+            InputStreamReader(`is`, Charset.forName("UTF-8"))
+                .use { isr ->
+                  BufferedReader(isr)
+                      .use { br ->
+                        var line: String
+                        // readLine here will be an entire chapter
+                        line = br.readLine()
+                        val wc = line.split(" ".toRegex())
+                            .toTypedArray()
+
+                        totalWordCount = wc.size
+                        bookProgress!!.max = totalWordCount
+                        val switchWordPeriod = (MILLISECOND_PER_MINUTE / speed).toLong()
+
+                        newsTimer.cancel()
+                        userUploadsTimer.cancel()
+
+                        booksTimer.scheduleAtFixedRate(object : TimerTask() {
+                          override fun run() {
+                            runOnUiThread {
+                              if (totalWordCount != 1 && currentWordCount < totalWordCount) {
+                                wordTextView!!.text = wc[currentWordCount]
+                                if (!pauseTimer) currentWordCount++
+                                bookProgress!!.progress = currentWordCount
+                              } else {
+                                booksTimer.cancel()
+                              }
+                            }
+                          }
+                        }, 500, switchWordPeriod)
+                      }
+                }
+          }
+    } catch (e: FileNotFoundException) {
+      e.printStackTrace()
+    } catch (e: IOException) {
+      e.printStackTrace()
     }
   }
 

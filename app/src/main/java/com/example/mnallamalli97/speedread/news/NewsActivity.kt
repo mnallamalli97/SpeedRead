@@ -9,6 +9,7 @@ import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -36,6 +37,8 @@ import com.example.mnallamalli97.speedread.R.layout
 import com.example.mnallamalli97.speedread.SettingsActivity
 import com.example.mnallamalli97.speedread.models.Article
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -99,6 +102,24 @@ class NewsActivity : AppCompatActivity() {
     btnRetry = findViewById(id.btnRetry)
 
     // newsUpgradeButton!!.visibility = View.VISIBLE
+
+
+//
+//        .addOnCompleteListener(this) {
+//          if (task.isSuccessful) {
+//            // Sign in success, update UI with the signed-in user's information
+//            Log.d("sign in", "signInAnonymously:success")
+//            val user = auth.currentUser
+//           // updateUI(user)
+//          } else {
+//            // If sign in fails, display a message to the user.
+//            Log.w("sign in", "signInAnonymously:failure", task.exception)
+//            Toast.makeText(baseContext, "Authentication failed.",
+//                Toast.LENGTH_SHORT).show()
+//           // updateUI(null)
+//          }
+//        }
+//
 
 
 
