@@ -2,14 +2,10 @@ package com.example.mnallamalli97.speedread
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.View.OnClickListener
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -60,7 +56,7 @@ class SettingsActivity : AppCompatActivity() {
     settingsProgressBar = findViewById(id.settingsProgressBar)
     bookTitle = findViewById(id.bookTitle)
     darkModeButton = findViewById(id.darkMode)
-    contactNewsButton = findViewById(id.contactNews)
+    contactNewsButton = findViewById(id.contactNewsButton)
 
     loadInterstitial()
 
@@ -111,6 +107,13 @@ class SettingsActivity : AppCompatActivity() {
     } else {
       darkModeButton!!.text = "ENABLE DARK MODE"
     }
+
+    if (author == "Google News") {
+      contactNewsButton!!.visibility = View.VISIBLE
+    } else {
+      contactNewsButton!!.visibility = View.GONE
+    }
+
 
     contactNewsButton!!.setOnClickListener {
       val startIntent = Intent(this@SettingsActivity, WebviewActivity::class.java)

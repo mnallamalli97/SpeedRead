@@ -16,7 +16,7 @@
         android:background="@drawable/my_shape"
         android:backgroundTint="@color/color_light_green"
         android:fontFamily="@font/montserrat_bold"
-        android:text="Save"
+        android:text="GET READY.. SET.. "
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,18 +54,19 @@
         android:layout_marginStart="10dp"
         android:padding="10dp"
         android:text="Enable Dark Mode"
-        app:layout_constraintBottom_toTopOf="@+id/contactNews"
+        app:layout_constraintBottom_toTopOf="@+id/contactNewsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
 
 
     <Button
-        android:id="@+id/contactNews"
+        android:id="@+id/contactNewsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/my_shape"
         android:fontFamily="@font/montserrat_regular"
+        android:visibility="gone"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
