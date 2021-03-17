@@ -25,8 +25,6 @@ class Book {
     private set
   var bookSummaryPath: String? = null
     private set
-  var purchased: Boolean? = null
-  private var storage: SharedPreferences? = null
 
   constructor() {}
 
@@ -44,8 +42,7 @@ class Book {
     featuredBookCover: String?,
     bookSummaryPath: String?,
     bookPath: String?,
-    bookPrice: Float?,
-    isPurchased: Boolean?
+    bookPrice: Float?
   ) {
     this.id = id
     this.title = title
@@ -57,7 +54,6 @@ class Book {
     this.bookSummaryPath = bookSummaryPath
     this.bookPath = bookPath
     this.bookPrice = bookPrice
-    this.purchased = isPurchased
   }
 
   companion object {

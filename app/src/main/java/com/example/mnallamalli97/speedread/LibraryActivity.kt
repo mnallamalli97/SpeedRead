@@ -158,6 +158,9 @@ class LibraryActivity : AppCompatActivity(),
     intent.putExtra("id", book.id)
     intent.putExtra("author", book.author)
     intent.putExtra("cover", book.bookCover)
+    intent.putExtra("bookChaptersName", book.bookChaptersName)
+    intent.putExtra("bookChaptersPath", book.bookChaptersPath)
+    intent.putExtra("featuredCover", book.featuredBookCover)
 
     startActivity(intent)
   }
@@ -205,8 +208,7 @@ class LibraryActivity : AppCompatActivity(),
           val bookPath = book?.bookPath
           val bookPrice = book?.bookPrice
           val bookSummaryPath = book?.bookSummaryPath
-          val isPurchased = book!!.purchased
-          libraryList.add(Book(id, title, author, bookChaptersNames, bookChaptersPaths, cover, featuredCover, bookSummaryPath, bookPath, bookPrice, isPurchased))
+          libraryList.add(Book(id, title, author, bookChaptersNames, bookChaptersPaths, cover, featuredCover, bookSummaryPath, bookPath, bookPrice))
         }
         featuredListAdapter!!.notifyDataSetChanged()
         topChartsListViewAdapter!!.notifyDataSetChanged()

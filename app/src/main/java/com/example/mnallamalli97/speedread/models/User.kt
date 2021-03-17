@@ -7,7 +7,7 @@ class User {
 
   @SerializedName("id") @Expose var id: String? = null
 
-  @SerializedName("isPurchasedMap") @Expose var isPurchasedMap: MutableMap<String, Boolean> = mutableMapOf()
+  @SerializedName("isPurchasedMap") @Expose var isPurchasedMap: ArrayList<Boolean>? = null
 
 
   // Register new user
@@ -19,7 +19,7 @@ class User {
 
   constructor(
     id: String?,
-    isPurchasedMap: MutableMap<String, Boolean>,
+    isPurchasedMap: ArrayList<Boolean>?
   ) {
     this.id = id
     this.isPurchasedMap = isPurchasedMap

@@ -62,10 +62,14 @@ class CheckoutActivity : AppCompatActivity() {
   private var selectedBook: Book? = null
   private lateinit var auth: FirebaseAuth
   private var firebaseUser: FirebaseUser? = null
-  private var userPurchasesMapping: MutableMap<String, Boolean> = mutableMapOf()
+  private var currentUser: User? = null
+  private var userPurchasesMapping: ArrayList<Boolean>? = null
+  private var bookChaptersName: ArrayList<String>? = null
+  private var bookChaptersPath: ArrayList<String>? = null
   var bookSummaryPath: String? = ""
   var author: String? = ""
   var title: String? = ""
+  var featuredCover: String? = ""
   private val LOAD_PAYMENT_DATA_REQUEST_CODE = 1214
   private val stripe: Stripe by lazy {
     Stripe(this, PUBLISHABLE_KEY)
@@ -108,14 +112,31 @@ class CheckoutActivity : AppCompatActivity() {
     title = extras.getString("title")
     val bookCoverPath = extras.getString("cover")
     bookPrice = extras.getFloat("book_price")
+    bookChaptersName = extras.getStringArrayList("bookChaptersName")
+    bookChaptersPath = extras.getStringArrayList("bookChaptersPath")
+    featuredCover = extras.getString("featuredCover")
 
+
+    selectedBook = Book(
+        id = bookId,
+        title = title,
+        author = author,
+        bookChaptersNames = bookChaptersName,
+        bookChaptersPaths = bookChaptersPath,
+        bookCover = bookCoverPath,
+        featuredBookCover = featuredCover,
+        bookSummaryPath = bookSummaryPath,
+        bookPath = bookPath,
+        bookPrice = bookPrice
+    )
+
+    retrieve()
     /*
       Sign up the user anonymously using Firebase
    */
     signInAndUpdateDatabase()
 
 
-    retrieve()
     // Initialize a Google Pay API client for an environment suitable for testing.
     // It's recommended to create the PaymentsClient object inside of the onCreate method.
     PaymentConfiguration.init(this, PUBLISHABLE_KEY)
@@ -146,6 +167,8 @@ class CheckoutActivity : AppCompatActivity() {
         .getReference("speedread")
         .child("users")
 
+
+
     auth = Firebase.auth
     auth.signInAnonymously()
         .addOnCompleteListener { task ->
@@ -155,25 +178,35 @@ class CheckoutActivity : AppCompatActivity() {
             firebaseUser = auth.currentUser
 
             // check if in the data base
+            val currentUserReference = usersDatabaseReference!!.child("user${firebaseUser!!.uid}")
+
+            currentUserReference!!.addListenerForSingleValueEvent(object : ValueEventListener {
+              override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val userId = dataSnapshot.child("id").value as String?
+                val purchasedMap = dataSnapshot.child("purchasedMap").value as ArrayList<Boolean>?
 
 
-            usersDatabaseReference!!.addListenerForSingleValueEvent(object : ValueEventListener {
-                  override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    dataSnapshot.children.forEach { ds ->
+                if (userId == firebaseUser!!.uid) {
+                  userPurchasesMapping = purchasedMap
+                  currentUser = User(userId, purchasedMap)
+                } else {
+                  userPurchasesMapping!!.add(-1, false)
+                  usersDatabaseReference!!.child("user${firebaseUser!!.uid}")
+                      .setValue(User(firebaseUser!!.uid, userPurchasesMapping))
+                }
 
-                      if (ds.child("user${firebaseUser!!.uid}").exists()) {
-                        // user exists
-                        userPurchasesMapping.remove("-1")
-                        val user = ds.getValue(User::class.java)
-                        if (user?.id == firebaseUser!!.uid) {
-                          userPurchasesMapping = user.isPurchasedMap
-                      } else {
-                          userPurchasesMapping["-1"] = false
-                          usersDatabaseReference!!.child("user${firebaseUser!!.uid}").setValue(User(firebaseUser!!.uid, userPurchasesMapping))
-                        }
-                      }
-                    }
-                  }
+
+
+                if (currentUser!!.isPurchasedMap?.get(bookId!!) == true) {
+                  googlePayButton!!.visibility = View.GONE
+                  readNowButton!!.visibility = View.VISIBLE
+
+                } else {
+                  googlePayButton!!.visibility = View.VISIBLE
+                  readNowButton!!.visibility = View.GONE
+                }
+
+              }
 
                   override fun onCancelled(databaseError: DatabaseError) {
                     Log.d(ContentValues.TAG, databaseError.message) // Don't ignore errors!
@@ -215,6 +248,9 @@ class CheckoutActivity : AppCompatActivity() {
       intent.putExtra("author", currentBook.author)
       intent.putExtra("cover", currentBook.bookCover)
       intent.putExtra("book_price", currentBook.bookPrice)
+      intent.putExtra("bookChaptersName", currentBook.bookChaptersName)
+      intent.putExtra("bookChaptersPath", currentBook.bookSummaryPath)
+      intent.putExtra("featuredCover", currentBook.featuredBookCover)
 
       startActivity(intent)
       true
@@ -456,57 +492,23 @@ class CheckoutActivity : AppCompatActivity() {
   }
 
   fun retrieve() {
-    booksDatabaseReference = FirebaseDatabase.getInstance()
-        .getReference("speedread")
-        .child("books")
+
+    if (paymentSuccess) {
+      userPurchasesMapping?.add(bookId!!, true)
+      updateData()
+    }
 
 
-
-    booksDatabaseReference!!.addListenerForSingleValueEvent(object : ValueEventListener {
-      override fun onDataChange(dataSnapshot: DataSnapshot) {
-        for (ds in dataSnapshot.children) {
-          val book = ds.getValue(Book::class.java)
-
-          if (paymentSuccess) {
-            userPurchasesMapping[bookId!!.toString()] = true
-            updateData(book)
-          }
-
-          if (bookId == book!!.id) {
-            if (book!!.purchased!!) {
-              googlePayButton!!.visibility = View.GONE
-              readNowButton!!.visibility = View.VISIBLE
-              selectedBook = book
-            } else {
-              googlePayButton!!.visibility = View.VISIBLE
-              readNowButton!!.visibility = View.GONE
-            }
-          }
-        }
-      }
-
-      override fun onCancelled(databaseError: DatabaseError) {
-        Log.d(ContentValues.TAG, databaseError.message) // Don't ignore errors!
-      }
-    })
   }
 
-  private fun updateData(book: Book?) {
+  private fun updateData() {
     val currentUserReference = usersDatabaseReference!!.child("user${firebaseUser!!.uid}")
 
+    currentUserReference!!.setValue(User(firebaseUser!!.uid, userPurchasesMapping))
+    val intent = intent
+    finish()
+    startActivity(intent)
 
-
-    if (firebaseUser != null) {
-      currentUserReference!!.setValue(User(firebaseUser!!.uid, userPurchasesMapping))
-    }
-    if (bookId == book!!.id) {
-      booksDatabaseReference!!.child("book$bookId")
-          .child("purchased")
-          .setValue(true)
-      val intent = intent
-      finish()
-      startActivity(intent)
-    }
   }
 
   /**
